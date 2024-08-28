@@ -7,7 +7,7 @@ import {
     Archive,
     FolderPlus,
     Home, Info,
-    Menu, MoveUpRight,
+    LogOut, Menu, MoveUpRight,
     Settings,
     Share2,
     SquarePen,
@@ -16,7 +16,7 @@ import {
     User,
     Users
 } from "lucide-react";
-import {Outlet, useLocation} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {Navbar, NavItem, NavItems, NavItemsLeft, NavItemsRight} from "../../components/layouts/nav.tsx";
 import {ButtonIcon} from "../../components/modules/Button.tsx";
 import {ModalCreateFolder} from "../modals/folders/ModalCreateFolder.tsx";
@@ -26,6 +26,7 @@ import {ModalEditMedia} from "../modals/ModalEditMedia.tsx";
 import {useModal} from "../../hooks/useModal.ts";
 import {Modal} from "../../components/modules/Modal.tsx";
 import {useFileStore} from "../../stores/useFileStore.ts";
+import {useAuth} from "../../context/modules/AuthContext.tsx";
 import {ButtonDownload} from "../../components/layouts/modules/ButtonDownload..tsx";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
@@ -39,13 +40,20 @@ import {ModalShareMedia} from "../modals/shares/ModalShareMedia.tsx";
 
 export function App() {
     const {openModal} = useModal()
+    const {logout} = useAuth()
     const {uploadLogin} = useProgressBar()
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const {activeStorage} = useFileStore()
+    const nav = useNavigate()
     const location = useLocation()
     const {t} = useTranslation()
     const {role} = useRoles()
     const {user} = useUserStore()
+
+    const handleClickLogout = () => {
+        logout()
+        nav('/login')
+    }
 
     return <div>
         {uploadLogin && <ProgressBar/>}
@@ -108,7 +116,7 @@ export function App() {
                 <SidebarMenuContent>
                     <SidebarMenu>
                         <SidebarTitleMenu>{t('title.nav.sub.menu')}</SidebarTitleMenu>
-                        <SidebarMenuItem href="/" svg={Home}>{t('title.nav.dashboard')}</SidebarMenuItem>
+                        <SidebarMenuItem href="/" active="/" svg={Home}>{t('title.nav.dashboard')}</SidebarMenuItem>
                         {role([RoleEnum.CREATE_OBJECT], user!.roles) && (
                             <SidebarMenuItem svg={FolderPlus}
                                              onClick={() => openModal(() => <ModalCreateFolder/>, "md")}>
@@ -118,8 +126,11 @@ export function App() {
                     </SidebarMenu>
                     <SidebarMenu>
                         <SidebarTitleMenu>{t('title.nav.profile')}</SidebarTitleMenu>
-                        <SidebarMenuItem href="/profile" svg={User}>
+                        <SidebarMenuItem href="/profile"  active="/profile/*" svg={User}>
                             {t('title.nav.profile')}
+                        </SidebarMenuItem>
+                        <SidebarMenuItem svg={LogOut} onClick={() => handleClickLogout()}>
+                            {t('title.nav.logout')}
                         </SidebarMenuItem>
                     </SidebarMenu>
                     {role([RoleEnum.ADMIN], user!.roles) && (
@@ -127,23 +138,23 @@ export function App() {
                             <SidebarTitleMenu>
                                 {t('title.nav.sub.administration')}
                             </SidebarTitleMenu>
-                            <SidebarMenuItem href="/admin/settings" svg={Settings}>
+                            <SidebarMenuItem href="/admin/settings" active="/admin/settings" svg={Settings}>
                                 {t('title.nav.settings')}
                             </SidebarMenuItem>
-                            <SidebarMenuItem href="/admin/users" svg={Users}>
+                            <SidebarMenuItem href="/admin/users" active="/admin/users" svg={Users}>
                                 {t('title.nav.users')}
                             </SidebarMenuItem>
-                            <SidebarMenuItem href="/admin/shares" svg={Share2}>
+                            <SidebarMenuItem href="/admin/shares" active="/admin/shares" svg={Share2}>
                                 {t('title.nav.shares')}
                             </SidebarMenuItem>
-                            <SidebarMenuItem href="/admin/logs" svg={Archive}>
+                            <SidebarMenuItem href="/admin/logs" active="/admin/logs" svg={Archive}>
                                 {t('title.nav.logs')}
                             </SidebarMenuItem>
                         </SidebarMenu>
                     )}
                 </SidebarMenuContent>
                 <SidebarMenuContent>
-                    <SidebarItemVersion>v 1.0.8</SidebarItemVersion>
+                    <SidebarItemVersion>v 0.0.1</SidebarItemVersion>
                 </SidebarMenuContent>
             </Sidebar>
 

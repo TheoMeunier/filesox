@@ -8,6 +8,7 @@ object LogService {
     const val ACTION_UPDATE = "updated"
     const val ACTION_DELETE = "deleted"
     const val ACTION_UPLOAD = "uploaded"
+    const val ACTION_MOVE = "moved"
     const val ACTION_RESTORE = "restore"
     const val ACTION_LOGIN = "login"
 

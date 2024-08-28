@@ -108,7 +108,9 @@ object FileRepository {
         }
     }
 
-    fun move (id: UUID, parentId: UUID?) {
+    suspend fun move (id: UUID, parentId: UUID?) {
+        LogService.add(Security.getUserId(), LogService.ACTION_MOVE, "${id.toString()} file moved")
+
         transaction(database) {
             Files.update({ Files.id eq id }) {
                 it[Files.parentId] = parentId

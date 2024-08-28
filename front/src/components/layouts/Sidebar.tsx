@@ -38,19 +38,20 @@ export function SidebarTitleMenu({children}: { children: ReactNode }) {
     </>
 }
 
-export function SidebarMenuItem({svg: SvgComponent, children, href, onClick}: {
+export function SidebarMenuItem({svg: SvgComponent, children, href, active, onClick}: {
     svg: ComponentType<any>,
     children: ReactNode,
     href?: string,
+    active?: string,
     onClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }) {
     const location = useLocation();
     let isActive;
 
-    if (location.pathname === href) {
+    if (active && location.pathname === href) {
         isActive = 'border-indigo-700 text-indigo-700 bg-indigo-50';
-    } else  if (location.pathname === '/' && href === '/'){
-        isActive = 'text-gray-600 border-transparent';
+    } else if (active && location.pathname.startsWith(href!) && href !== '/') {
+        isActive = 'border-indigo-700 text-indigo-700 bg-indigo-50';
     } else {
         isActive = 'text-gray-600 border-transparent';
     }
