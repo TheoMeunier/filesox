@@ -4,7 +4,7 @@ import fr.tmeunier.config.Security
 import fr.tmeunier.web.controller.admin.AdminLogController
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import withRole
+import fr.tmeunier.core.permissions.withRole
 
 fun Route.adminLogRouting()
 {

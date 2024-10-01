@@ -1,11 +1,11 @@
-import {FileType, FolderType} from "../../types/api/storageType.ts";
-import {useFileStore} from "../../stores/useFileStore.ts";
+import {FileType, FolderType} from "@/types/api/storageType.ts";
 import {ReactNode} from "react";
-import {truncateString} from "../../hooks/useStore.ts";
-import {FilePaths, useLocalStorage} from "../../hooks/useLocalStorage.ts";
+import {FilePaths, useLocalStorage} from "@hooks/useLocalStorage.ts";
 import {LayoutModules} from "./modules/LayoutModulesImage.tsx";
-import {useCurrentPath} from "../../context/modules/CurrentPathContext.tsx";
 import {useTranslation} from "react-i18next";
+import {useCurrentPath} from "@context/modules/CurrentPathContext.tsx";
+import {useFileStore} from "@stores/useFileStore.ts";
+import {truncateString} from "@hooks/useStore.ts";
 
 export function LayoutsGrid({files, folders}: { files: FileType[] | undefined, folders: FolderType[] | undefined }) {
     const {activeStorage, setActiveStorage} = useFileStore();

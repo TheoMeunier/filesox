@@ -1,5 +1,5 @@
 import {useCallback, useEffect} from "react";
-import {usePagination} from "../../hooks/usePagination.ts";
+import {usePagination} from "@hooks/usePagination.ts";
 import {useTranslation} from "react-i18next";
 
 export function Pagination({from, to,  currentPage, totalPage, onPageChange}: {

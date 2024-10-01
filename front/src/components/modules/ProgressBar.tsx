@@ -1,4 +1,4 @@
-import {useProgressBar} from "../../stores/useProgressBar.ts";
+import {useProgressBar} from "@/stores/useProgressBar.ts";
 
 export default function ProgressBar() {
     const {value} = useProgressBar()

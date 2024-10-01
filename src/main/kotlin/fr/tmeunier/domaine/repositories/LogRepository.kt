@@ -1,17 +1,16 @@
 package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
+import fr.tmeunier.config.Database.dbQuery
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
-object LogRepository
-{
+object LogRepository {
     private val database = Database.getConnexion()
 
-    object Logs : Table()
-    {
+    object Logs : Table() {
         val id: Column<Int> = integer("id").autoIncrement()
         val userId: Column<Int> = integer("user_id").references(UserRepository.Users.id)
         val action: Column<String> = varchar("action", length = 255)
@@ -43,14 +42,12 @@ object LogRepository
         }
     }
 
-    suspend fun create(user: Int, action: String, subject: String): Int {
-        return transaction(database) {
-            Logs.insert {
-                it[Logs.userId] = user
-                it[Logs.action] = action
-                it[Logs.subject] = subject
-                it[Logs.createdAt] = LocalDateTime.now()
-            } get Logs.id
-        }
+    suspend fun create(user: Int, action: String, subject: String): Int = dbQuery {
+        Logs.insert {
+            it[Logs.userId] = user
+            it[Logs.action] = action
+            it[Logs.subject] = subject
+            it[Logs.createdAt] = LocalDateTime.now()
+        } get Logs.id
     }
 }

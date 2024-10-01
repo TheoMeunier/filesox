@@ -2,18 +2,18 @@ import {
     ModalBody,
     ModalFooterButton,
     ModalHeaderLogo,
-} from "../../components/modules/Modal.tsx";
-import {ButtonBig} from "../../components/modules/Button.tsx";
-import {useAlerts} from "../../context/modules/AlertContext.tsx";
-import {FormFields} from "../../components/modules/Form.tsx";
+} from "@components/modules/Modal.tsx";
+import {ButtonBig} from "@components/modules/Button.tsx";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {FormFields} from "@components/modules/Form.tsx";
 import {useForm} from "react-hook-form";
 import {useMutation, useQueryClient} from "react-query";
-import {useModal} from "../../hooks/useModal.ts";
-import {useAxios} from "../../config/axios.ts";
+import {useModal} from "@hooks/useModal.ts";
+import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
 import {Trash2} from "lucide-react";
-import {useStorage} from "../../hooks/useStorage.ts";
-import {useFileStore} from "../../stores/useFileStore.ts";
+import {useStorage} from "@hooks/useStorage.ts";
+import {useFileStore} from "@/stores/useFileStore.ts";
 
 export function ModalDeleteMedia() {
     const {setAlerts} = useAlerts()

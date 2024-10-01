@@ -1,4 +1,4 @@
-import {getSize, useModal} from "../../hooks/useModal.ts";
+import {getSize, useModal} from "@hooks/useModal.ts";
 import {ReactNode} from "react";
 import {Button, ButtonIcon} from "./Button.tsx";
 import {X} from "lucide-react";

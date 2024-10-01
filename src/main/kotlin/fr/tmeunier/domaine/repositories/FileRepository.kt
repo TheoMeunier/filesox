@@ -1,6 +1,7 @@
 package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
+import fr.tmeunier.config.Database.dbQuery
 import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.requests.InitialUploadRequest
 import fr.tmeunier.domaine.response.S3File
@@ -39,7 +40,7 @@ object FileRepository {
     }
 
     fun findById(id: UUID): S3File? {
-        return transaction(database) {
+        return transaction {
             Files.select { Files.id eq id }.map {
                 S3File(
                     it[Files.id],
@@ -53,83 +54,64 @@ object FileRepository {
         }
     }
 
-    fun findAllByParentId(uuid: String): MutableList<S3File> {
-        val files = mutableListOf<S3File>()
-
-        transaction(database) {
-            val query = if (uuid != "null") {
-                Files.select { Files.parentId eq UUID.fromString(uuid) }
-            } else {
-                Files.select { Files.parentId.isNull() }
-            }
-
-           query.forEach {
-                files.add(
-                    S3File(
-                        it[Files.id],
-                        it[Files.name],
-                        it[Files.type],
-                        it[Files.size].toHumanReadableValue(),
-                        it[Files.parentId],
-                        it[Files.icon]
-                    )
-                )
-            }
+    suspend fun findAllByParentId(uuid: String): List<S3File> = dbQuery {
+        (if (uuid != "null") {
+            Files.select { Files.parentId eq UUID.fromString(uuid) }
+        } else {
+            Files.select { Files.parentId.isNull() }
+        }).map {
+            S3File(
+                it[Files.id],
+                it[Files.name],
+                it[Files.type],
+                it[Files.size].toHumanReadableValue(),
+                it[Files.parentId],
+                it[Files.icon]
+            )
         }
-
-        return files
     }
 
-    suspend fun create (file: InitialUploadRequest, parentId: UUID?): UUID {
+    suspend fun create(file: InitialUploadRequest, parentId: UUID?): UUID = dbQuery {
         LogService.add(Security.getUserId(), LogService.ACTION_UPLOAD, "${file.name} file uploaded")
 
-        return transaction(database) {
-            Files.insert {
-                it[id] = UUID.randomUUID()
-                it[Files.name] = file.name
-                it[Files.size] = file.size
-                it[Files.type] = file.type
-                it[Files.icon] = StorageService.getIconForFile(file.name)
-                it[Files.parentId] = parentId
-                it[Files.updatedAt] = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified), java.time.ZoneId.systemDefault())
-            }
+        Files.insert {
+            it[id] = UUID.randomUUID()
+            it[name] = file.name
+            it[size] = file.size
+            it[type] = file.type
+            it[icon] = StorageService.getIconForFile(file.name)
+            it[Files.parentId] = parentId
+            it[updatedAt] =
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified), java.time.ZoneId.systemDefault())
         } get Files.id
     }
 
-    suspend fun update (id: UUID, name: String, parentId: UUID?) {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "${name} file updated")
+    suspend fun update(id: UUID, name: String, parentId: UUID?) = dbQuery {
+        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name file updated")
 
-        transaction(database) {
-            Files.update({ Files.id eq id }) {
-                it[Files.name] = name
-                it[Files.parentId] = parentId
-                it[Files.updatedAt] = java.time.LocalDateTime.now()
-            }
+        Files.update({ Files.id eq id }) {
+            it[Files.name] = name
+            it[Files.parentId] = parentId
+            it[updatedAt] = LocalDateTime.now()
         }
     }
 
-    suspend fun move (id: UUID, parentId: UUID?) {
-        LogService.add(Security.getUserId(), LogService.ACTION_MOVE, "${id.toString()} file moved")
+    suspend fun move(id: UUID, parentId: UUID?) = dbQuery {
+        LogService.add(Security.getUserId(), LogService.ACTION_MOVE, "$id file moved")
 
-        transaction(database) {
-            Files.update({ Files.id eq id }) {
-                it[Files.parentId] = parentId
-                it[Files.updatedAt] = java.time.LocalDateTime.now()
-            }
+        Files.update({ Files.id eq id }) {
+            it[Files.parentId] = parentId
+            it[updatedAt] = LocalDateTime.now()
         }
     }
 
-    suspend fun delete(name: String, id: UUID) {
-        LogService.add(Security.getUserId(), LogService.ACTION_DELETE, "${name} file deleted")
+    suspend fun delete(name: String, id: UUID) = dbQuery {
+        LogService.add(Security.getUserId(), LogService.ACTION_DELETE, "$name file deleted")
 
-        transaction(database) {
-            Files.deleteWhere { Files.id eq id }
-        }
+        Files.deleteWhere { Files.id eq id }
     }
 
-    fun deleteByParentId (parentId: UUID) {
-        transaction(database) {
-            Files.deleteWhere { Files.parentId eq parentId }
-        }
+    suspend fun deleteByParentId(parentId: UUID) = dbQuery {
+        Files.deleteWhere { Files.parentId eq parentId }
     }
 }

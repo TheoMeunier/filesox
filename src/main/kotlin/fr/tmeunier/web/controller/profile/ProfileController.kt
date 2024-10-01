@@ -3,12 +3,10 @@ package fr.tmeunier.web.controller.profile
 import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.models.LogsResponses
 import fr.tmeunier.domaine.repositories.LogRepository
-import fr.tmeunier.domaine.repositories.ShareRepository
 import fr.tmeunier.domaine.repositories.UserRepository
 import fr.tmeunier.domaine.repositories.UsersPermissionsRepository
 import fr.tmeunier.domaine.requests.UserUpdatePasswordRequest
 import fr.tmeunier.domaine.requests.UserUpdateRequest
-import fr.tmeunier.domaine.response.ProfileSharesResponse
 import fr.tmeunier.domaine.services.PaginationService
 import fr.tmeunier.domaine.services.utils.formatDate
 import io.ktor.http.*

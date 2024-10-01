@@ -123,7 +123,7 @@ object StorageController {
         if (share.type === "file") {
             val file = FileRepository.findById(share.storageId)
             S3Config.makeClient()?.let { file?.name?.let { it1 ->
-                S3DownloadService.downloadFile(call, it, file?.id.toString(),
+                S3DownloadService.downloadFile(call, it, file.id.toString(),
                     it1
                 )
             } }

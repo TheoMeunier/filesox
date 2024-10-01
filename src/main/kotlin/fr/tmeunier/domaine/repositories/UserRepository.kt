@@ -1,6 +1,7 @@
 package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
+import fr.tmeunier.config.Database.dbQuery
 import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.models.User
 import fr.tmeunier.domaine.services.utils.HashService
@@ -35,72 +36,61 @@ object UserRepository {
         }
     }
 
-    suspend fun create(name: String, email: String, password: String, filePath: UUID?): Int {
+    suspend fun create(name: String, email: String, password: String, filePath: UUID?): Int = dbQuery {
         if (Security.getUserId() != 0) {
-            LogService.add(Security.getUserId(), LogService.ACTION_CREATE, "${name} created")
+            LogService.add(Security.getUserId(), LogService.ACTION_CREATE, "$name created")
         }
 
-        return transaction(database) {
-            Users.insert {
-                it[Users.name] = name
-                it[Users.email] = email
-                it[Users.filePath] = filePath
-                it[Users.password] = HashService.hashPassword(password)
-                it[Users.createdAt] = LocalDateTime.now()
-                it[Users.updatedAt] = LocalDateTime.now()
-            } get Users.id
+        Users.insert {
+            it[Users.name] = name
+            it[Users.email] = email
+            it[Users.filePath] = filePath
+            it[Users.password] = HashService.hashPassword(password)
+            it[createdAt] = LocalDateTime.now()
+            it[updatedAt] = LocalDateTime.now()
+        } get Users.id
+    }
+
+    suspend fun update(id: Int, name: String, email: String): Int = dbQuery {
+        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name updated")
+
+        Users.update({ Users.id eq id }) {
+            it[Users.name] = name
+            it[Users.email] = email
+            it[updatedAt] = LocalDateTime.now()
         }
     }
 
-    suspend fun update(id: Int, name: String, email: String): Int {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "${name} updated")
+    suspend fun adminUpdate(id: Int, name: String, email: String, filePath: UUID?) = dbQuery {
+        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name updated")
 
-        return transaction(database) {
-            Users.update({ Users.id eq id }) {
-                it[Users.name] = name
-                it[Users.email] = email
-                it[Users.updatedAt] = LocalDateTime.now()
-            }
+        Users.update({ Users.id eq id }) {
+            it[Users.name] = name
+            it[Users.email] = email
+            it[Users.filePath] = filePath
+            it[updatedAt] = LocalDateTime.now()
         }
     }
 
-    suspend fun adminUpdate(id: Int, name: String, email: String, filePath: UUID?): Int {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "${name} updated")
-
-        return transaction(database) {
-            Users.update({ Users.id eq id }) {
-                it[Users.name] = name
-                it[Users.email] = email
-                it[Users.filePath] = filePath
-                it[Users.updatedAt] = LocalDateTime.now()
-            }
-        }
-    }
-
-    suspend fun updatePassword(id: Int, password: String): Int {
+    suspend fun updatePassword(id: Int, password: String) = dbQuery {
         LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "updated account")
 
-        return transaction(database) {
-            Users.update({ Users.id eq id }) {
-                it[Users.password] = HashService.hashPassword(password)
-                it[Users.updatedAt] = LocalDateTime.now()
-            }
+        Users.update({ Users.id eq id }) {
+            it[Users.password] = HashService.hashPassword(password)
+            it[updatedAt] = LocalDateTime.now()
         }
     }
 
-    suspend fun delete(id: Int) {
+    suspend fun delete(id: Int) = dbQuery {
         LogService.add(Security.getUserId(), LogService.ACTION_DELETE, "updated account")
-
-        transaction(database) {
-            Users.deleteWhere { Users.id eq id }
-        }
+        Users.deleteWhere { Users.id eq id }
     }
 
     suspend fun findByEmail(email: String): User? = findBy { Users.email eq email }
 
     suspend fun findById(id: Int): User? = findBy { Users.id eq id }
 
-    suspend fun findBy(where: SqlExpressionBuilder.() -> Op<Boolean>): User? = transaction(database) {
+    private suspend fun findBy(where: SqlExpressionBuilder.() -> Op<Boolean>): User? = dbQuery {
         Users.select(where)
             .map {
                 User(

@@ -1,7 +1,6 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../../components/modules/Table.tsx";
 import {Pagination} from "../../../components/modules/Pagination.tsx";
 import {useState} from "react";
-import {useQuery} from "react-query";
 import {Button, ButtonIcon} from "../../../components/modules/Button.tsx";
 import {Plus, SquarePen, Trash2, Users} from "lucide-react";
 import {useModal} from "../../../hooks/useModal.ts";
@@ -9,26 +8,19 @@ import {AdminDeleteUserModal} from "./modals/AdminUserDeleteModal.tsx";
 import {AdminCreateUserModal} from "./modals/AdminUserCreateModal.tsx";
 import {AdminEditUserModal} from "./modals/AdminUserEditModal.tsx";
 import {Pill} from "../../../components/modules/Pill.tsx";
-import {useAxios} from "../../../config/axios.ts";
-import {usersSchemaType} from "../../../types/api/userType.ts";
 import {useTranslation} from "react-i18next";
+import {useUserApi} from "../../../api/admin/adminUserApi.ts";
+import {Loader} from "../../../components/modules/Loader/Loader.tsx";
 
 export function AdminUsers() {
     const {openModal} = useModal()
-    const API = useAxios()
-    const [page, setPage] = useState(1)
     const {t} = useTranslation();
 
-    const {data, isLoading} = useQuery(
-        ['users', page],
-        async () => {
-            const response = await API.get('/admin/users?page=' + page)
-            return usersSchemaType.parse(response.data)
-        }
-    );
+    const [page, setPage] = useState(1)
+    const {data, isLoading} = useUserApi(page)
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div><Loader/></div>;
     }
 
     return <div className="px-7 py-4">

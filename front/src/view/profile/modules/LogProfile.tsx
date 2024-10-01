@@ -1,11 +1,11 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../../components/modules/Table.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
 import {useQuery} from "react-query";
-import {Pagination} from "../../../components/modules/Pagination.tsx";
+import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
-import {Pill} from "../../../components/modules/Pill.tsx";
-import {useAxios} from "../../../config/axios.ts";
-import {logsProfileSchemaType} from "../../../types/api/userType.ts";
-import {Loader} from "../../../components/modules/Loader/Loader.tsx";
+import {Pill} from "@components/modules/Pill.tsx";
+import {useAxios} from "@config/axios.ts";
+import {logsProfileSchemaType} from "@/types/api/userType.ts";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
 
 export function ProfileLog() {
     const API = useAxios()

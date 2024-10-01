@@ -1,8 +1,8 @@
 import {Home} from "lucide-react";
 import {ReactNode} from "react";
-import {useUserStore} from "../../stores/useUserStore.ts";
-import {useCurrentPath} from "../../context/modules/CurrentPathContext.tsx";
 import {useTranslation} from "react-i18next";
+import {useCurrentPath} from "@context/modules/CurrentPathContext.tsx";
+import {useUserStore} from "@stores/useUserStore.ts";
 
 export function Breadcrumb() {
     const {user} = useUserStore()

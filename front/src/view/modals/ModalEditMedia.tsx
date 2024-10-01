@@ -1,17 +1,17 @@
-import {ModalBody, ModalFooter, ModalHeader} from "../../components/modules/Modal.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "../../components/modules/Form.tsx";
-import {Button} from "../../components/modules/Button.tsx";
-import {useModal} from "../../hooks/useModal.ts";
-import {useAlerts} from "../../context/modules/AlertContext.tsx";
-import {useAxios} from "../../config/axios.ts";
+import {ModalBody, ModalFooter, ModalHeader} from "@components/modules/Modal.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {Button} from "@components/modules/Button.tsx";
+import {useModal} from "@hooks/useModal.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useAxios} from "@config/axios.ts";
 import {useMutation, useQueryClient} from "react-query";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {useFileStore} from "../../stores/useFileStore.ts";
+import {useFileStore} from "@/stores/useFileStore.ts";
 import {SquarePen} from "lucide-react";
 import {useTranslation} from "react-i18next";
-import {useStorage} from "../../hooks/useStorage.ts";
+import {useStorage} from "@hooks/useStorage.ts";
 
 const schema = z.object({
     name: z.string().min(2)

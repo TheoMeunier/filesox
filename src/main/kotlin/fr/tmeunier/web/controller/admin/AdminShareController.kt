@@ -1,5 +1,6 @@
 package fr.tmeunier.web.controller.admin
 
+import fr.tmeunier.domaine.models.getPathFromShare
 import fr.tmeunier.domaine.repositories.FileRepository
 import fr.tmeunier.domaine.repositories.FolderRepository
 import fr.tmeunier.domaine.repositories.ShareRepository
@@ -20,13 +21,7 @@ object AdminShareController
         val page = call.parameters["page"]?.toInt() ?: 1
 
         val response = PaginationService.paginate(page, 10, { ShareRepository.findAll() }) { row ->
-            val path = if (row[ShareRepository.Shares.type] === "folder") {
-                val folder = FolderRepository.findById(row[ShareRepository.Shares.storageId])
-                folder?.path ?: "./"
-            } else {
-                val file = FileRepository.findById(row[ShareRepository.Shares.storageId])
-                file?.name ?: "./"
-            }
+            val path = getPathFromShare(row[ShareRepository.Shares.type], row[ShareRepository.Shares.storageId])
 
             AdminSharesResponse(
                 id = row[ShareRepository.Shares.id],

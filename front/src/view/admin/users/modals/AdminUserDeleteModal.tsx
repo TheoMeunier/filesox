@@ -2,31 +2,18 @@ import {
     ModalBody,
     ModalFooterButton,
     ModalHeaderLogo
-} from "../../../../components/modules/Modal.tsx";
-import {ButtonBig} from "../../../../components/modules/Button.tsx";
-import {useMutation, useQueryClient} from "react-query";
-import {useModal} from "../../../../hooks/useModal.ts";
-import {useAlerts} from "../../../../context/modules/AlertContext.tsx";
-import {useAxios} from "../../../../config/axios.ts";
+} from "@components/modules/Modal.tsx";
+import {ButtonBig} from "@components/modules/Button.tsx";
+import {useModal} from "@hooks/useModal.ts";
 import {useTranslation} from "react-i18next";
 import {Trash2} from "lucide-react";
+import {useAdminDeleteUserApi} from "@/api/admin/adminUserApi.ts";
 
 export function AdminDeleteUserModal({userId}: {userId: number}) {
     const {closeModal} = useModal()
-    const {setAlerts} = useAlerts()
-    const API = useAxios()
-    const queryClient = useQueryClient()
     const {t}  = useTranslation()
 
-    const { mutate } = useMutation(async (id: number) => {
-        await API.delete('/admin/users/delete/' + id)
-    }, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('users');
-            setAlerts('success', t('alerts.success.user.delete'));
-            closeModal();
-        }
-    });
+    const {mutate} = useAdminDeleteUserApi(userId)
 
     return <>
         <ModalHeaderLogo color="danger">
@@ -47,7 +34,7 @@ export function AdminDeleteUserModal({userId}: {userId: number}) {
             <ButtonBig
                 color="danger"
                 type="button"
-                onClick={() => mutate(userId)}
+                onClick={() => mutate()}
             >
                 {t('button.delete')}
             </ButtonBig>

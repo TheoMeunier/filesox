@@ -1,13 +1,13 @@
-import {Card, CardBody} from "../../../components/modules/Card.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "../../../components/modules/Form.tsx";
-import {Button} from "../../../components/modules/Button.tsx";
+import {Card, CardBody} from "@components/modules/Card.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {Button} from "@components/modules/Button.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useMutation} from "react-query";
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
-import {useUserStore} from "../../../stores/useUserStore.ts";
-import {useAxios} from "../../../config/axios.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useUserStore} from "@/stores/useUserStore.ts";
+import {useAxios} from "@config/axios.ts";
 
 const schema = z.object({
     email: z.string().email(),

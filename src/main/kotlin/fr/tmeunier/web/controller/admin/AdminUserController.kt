@@ -7,8 +7,6 @@ import fr.tmeunier.domaine.repositories.UserRepository
 import fr.tmeunier.domaine.repositories.UsersPermissionsRepository
 import fr.tmeunier.domaine.requests.AdminUpdateCreateRequest
 import fr.tmeunier.domaine.requests.AdminUserCreateRequest
-import fr.tmeunier.domaine.requests.AdminUserRequest
-import fr.tmeunier.domaine.response.S3Folder
 import fr.tmeunier.domaine.services.PaginationService
 import fr.tmeunier.domaine.services.utils.formatDate
 import io.ktor.http.*
@@ -30,7 +28,7 @@ object AdminUserController {
                 name = row[UserRepository.Users.name],
                 email = row[UserRepository.Users.email],
                 createdAt = formatDate(row[UserRepository.Users.createdAt]),
-                filePath = row[UserRepository.Users.filePath]?.let { FolderRepository.findById(it)?.path } ?: null,
+                filePath = row[UserRepository.Users.filePath]?.let { FolderRepository.findById(it)?.path },
                 permissions = UsersPermissionsRepository.findUserPermissions(row[UserRepository.Users.id])
             )
         }
@@ -47,10 +45,10 @@ object AdminUserController {
         val request = call.receive<AdminUserCreateRequest>()
 
         // Assign or create a folder for the user
-        var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id ?: null
+        var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id
 
         if (baseFolder === null && request.filePath !== null) {
-            baseFolder = request.filePath?.let { FolderRepository.create(it, null) }
+            baseFolder = request.filePath.let { FolderRepository.create(it, null) }
         }
 
         // create the user
@@ -65,10 +63,10 @@ object AdminUserController {
         val id = call.parameters["id"]?.toInt() ?: return call.respond(HttpStatusCode.BadRequest)
 
         // Assign or create a folder for the user
-        var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id ?: null
+        var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id
 
         if (baseFolder === null && request.filePath !== null) {
-            baseFolder = request.filePath?.let { FolderRepository.create(it, null) }
+            baseFolder = request.filePath.let { FolderRepository.create(it, null) }
         }
 
         // update the user

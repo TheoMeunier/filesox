@@ -1,32 +1,31 @@
-import {Alert, AlertIcon, Alerts} from "../../../components/modules/Alerts/Alert.tsx";
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
-import {useEffect} from "react";
+import {Alert, AlertIcon, Alerts, AlertTypeProps} from "@components/modules/Alerts/Alert.tsx";
+import {AlertType, useAlerts} from "@context/modules/AlertContext.tsx";
+import {useEffect, useRef} from "react";
 
 export function AlertsFlash() {
     const {alerts, deleteAlert} = useAlerts()
+    const timersRef = useRef<Record<number, NodeJS.Timeout>>({});
 
     useEffect(() => {
-        const timers: number[] = [];
-
         alerts.forEach((_, index) => {
-            const timer = setTimeout(() => {
-                deleteAlert(index);
-            }, 5000 * (index + 1));
-
-            timers.push(timer);
+            if (!timersRef.current[index]) {
+                timersRef.current[index] = setTimeout(() => {
+                    deleteAlert(index);
+                    delete timersRef.current[index];
+                }, 5000);
+            }
         });
 
         return () => {
-            timers.forEach((timer) => {
-                clearTimeout(timer);
-            });
+            Object.values(timersRef.current).forEach(clearTimeout);
+            timersRef.current = {};
         };
     }, [alerts, deleteAlert]);
 
     return <Alerts>
-        {alerts.map((alert, index) => {
-            return <Alert key={index} type={alert.type}>
-                <AlertIcon type={alert.type}/>
+        {alerts.map((alert: AlertType, index) => {
+            return <Alert key={index} type={alert.type as AlertTypeProps}>
+                <AlertIcon type={alert.type as AlertTypeProps}/>
                 {alert.message}
             </Alert>
         })}

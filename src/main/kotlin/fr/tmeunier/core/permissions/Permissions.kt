@@ -1,4 +1,5 @@
-import fr.tmeunier.core.permissions.UnauthorizedAccessException
+package fr.tmeunier.core.permissions
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -74,7 +75,7 @@ class RoleBasedAuthConfiguration {
 
 val RoleBasedAuthPlugin = createRouteScopedPlugin(name = "RoleBasedAuthorization", createConfiguration = ::RoleBasedAuthConfiguration) {
         if (::pluginGlobalConfig.isInitialized.not()) {
-            error("RoleBasedAuthPlugin not initialized. Setup plugin by calling AuthenticationConfig#roleBased in authenticate block")
+            error("fr.tmeunier.core.permissions.getRoleBasedAuthPlugin not initialized. Setup plugin by calling AuthenticationConfig#fr.tmeunier.core.permissions.roleBased in authenticate block")
         }
 
         with(pluginConfig) {

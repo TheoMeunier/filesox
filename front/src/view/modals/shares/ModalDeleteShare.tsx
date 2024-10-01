@@ -1,13 +1,13 @@
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
-import {useModal} from "../../../hooks/useModal.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useModal} from "@hooks/useModal.ts";
 import {useMutation, useQueryClient} from "react-query";
 import {useTranslation} from "react-i18next";
-import {useAxios} from "../../../config/axios.ts";
+import {useAxios} from "@config/axios.ts";
 import {useForm} from "react-hook-form";
-import {ModalBody, ModalFooterButton, ModalHeaderLogo} from "../../../components/modules/Modal.tsx";
+import {ModalBody, ModalFooterButton, ModalHeaderLogo} from "@components/modules/Modal.tsx";
 import {Trash2} from "lucide-react";
-import {FormFields} from "../../../components/modules/Form.tsx";
-import {ButtonBig} from "../../../components/modules/Button.tsx";
+import {FormFields} from "@components/modules/Form.tsx";
+import {ButtonBig} from "@components/modules/Button.tsx";
 
 export function ModalDeleteShares({url, shareId}: {url: string, shareId: string}) {
     const {setAlerts} = useAlerts()

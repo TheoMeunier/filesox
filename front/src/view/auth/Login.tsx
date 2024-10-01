@@ -1,59 +1,10 @@
-import {FormError, FormField, FormFields, FormLabel} from "../../components/modules/Form.tsx";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {z} from "zod";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../context/modules/AuthContext.tsx";
-import {useMutation} from "react-query";
-import {useAlerts} from "../../context/modules/AlertContext.tsx";
-import axios from "axios";
-import {loginSchemaType} from "../../types/api/authType.ts";
-import {BASE_URL} from "../../config/axios.ts";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {useLoginApi} from "@/api/authApi.ts";
 import {useTranslation} from "react-i18next";
 
-const schema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8)
-})
-
-type FormFields = z.infer<typeof schema>
-
 export default function Login() {
-    const {login} = useAuth()
     const {t} = useTranslation()
-    const nav = useNavigate()
-    const {setAlerts} = useAlerts()
-
-    const {
-        register,
-        handleSubmit,
-        formState: {errors}
-    } = useForm<FormFields>({
-        resolver: zodResolver(schema)
-    })
-
-    const { mutate } = useMutation(
-        async (data :  {email:string, password:string} ) => {
-            return await axios.post(BASE_URL + '/auth/login', {
-                email: data.email,
-                password: data.password
-            });
-        },
-        {
-            onSuccess: (response: any) => {
-                login(loginSchemaType.parse(response.data));
-                nav("/");
-            },
-            onError: () => {
-                setAlerts('danger',  t('alerts.error.auth.login'))
-            }
-        }
-    );
-
-
-    const onSubmit: SubmitHandler<FormFields> = async (data: {email: string, password: string}) => {
-        mutate(data)
-    }
+    const {form, onSubmit} = useLoginApi()
 
     return <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -64,34 +15,30 @@ export default function Login() {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-            <FormFields onSubmit={handleSubmit(onSubmit)}>
+            <FormFields onSubmit={form.handleSubmit(onSubmit)}>
                 <div>
                     <FormLabel htmlFor="email">
                         {t('input.label.email')}
                     </FormLabel>
                     <FormField>
                         <input
-                            {...register('email')}
+                            {...form.register('email')}
                             type="text"
                             placeholder={t('input.placeholder.email')}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        {errors.email &&
-                            <FormError>{errors.email.message}</FormError>
-                        }
+                            <FormError>{form.formState.errors.email?.message}</FormError>
                     </FormField>
                 </div>
                 <div className="mt-3">
                     <FormLabel htmlFor="password"> {t('input.label.password')}</FormLabel>
                     <FormField>
                         <input
-                            {...register('password')}
+                            {...form.register('password')}
                             type="password"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        {errors.password &&
-                            <FormError>{errors.password.message}</FormError>
-                        }
+                            <FormError>{form.formState.errors.password?.message}</FormError>
                     </FormField>
                 </div>
 

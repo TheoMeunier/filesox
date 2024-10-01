@@ -2,7 +2,9 @@ package fr.tmeunier.config
 
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
+import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 object Database {
      private lateinit var connexion: Database;
@@ -36,5 +38,10 @@ object Database {
 
         return connexion
     }
+
+
+    suspend fun <T> dbQuery(block: suspend () -> T): T =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
+
 }
 

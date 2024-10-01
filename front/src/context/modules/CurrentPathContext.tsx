@@ -1,4 +1,4 @@
-import {FilePaths} from "../../hooks/useLocalStorage.ts";
+import {FilePaths} from "@hooks/useLocalStorage.ts";
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {Outlet} from "react-router-dom";
 

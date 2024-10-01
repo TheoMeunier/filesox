@@ -1,15 +1,15 @@
-import {ModalBody, ModalFooter, ModalHeader} from "../../../components/modules/Modal.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "../../../components/modules/Form.tsx";
-import {Button} from "../../../components/modules/Button.tsx";
+import {ModalBody, ModalFooter, ModalHeader} from "@components/modules/Modal.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {Button} from "@components/modules/Button.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useMutation, useQueryClient} from "react-query";
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useModal} from "../../../hooks/useModal.ts";
-import {useAxios} from "../../../config/axios.ts";
+import {useModal} from "@hooks/useModal.ts";
+import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
-import {FilePaths, useLocalStorage} from "../../../hooks/useLocalStorage.ts";
+import {FilePaths, useLocalStorage} from "@hooks/useLocalStorage.ts";
 import {FolderPlus} from "lucide-react";
 
 const schema = z.object({

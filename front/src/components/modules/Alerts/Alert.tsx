@@ -2,35 +2,35 @@ import React, {ReactNode} from "react";
 import './alerts.css'
 import {CircleAlert, CircleCheck, CircleX} from "lucide-react";
 
-export function Alerts({children}: {children: ReactNode}) {
-  return (
-    <div className={`alerts`} role="alert">
-        {children}
-    </div>
-  );
+export function Alerts({children}: { children: ReactNode }) {
+    return (
+        <div className={`alerts`} role="alert">
+            {children}
+        </div>
+    );
 }
 
-export function Alert({children, type}: {children: ReactNode, type: AlertType}) {
+export function Alert({children, type}: { children: ReactNode, type: AlertTypeProps }) {
     const className = `alert after:bg-${getAlertClass(type)}-500`;
-  return (
-    <div className={className}>
-        {children}
-    </div>
-  );
+    return (
+        <div className={className}>
+            {children}
+        </div>
+    );
 }
 
-export function AlertIcon({type}: {type: AlertType}) {
-    const icon  = getAlertIcon(type);
+export function AlertIcon({type}: { type: AlertTypeProps }) {
+    const icon = getAlertIcon(type);
     return <>
         {icon}
     </>;
 }
 
 // function for flashing alerts
-type AlertType = 'success' | 'danger' | 'warning';
+export type AlertTypeProps = 'success' | 'danger' | 'warning';
 
-function getAlertClass(type: AlertType): string {
-    const alertClasses: { [key in AlertType]: string } = {
+function getAlertClass(type: AlertTypeProps): string {
+    const alertClasses: { [key in AlertTypeProps]: string } = {
         success: 'after:bg-green-500',
         danger: 'after:bg-red-500',
         warning: 'after:bg-orange-500',
@@ -39,16 +39,12 @@ function getAlertClass(type: AlertType): string {
     return alertClasses[type];
 }
 
-function getAlertIcon(type: AlertType): React.ReactNode {
-    const alertIcons: { [key in AlertType]: React.ReactNode } = {
+function getAlertIcon(type: AlertTypeProps): React.ReactNode {
+    const alertIcons: { [key in AlertTypeProps]: React.ReactNode } = {
         success: <CircleCheck className="text-green-500"/>,
         danger: <CircleX className="text-red-500"/>,
         warning: <CircleAlert className="text-orange-500"/>,
     };
 
-    if (alertIcons.hasOwnProperty(type)) {
-        return alertIcons[type];
-    }
-
-    return null;
+    return alertIcons[type] || null;
 }

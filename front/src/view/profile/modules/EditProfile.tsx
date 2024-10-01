@@ -1,6 +1,6 @@
 import {EditProfileInformation} from "../partials/EditProfileInformation.tsx";
 import {EditProfilePassword} from "../partials/EditProfilePassword.tsx";
-import {Row} from "../../../components/modules/Grid.tsx";
+import {Row} from "@components/modules/Grid.tsx";
 
 export function ProfileEdit() {
 

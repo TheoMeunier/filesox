@@ -2,7 +2,7 @@ import {
     Sidebar, SidebarItemVersion, SidebarMenu, SidebarMenuContent,
     SidebarMenuItem,
     SidebarTitleMenu
-} from "../../components/layouts/Sidebar.tsx";
+} from "@components/layouts/Sidebar.tsx";
 import {
     Archive,
     FolderPlus,
@@ -17,25 +17,25 @@ import {
     Users
 } from "lucide-react";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {Navbar, NavItem, NavItems, NavItemsLeft, NavItemsRight} from "../../components/layouts/nav.tsx";
-import {ButtonIcon} from "../../components/modules/Button.tsx";
+import {Navbar, NavItem, NavItems, NavItemsLeft, NavItemsRight} from "@components/layouts/nav.tsx";
+import {ButtonIcon} from "@components/modules/Button.tsx";
 import {ModalCreateFolder} from "../modals/folders/ModalCreateFolder.tsx";
 import {ModalMoveMedia} from "../modals/ModalMoveMedia.tsx";
 import {ModalDeleteMedia} from "../modals/ModalDeleteMedia.tsx";
 import {ModalEditMedia} from "../modals/ModalEditMedia.tsx";
-import {useModal} from "../../hooks/useModal.ts";
-import {Modal} from "../../components/modules/Modal.tsx";
-import {useFileStore} from "../../stores/useFileStore.ts";
-import {useAuth} from "../../context/modules/AuthContext.tsx";
-import {ButtonDownload} from "../../components/layouts/modules/ButtonDownload..tsx";
+import {useModal} from "@hooks/useModal.ts";
+import {Modal} from "@components/modules/Modal.tsx";
+import {useFileStore} from "@/stores/useFileStore.ts";
+import {useAuth} from "@context/modules/AuthContext.tsx";
+import {ButtonDownload} from "@components/layouts/modules/ButtonDownload..tsx";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useRoles} from "../../hooks/useRoles.ts";
-import {RoleEnum} from "../../types/enum/RoleEnum.ts";
-import {useUserStore} from "../../stores/useUserStore.ts";
+import {useRoles} from "@hooks/useRoles.ts";
+import {RoleEnum} from "@/types/enum/RoleEnum.ts";
+import {useUserStore} from "@/stores/useUserStore.ts";
 import {ModalInformationMedia} from "../modals/ModalInformationMedia.tsx";
 import ProgressBar from "../../components/modules/ProgressBar.tsx";
-import {useProgressBar} from "../../stores/useProgressBar.ts";
+import {useProgressBar} from "@/stores/useProgressBar.ts";
 import {ModalShareMedia} from "../modals/shares/ModalShareMedia.tsx";
 
 export function App() {

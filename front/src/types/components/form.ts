@@ -8,4 +8,5 @@ export interface LabelProps {
 export interface FormFieldsProps {
     children: ReactNode,
     onSubmit: (event: FormEvent<HTMLElement>) => void
+    id?: string
 }

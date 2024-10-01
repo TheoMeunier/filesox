@@ -1,15 +1,15 @@
 import {useTranslation} from "react-i18next";
-import {useAxios} from "../../../../config/axios.ts";
-import {useFileStore} from "../../../../stores/useFileStore.ts";
+import {useAxios} from "@config/axios.ts";
+import {useFileStore} from "@/stores/useFileStore.ts";
 import {useQuery} from "react-query";
-import {ListModalShareSchemaType} from "../../../../types/api/storageType.ts";
-import {ButtonIcon} from "../../../../components/modules/Button.tsx";
+import {ListModalShareSchemaType} from "@/types/api/storageType.ts";
+import {ButtonIcon} from "@components/modules/Button.tsx";
 import {ClipboardCopy, Trash2} from "lucide-react";
 import {ModalDeleteShares} from "../ModalDeleteShare.tsx";
-import {useModal} from "../../../../hooks/useModal.ts";
-import {Loader} from "../../../../components/modules/Loader/Loader.tsx";
-import {environmentVariables} from "../../../../config/env.ts";
-import {useAlerts} from "../../../../context/modules/AlertContext.tsx";
+import {useModal} from "@hooks/useModal.ts";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {environmentVariables} from "@config/env.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
 
 export function ModalShareListMedia() {
     const API = useAxios()

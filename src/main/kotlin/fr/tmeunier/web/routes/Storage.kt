@@ -20,7 +20,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
-import withAnyRole
+import fr.tmeunier.core.permissions.withAnyRole
 import java.util.*
 
 fun Route.storageRoute() {
@@ -59,7 +59,7 @@ fun Route.storageRoute() {
     }
 
     route("/images") {
-        post {FileController.image(call)}
+        post { FileController.image(call) }
     }
 
     route("/files") {
@@ -144,19 +144,15 @@ fun Route.storageRoute() {
             post("/complete") {
                 val request = call.receive<CompletedUpload>()
 
-                if (request.uploadId != null && request.filename != null) {
-                    runBlocking {
-                        try {
-                            S3Config.makeClient()?.let {
-                                FolderSystemService.completeMultipartUpload(it, request.filename, request.uploadId)
-                            }
-                            call.respond(HttpStatusCode.OK, "Upload completed successfully")
-                        } catch (e: S3Exception) {
-                            call.respond(HttpStatusCode.BadRequest, "Error completing upload ${e.message}")
+                runBlocking {
+                    try {
+                        S3Config.makeClient()?.let {
+                            FolderSystemService.completeMultipartUpload(it, request.filename, request.uploadId)
                         }
+                        call.respond(HttpStatusCode.OK, "Upload completed successfully")
+                    } catch (e: S3Exception) {
+                        call.respond(HttpStatusCode.BadRequest, "Error completing upload ${e.message}")
                     }
-                } else {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid parameters")
                 }
             }
         }

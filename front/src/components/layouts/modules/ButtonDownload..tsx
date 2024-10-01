@@ -1,8 +1,8 @@
 import {Download} from "lucide-react";
-import {useStorage} from "../../../hooks/useStorage.ts";
-import {useFileStore} from "../../../stores/useFileStore.ts";
+import {useStorage} from "@hooks/useStorage.ts";
+import {useFileStore} from "@/stores/useFileStore.ts";
 import {ButtonIcon} from "../../modules/Button.tsx";
-import {useAxios} from "../../../config/axios.ts";
+import {useAxios} from "@config/axios.ts";
 
 export function ButtonDownload() {
     const {isFolder, getPathOrName, getFolderName} = useStorage()

@@ -1,9 +1,12 @@
 import {RoleEnum} from "../types/enum/RoleEnum.ts";
 import {PermissionType} from "../types/api/userType.ts";
-import {SelectValue} from "react-tailwindcss-select/dist/components/type";
+import {Permissions} from "@/types/types/rolesTypes.ts";
 
 export function useRoles() {
-    const getPermissionsValue = (permissions: PermissionType[], userPermissions: string[]): SelectValue => {
+    const getPermissionsValue = (
+        permissions: PermissionType[],
+        userPermissions: string[]): Permissions | undefined =>
+    {
         return permissions
             .filter(permission => userPermissions.includes(permission.name))
             .map(permission => ({ label: permission.name, value: permission.id.toString(), disabled: false }));

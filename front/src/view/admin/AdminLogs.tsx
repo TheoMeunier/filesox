@@ -1,26 +1,17 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../components/modules/Table.tsx";
-import {Pagination} from "../../components/modules/Pagination.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
+import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
-import {useQuery} from "react-query";
-import {Pill} from "../../components/modules/Pill.tsx";
-import {useAxios} from "../../config/axios.ts";
-import {adminLogsSchemaType} from "../../types/api/adminType.ts";
+import {Pill} from "@components/modules/Pill.tsx";
 import {useTranslation} from "react-i18next";
 import {Archive} from "lucide-react";
-import {Loader} from "../../components/modules/Loader/Loader.tsx";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {useAdminLogsApi} from "@/api/admin/adminApi.ts";
 
 export function AdminLogs() {
     const [page, setPage] = useState(1)
-    const API = useAxios()
     const {t} = useTranslation();
 
-    const {data, isLoading} = useQuery(
-        ['logs', page],
-        async () => {
-            const response = await  API.get('/admin/logs?page=' + page)
-            return adminLogsSchemaType.parse(response.data)
-        },
-    );
+    const {data, isLoading} = useAdminLogsApi(page)
 
     if (isLoading) {
         return <Loader/>;

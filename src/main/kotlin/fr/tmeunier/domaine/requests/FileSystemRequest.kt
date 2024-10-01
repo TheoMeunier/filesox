@@ -1,10 +1,8 @@
 package fr.tmeunier.domaine.requests
 
-import aws.smithy.kotlin.runtime.util.Uuid
 import fr.tmeunier.domaine.services.serializer.UUIDSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.h2.util.DateTimeUtils
 import java.util.UUID
 
 // --- Storage
@@ -48,13 +46,6 @@ data class GetPathImageRequest(
 )
 
 // -- Folders
-@Serializable
-data class Folder(
-    @Serializable(with = UUIDSerializer::class)
-    val id: UUID,
-    val path: String
-)
-
 @Serializable
 data class FolderCreateRequest(
     val path: String,

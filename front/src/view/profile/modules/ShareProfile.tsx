@@ -6,20 +6,20 @@ import {
     TableHeader,
     TableNoData,
     TableRow
-} from "../../../components/modules/Table.tsx";
-import {useAxios} from "../../../config/axios.ts";
+} from "@components/modules/Table.tsx";
+import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
-import {useModal} from "../../../hooks/useModal.ts";
+import {useModal} from "@hooks/useModal.ts";
 import {useQuery} from "react-query";
-import {apiProfileSharedSchemaType} from "../../../types/api/apiProfileType.ts";
+import {apiProfileSharedSchemaType} from "@/types/api/apiProfileType.ts";
 import {useState} from "react";
 import {ClipboardCopy, Trash2} from "lucide-react";
 import {ModalDeleteShares} from "../../modals/shares/ModalDeleteShare.tsx";
-import {ButtonIcon} from "../../../components/modules/Button.tsx";
-import {Pagination} from "../../../components/modules/Pagination.tsx";
-import {Loader} from "../../../components/modules/Loader/Loader.tsx";
-import {environmentVariables} from "../../../config/env.ts";
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
+import {ButtonIcon} from "@components/modules/Button.tsx";
+import {Pagination} from "@components/modules/Pagination.tsx";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {environmentVariables} from "@config/env.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
 
 export function ProfileShare() {
     const [page, setPage] = useState(1)

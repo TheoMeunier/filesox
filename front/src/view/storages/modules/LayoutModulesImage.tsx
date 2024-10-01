@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {FileType} from "../../../types/api/storageType.ts";
-import {useAxios} from "../../../config/axios.ts";
+import {FileType} from "@/types/api/storageType.ts";
+import {useAxios} from "@config/axios.ts";
 
 export function LayoutModules({file}: { file: FileType }) {
     const API = useAxios()

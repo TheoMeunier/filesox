@@ -57,6 +57,7 @@ export const useAxios = () => {
 
                     return axios(baseReq)
                 } catch (e) {
+                    logout()
                     return Promise.reject(error)
                 }
             }

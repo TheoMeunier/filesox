@@ -8,30 +8,10 @@ export function Card({children}: {children: ReactNode}) {
   );
 }
 
-export function CardHeader() {
-  return (
-    <div>
-
-    </div>
-  );
-}
-
 export function CardBody({children}: {children: ReactNode}) {
   return (
     <div className="p-4">
         {children}
     </div>
   );
-}
-
-export function CardTitle() {}
-
-export function CardText() {}
-
-export function CardFooter() {
-    return (
-        <div>
-
-        </div>
-    );
 }

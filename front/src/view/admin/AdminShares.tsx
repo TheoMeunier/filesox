@@ -1,5 +1,3 @@
-import {useAxios} from "../../config/axios.ts";
-import {useQuery} from "react-query";
 import {useState} from "react";
 import {
     Table,
@@ -9,32 +7,25 @@ import {
     TableHeader,
     TableNoData,
     TableRow
-} from "../../components/modules/Table.tsx";
-import {Pagination} from "../../components/modules/Pagination.tsx";
+} from "@components/modules/Table.tsx";
+import {Pagination} from "@components/modules/Pagination.tsx";
 import {useTranslation} from "react-i18next";
-import {adminSharesSchemaType} from "../../types/api/adminType.ts";
-import {ButtonIcon} from "../../components/modules/Button.tsx";
+import {ButtonIcon} from "@components/modules/Button.tsx";
 import {ClipboardCopy, Share2, Trash2} from "lucide-react";
-import {useModal} from "../../hooks/useModal.ts";
+import {useModal} from "@hooks/useModal.ts";
 import {ModalDeleteShares} from "../modals/shares/ModalDeleteShare.tsx";
-import {Loader} from "../../components/modules/Loader/Loader.tsx";
-import {environmentVariables} from "../../config/env.ts";
-import {useAlerts} from "../../context/modules/AlertContext.tsx";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {environmentVariables} from "@config/env.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useAdminSharesApi} from "@/api/admin/adminApi.ts";
 
 export function AdminShares() {
     const [page, setPage] = useState(1)
-    const API = useAxios()
     const {t} = useTranslation();
     const {openModal} = useModal()
     const {setAlerts} = useAlerts()
 
-    const {data, isLoading} = useQuery(
-        ['shares', page],
-        async () => {
-            const response = await API.get('/admin/shares?page=' + page)
-            return adminSharesSchemaType.parse(response.data)
-        },
-    );
+    const {data, isLoading} = useAdminSharesApi(page)
 
     const handleCopy = (id: string) => {
         navigator.clipboard.writeText(environmentVariables.VITE_API_URL + '/storages/share/dl/' + id)

@@ -1,8 +1,8 @@
-import {ReactNode} from "react";
-import {FormFieldsProps, LabelProps} from "../../types/components/form.ts";
+import {ComponentType, InputHTMLAttributes, ReactNode} from "react";
+import {FormFieldsProps, LabelProps} from "@/types/components/form.ts";
 
-export function FormFields({children, onSubmit}: FormFieldsProps) {
-    return <form method='POST' onSubmit={onSubmit}>
+export function FormFields({children, onSubmit, id}: FormFieldsProps) {
+    return <form id={id} method='POST' onSubmit={onSubmit}>
         {children}
     </form>
 }
@@ -19,7 +19,7 @@ export function FormDescription({children}: { children: ReactNode }) {
     </p>
 }
 
-export function FormError({children}: { children: React.ReactNode }) {
+export function FormError({children}: { children: ReactNode }) {
     return <span className="text-red-500">{children}</span>
 }
 
@@ -36,7 +36,7 @@ export function FormButton({children}: { children: ReactNode }) {
     </button>
 }
 
-export function FormInput({type, ...props }: { type: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+export function FormInput({type, ...props }: { type: string } & InputHTMLAttributes<HTMLInputElement>) {
 
     return <>
         <input
@@ -47,7 +47,7 @@ export function FormInput({type, ...props }: { type: string } & React.InputHTMLA
     </>
 }
 
-export function InputIcon({svg: SvgComponent}: { svg: React.ComponentType<any> }) {
+export function InputIcon({svg: SvgComponent}: { svg: ComponentType<any> }) {
     return <div className="relative">
         <div className="text-gray-400 flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <SvgComponent size={20} strokeWidth={1.75}/>

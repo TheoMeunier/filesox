@@ -2,8 +2,7 @@ import {useFileStore} from "../stores/useFileStore.ts";
 
 export function useStore() {
     const {activeStorage, setActiveStorage} = useFileStore();
-
-
+    
     return {
         activeStorage,
         setActiveStorage

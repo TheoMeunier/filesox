@@ -1,6 +1,6 @@
 import {ModalShareFormMedia} from "./partials/ModalShareFormMedia.tsx";
 import {Share2} from "lucide-react";
-import {ModalHeader} from "../../../components/modules/Modal.tsx";
+import {ModalHeader} from "@components/modules/Modal.tsx";
 import {ModalShareListMedia} from "./partials/ModalShareListMedia.tsx";
 import {useTranslation} from "react-i18next";
 

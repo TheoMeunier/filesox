@@ -1,11 +1,11 @@
 import {useDropzone} from "react-dropzone";
 import {ReactNode, useCallback} from "react";
 import './dropzone.css';
-import {useFileStore} from "../../stores/useFileStore.ts";
-import {useAxios} from "../../config/axios.ts";
+import {useAxios} from "@config/axios.ts";
 import {useQueryClient} from "react-query";
-import {FilePaths, useLocalStorage} from "../../hooks/useLocalStorage.ts";
-import {useProgressBar} from "../../stores/useProgressBar.ts";
+import {FilePaths, useLocalStorage} from "@hooks/useLocalStorage.ts";
+import {useProgressBar} from "@/stores/useProgressBar.ts";
+import {useFileStore} from "@stores/useFileStore.ts";
 
 export function Dropzone({children}: { children: ReactNode }) {
     const {setFiles} = useFileStore();

@@ -35,14 +35,7 @@ data class S3Response(
 
 @Serializable
 data class UploadCompleteResponse(
-    @SerialName("upload_id") val upload_id: String,
+    @SerialName("upload_id") val uploadId: String,
     val filename: String,
 )
-
-@Serializable
-data class UploadCreateFolderResponse(
-    @Serializable(with = UUIDSerializer::class)
-    @SerialName("parent_id") val parentId: UUID?
-)
-
 

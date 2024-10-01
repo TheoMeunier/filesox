@@ -1,9 +1,9 @@
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from "react";
-import {User, useUserStore} from "../../stores/useUserStore.ts";
+import {User, useUserStore} from "@/stores/useUserStore.ts";
 import {jwtDecode} from "jwt-decode";
-import {FilePaths} from "../../hooks/useLocalStorage.ts";
+import {FilePaths} from "@hooks/useLocalStorage.ts";
 import axios from "axios";
-import {BASE_URL} from "../../config/axios.ts";
+import {BASE_URL} from "@config/axios.ts";
 
 interface AuthContext {
     token: string | null;

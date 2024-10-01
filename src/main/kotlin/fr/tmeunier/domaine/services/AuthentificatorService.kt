@@ -14,7 +14,7 @@ object AuthentificatorService {
     private const val JWT_ACCESS_TOKEN_EXPIRATION_TIME: Long = 2 // access token refreshed every 2 mins
     private const val JWT_REFRESH_TOKEN_EXPIRATION_TIME: Long = 60 * 16 // maximum session lifetime of 16h
 
-    fun createJwtToken(user: User): String {
+    suspend fun createJwtToken(user: User): String {
 
         val role = UsersPermissionsRepository.findUserPermissions(user.id)
         val folder = if (user.filePath != null) FolderRepository.findById(user.filePath) else null
@@ -42,7 +42,8 @@ object AuthentificatorService {
     }
 
     suspend fun updateRefreshToken(refreshToken: String): String {
-        return RefreshTokenRepository.update(refreshToken, JWT_REFRESH_TOKEN_EXPIRATION_TIME)
+        RefreshTokenRepository.update(refreshToken, JWT_REFRESH_TOKEN_EXPIRATION_TIME)
+        return refreshToken
     }
 
     fun refreshTokenIsValid(expiresAt: LocalDateTime): Boolean {

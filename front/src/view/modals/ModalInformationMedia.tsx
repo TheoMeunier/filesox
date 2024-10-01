@@ -1,5 +1,5 @@
-import {ModalBody, ModalHeader} from "../../components/modules/Modal.tsx";
-import {useFileStore} from "../../stores/useFileStore.ts";
+import {ModalBody, ModalHeader} from "@components/modules/Modal.tsx";
+import {useFileStore} from "@/stores/useFileStore.ts";
 import {InfoIcon} from "lucide-react";
 
 export function ModalInformationMedia() {

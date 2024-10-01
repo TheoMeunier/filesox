@@ -1,5 +1,5 @@
 import {Outlet} from "react-router-dom";
-import {Tab, TabItem, TabItems} from "../../components/modules/Tab.tsx";
+import {Tab, TabItem, TabItems} from "@components/modules/Tab.tsx";
 import {Archive, Share2, User} from "lucide-react";
 
 export function Profile() {

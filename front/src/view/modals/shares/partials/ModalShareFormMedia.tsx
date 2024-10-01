@@ -2,15 +2,15 @@ import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useMutation} from "react-query";
-import {useAxios} from "../../../../config/axios.ts";
-import {useModal} from "../../../../hooks/useModal.ts";
-import {useAlerts} from "../../../../context/modules/AlertContext.tsx";
-import {useStorage} from "../../../../hooks/useStorage.ts";
-import {useFileStore} from "../../../../stores/useFileStore.ts";
-import {ModalBody, ModalFooter} from "../../../../components/modules/Modal.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "../../../../components/modules/Form.tsx";
-import {Row} from "../../../../components/modules/Grid.tsx";
-import {Button} from "../../../../components/modules/Button.tsx";
+import {useAxios} from "@config/axios.ts";
+import {useModal} from "@hooks/useModal.ts";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useStorage} from "@hooks/useStorage.ts";
+import {useFileStore} from "@/stores/useFileStore.ts";
+import {ModalBody, ModalFooter} from "@components/modules/Modal.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {Row} from "@components/modules/Grid.tsx";
+import {Button} from "@components/modules/Button.tsx";
 import {z} from "zod";
 
 const schema = z.object({

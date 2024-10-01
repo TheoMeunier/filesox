@@ -1,12 +1,12 @@
-import {Card, CardBody} from "../../../components/modules/Card.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "../../../components/modules/Form.tsx";
-import {Button} from "../../../components/modules/Button.tsx";
+import {Card, CardBody} from "@components/modules/Card.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {Button} from "@components/modules/Button.tsx";
 import {z} from "zod";
-import {useAlerts} from "../../../context/modules/AlertContext.tsx";
+import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useMutation} from "react-query";
-import {useAxios} from "../../../config/axios.ts";
+import {useAxios} from "@config/axios.ts";
 
 const schema = z.object({
     password: z.string().min(8),

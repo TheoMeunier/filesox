@@ -14,6 +14,18 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@context/*": ["./src/context/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@config/*": ["./src/config/*"],
+      "@stores/*": ["./src/stores/*"]
+    },
+
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
