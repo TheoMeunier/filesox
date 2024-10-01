@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_SLUG}-backend
+  namespace: ${NAMESPACE}
+  labels:
+    app: ${APP_SLUG}
+    component: backend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: ${APP_SLUG}
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: ${APP_SLUG}
+        component: backend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: ${APP_SLUG}
+                  component: backend
+              topologyKey: "kubernetes.io/zone"
+
+      containers:
+        - name: ${APP_SLUG}-php
+          image: ${REGISTRY_URL}/${REGISTRY_APP}-backend:$TAG
+          envFrom:
+            - configMapRef:
+                name: ${APP_SLUG}-env
+          resources:
+            requests:
+              memory: "${MIN_MEMORY}"
+              cpu: "${MIN_CPU}"
+            limits:
+              memory: "${MAX_MEMORY}"
+              cpu: "${MAX_CPU}"
+          volumeMounts:
+            - name: env
+              mountPath: /app/.env
+              subPath: .env
+
+      volumes:
+        - name: env
+          configMap:
+            name: ${APP_SLUG}-env
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_SLUG}-frontend
+  namespace: ${NAMESPACE}
+  labels:
+    app: ${APP_SLUG}
+    component: frontend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: ${APP_SLUG}
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: ${APP_SLUG}
+        component: frontend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: ${APP_SLUG}
+                  component: frontend
+              topologyKey: "kubernetes.io/zone"
+
+      containers:
+        - name: ${APP_SLUG}
+          image: ${REGISTRY_URL}/${REGISTRY_APP}-frontend:$TAG
+
