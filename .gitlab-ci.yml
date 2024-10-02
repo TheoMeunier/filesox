@@ -101,8 +101,7 @@ Deploy to cluster:
   script:
     - cat $ENV_FILE > .env
     - set -a
-    - echo $ENV_FILE
-    - source $ENV_FILE
+    - source .env
     - set +a
 
     - kubectl create namespace $NAMESPACE || true
