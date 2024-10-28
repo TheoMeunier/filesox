@@ -28,8 +28,7 @@ export function AdminCreateUserModal() {
         <FormFields onSubmit={form.handleSubmit(onSubmit)}>
             <ModalBody>
                 <FormDescription>
-                    Si vous souhaitez que l'utilisateur est l'espace de stockage racine, remplisser le
-                    champs <TypoCode>./</TypoCode>.
+                    {t('input.description.create_user')} <TypoCode>./</TypoCode>.
                 </FormDescription>
                 <Row cols={2}>
                     <FormField>

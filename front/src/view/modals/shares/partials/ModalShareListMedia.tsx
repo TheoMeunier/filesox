@@ -1,8 +1,4 @@
 import {useTranslation} from "react-i18next";
-import {useAxios} from "@config/axios.ts";
-import {useFileStore} from "@/stores/useFileStore.ts";
-import {useQuery} from "react-query";
-import {ListModalShareSchemaType} from "@/types/api/storageType.ts";
 import {ButtonIcon} from "@components/modules/Button.tsx";
 import {ClipboardCopy, Trash2} from "lucide-react";
 import {ModalDeleteShares} from "../ModalDeleteShare.tsx";
@@ -10,21 +6,14 @@ import {useModal} from "@hooks/useModal.ts";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {environmentVariables} from "@config/env.ts";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useSharesByStorageId} from "@/api/shareApi.ts";
 
 export function ModalShareListMedia() {
-    const API = useAxios()
-    const {activeStorage} = useFileStore()
     const {t} = useTranslation()
     const {openModal} = useModal()
     const {setAlerts} = useAlerts()
 
-    const {data, isLoading} = useQuery(
-        ['shares', activeStorage!.id],
-        async () => {
-            const response = await API.get('/storages/share/' + activeStorage!.id)
-            return ListModalShareSchemaType.parse(response.data)
-        },
-    );
+    const {data, isLoading} = useSharesByStorageId()
 
     const handleCopy = (id: string) => {
         navigator.clipboard.writeText(environmentVariables.VITE_API_URL + '/storages/share/dl/' + id)

@@ -2,7 +2,6 @@ package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
 import fr.tmeunier.config.Database.dbQuery
-import fr.tmeunier.domaine.models.Permission
 import fr.tmeunier.domaine.models.UserWidthPermissionResponse
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -17,12 +16,6 @@ object UsersPermissionsRepository {
         val permissionId: Column<Int> = integer("permission_id").references(PermissionRepository.Permissions.id)
 
         override val primaryKey = PrimaryKey(id)
-    }
-
-    init {
-        transaction(database) {
-            SchemaUtils.create(UsersPermissions)
-        }
     }
 
     fun findUserPermissions(userId: Int): List<String> {

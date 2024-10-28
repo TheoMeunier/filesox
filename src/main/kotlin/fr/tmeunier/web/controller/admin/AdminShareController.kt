@@ -1,8 +1,6 @@
 package fr.tmeunier.web.controller.admin
 
 import fr.tmeunier.domaine.models.getPathFromShare
-import fr.tmeunier.domaine.repositories.FileRepository
-import fr.tmeunier.domaine.repositories.FolderRepository
 import fr.tmeunier.domaine.repositories.ShareRepository
 import fr.tmeunier.domaine.repositories.UserRepository
 import fr.tmeunier.domaine.requests.DeleteShareRequest
@@ -13,7 +11,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import org.jetbrains.exposed.sql.selectAll
 
 object AdminShareController
 {
@@ -27,7 +24,7 @@ object AdminShareController
                 id = row[ShareRepository.Shares.id],
                 username = row[UserRepository.Users.name],
                 path = path,
-                expiredAt = formatDate(row[ShareRepository.Shares.expiredAt], "dd/MM/yyyy mm:HH"),
+                expiredAt = formatDate(row[ShareRepository.Shares.expiredAt], "dd/MM/yyyy HH:mm"),
                 createdAt = formatDate(row[ShareRepository.Shares.createdAt])
             )
         }

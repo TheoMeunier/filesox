@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {FileType} from "@/types/api/storageType.ts";
 import {useAxios} from "@config/axios.ts";
 
-export function LayoutModules({file}: { file: FileType }) {
+export function LayoutModules({file, height = 48, width = 48}: { file: FileType, height: number | string, width: number | string }) {
     const API = useAxios()
     const [imageUrl, setImageUrl] = useState<{ [key: string]: any }>({});
 
@@ -44,14 +44,14 @@ export function LayoutModules({file}: { file: FileType }) {
                 src={`${imageUrl[file.id]}`}
                 alt={file.name}
                 className="object-cover"
-                width="48"
-                height="48"
+                width={width}
+                height={height}
             />
         ) : file.icon === "file" ? (
-                <img src={`images/file-icon.png`} alt="file-icon.png" width={48} height={48}/>
+                <img src={`images/file-icon.png`}  className="object-cover" alt="file-icon.png" width={width} height={height}/>
             )
             : (
-                <img src={`images/${file.icon}-icon.png`} alt={`${file.icon}-icon.png`} width={48} height={48}/>
+                <img src={`images/${file.icon}-icon.png`} alt={`${file.icon}-icon.png`} width={width} height={height}/>
             )}
     </div>
 }

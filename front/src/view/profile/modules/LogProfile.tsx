@@ -1,22 +1,15 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
-import {useQuery} from "react-query";
 import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
 import {Pill} from "@components/modules/Pill.tsx";
-import {useAxios} from "@config/axios.ts";
-import {logsProfileSchemaType} from "@/types/api/userType.ts";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {useLogsProfileApi} from "@/api/profileApi.ts";
+import {useTranslation} from "react-i18next";
 
 export function ProfileLog() {
-    const API = useAxios()
+    const {t} = useTranslation()
     const [page , setPage] = useState(1)
-    const {data, isLoading} = useQuery(
-        ['logs', page],
-        async () => {
-            const response = await API.get('/profile/logs?page=' + page)
-            return logsProfileSchemaType.parse(response.data)
-        },
-    );
+    const {data, isLoading} = useLogsProfileApi(page)
 
     if (isLoading) {
         return <Loader/>;
@@ -26,9 +19,9 @@ export function ProfileLog() {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableHeader>Subject</TableHeader>
-                    <TableHeader>Action</TableHeader>
-                    <TableHeader>Created At</TableHeader>
+                    <TableHeader>{t('table.subject')}</TableHeader>
+                    <TableHeader>{t('table.actions')}</TableHeader>
+                    <TableHeader>{t('table.created_at')}</TableHeader>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -46,8 +39,6 @@ export function ProfileLog() {
 
         {data &&
             <Pagination
-                from={data.from}
-                to={data.to}
                 currentPage={data.current_page}
                 totalPage={data.total_pages}
                 onPageChange={(p) => {setPage(p)}}

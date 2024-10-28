@@ -66,7 +66,7 @@ CREATE TABLE shares
     created_at DATETIME     NOT NULL,
     expired_at DATETIME     NOT NULL,
 
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 -- table settings
@@ -103,7 +103,7 @@ CREATE TABLE folders
     updated_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (parent_id) REFERENCES folders (id)
+    FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE
 );
 
 CREATE TABLE files
@@ -116,6 +116,5 @@ CREATE TABLE files
     type       VARCHAR(255)                       NOT NULL,
     updated_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (parent_id) REFERENCES folders (id)
+    FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE
 )
-

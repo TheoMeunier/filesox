@@ -1,16 +1,16 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../../components/modules/Table.tsx";
-import {Pagination} from "../../../components/modules/Pagination.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
+import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
-import {Button, ButtonIcon} from "../../../components/modules/Button.tsx";
+import {Button, ButtonIcon} from "@components/modules/Button.tsx";
 import {Plus, SquarePen, Trash2, Users} from "lucide-react";
-import {useModal} from "../../../hooks/useModal.ts";
+import {useModal} from "@hooks/useModal.ts";
 import {AdminDeleteUserModal} from "./modals/AdminUserDeleteModal.tsx";
 import {AdminCreateUserModal} from "./modals/AdminUserCreateModal.tsx";
 import {AdminEditUserModal} from "./modals/AdminUserEditModal.tsx";
-import {Pill} from "../../../components/modules/Pill.tsx";
+import {Pill} from "@components/modules/Pill.tsx";
 import {useTranslation} from "react-i18next";
-import {useUserApi} from "../../../api/admin/adminUserApi.ts";
-import {Loader} from "../../../components/modules/Loader/Loader.tsx";
+import {useUserApi} from "@/api/admin/adminUserApi.ts";
+import {Loader} from "@components/modules/Loader/Loader.tsx";
 
 export function AdminUsers() {
     const {openModal} = useModal()
@@ -71,8 +71,6 @@ export function AdminUsers() {
 
         {data && data.total_pages > 1 &&
             <Pagination
-                from={data.from}
-                to={data.to}
                 currentPage={data.current_page}
                 totalPage={data.total_pages}
                 onPageChange={(p) => {

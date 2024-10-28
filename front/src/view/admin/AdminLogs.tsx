@@ -50,8 +50,6 @@ export function AdminLogs() {
 
         {data &&
             <Pagination
-                from={data.from}
-                to={data.to}
                 currentPage={data.current_page}
                 totalPage={data.total_pages}
                 onPageChange={(p) => {

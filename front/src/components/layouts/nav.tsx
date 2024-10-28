@@ -29,7 +29,7 @@ export function NavItemsRight({children}: {children: ReactNode}) {
 }
 
 export function NavItem({children}: {children: ReactNode}) {
-    return <div className="flex">
+    return <div className="flex items-center">
         {children}
     </div>
 }

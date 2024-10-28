@@ -5,7 +5,6 @@ import fr.tmeunier.config.Database.dbQuery
 import fr.tmeunier.domaine.models.RefreshToken
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.javatime.datetime
 import java.time.LocalDateTime
 import java.util.*
@@ -21,12 +20,6 @@ object RefreshTokenRepository {
         val expiredAt = datetime("expired_at")
 
         override val primaryKey = PrimaryKey(id)
-    }
-
-    init {
-        transaction(database) {
-            SchemaUtils.create(RefreshToken)
-        }
     }
 
     suspend fun findByUserId(userId: Int): fr.tmeunier.domaine.models.RefreshToken? = dbQuery {

@@ -29,7 +29,7 @@ data class S3Folder(
 @Serializable
 data class S3Response(
     val folder: S3Folder?,
-    val folders: List<S3Folder>,
+    val folders: List<S3Folder>?,
     val files: List<S3File>,
 )
 

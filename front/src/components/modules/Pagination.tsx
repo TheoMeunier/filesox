@@ -1,30 +1,46 @@
-import {useCallback, useEffect} from "react";
-import {usePagination} from "@hooks/usePagination.ts";
+import {useCallback, useMemo} from "react";
 import {useTranslation} from "react-i18next";
 
-export function Pagination({from, to,  currentPage, totalPage, onPageChange}: {
-    from: number,
-    to: number,
+export function Pagination({currentPage, totalPage, onPageChange}: {
     currentPage: number,
     totalPage: number,
     onPageChange: (page: number) => void
 }) {
-    const {pages, arrayNumberPage} = usePagination()
     const {t} = useTranslation()
 
-    useEffect(() => {
-        arrayNumberPage({from: from, to: to, total_pages: totalPage})
-    }, [arrayNumberPage, from, to, totalPage])
+    const generatePaginationArray = useCallback((start: number, end: number) => {
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    }, []);
+
+    const pages = useMemo(() => {
+        const maxVisiblePages = 5;
+        let paginationArray: (number | string)[] = [];
+
+        if (totalPage <= maxVisiblePages) {
+            paginationArray = generatePaginationArray(1, totalPage);
+        } else {
+            if (currentPage <= 3) {
+                paginationArray = [...generatePaginationArray(1, 4), "...", totalPage];
+            } else if (currentPage >= totalPage - 2) {
+                paginationArray = [1, "...", ...generatePaginationArray(totalPage - 3, totalPage)];
+            } else {
+                paginationArray = [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPage];
+            }
+        }
+
+        return paginationArray;
+    }, [currentPage, totalPage, generatePaginationArray]);
 
     const handlePageChange = useCallback(
         (page: number) => {
-            if (page < 1 || page > totalPage) {
-                return;
+            if (page >= 1 && page <= totalPage) {
+                onPageChange(page);
             }
-            onPageChange(page);
         },
         [totalPage, onPageChange]
     );
+
+    if (totalPage <= 1) return null;
 
     return <>
         {totalPage > 1 && (

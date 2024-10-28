@@ -30,12 +30,6 @@ object ShareRepository {
         override val primaryKey = PrimaryKey(id)
     }
 
-    init {
-        transaction(database) {
-            SchemaUtils.create(Shares)
-        }
-    }
-
     fun findAll(): Query {
         return transaction {
             Shares.innerJoin(UserRepository.Users)

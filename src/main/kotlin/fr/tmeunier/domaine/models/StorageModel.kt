@@ -2,8 +2,7 @@ package fr.tmeunier.domaine.models
 
 import fr.tmeunier.domaine.repositories.FileRepository
 import fr.tmeunier.domaine.repositories.FolderRepository
-import fr.tmeunier.domaine.repositories.ShareRepository
-import java.util.UUID
+import java.util.*
 
 data class FolderModel(
     val id: UUID,
@@ -27,3 +26,12 @@ fun getPathFromShare(type: String, id: UUID): String {
         file?.name ?: "./"
     }
 }
+
+data class UploadedFile(
+    val id: UUID,
+    val name: String,
+    val size: Long,
+    val type: String,
+    val lastModified: Long,
+    val parentId: UUID?,
+)

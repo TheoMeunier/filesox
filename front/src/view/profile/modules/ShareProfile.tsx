@@ -7,11 +7,8 @@ import {
     TableNoData,
     TableRow
 } from "@components/modules/Table.tsx";
-import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
 import {useModal} from "@hooks/useModal.ts";
-import {useQuery} from "react-query";
-import {apiProfileSharedSchemaType} from "@/types/api/apiProfileType.ts";
 import {useState} from "react";
 import {ClipboardCopy, Trash2} from "lucide-react";
 import {ModalDeleteShares} from "../../modals/shares/ModalDeleteShare.tsx";
@@ -20,21 +17,15 @@ import {Pagination} from "@components/modules/Pagination.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {environmentVariables} from "@config/env.ts";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useSharesProfileApi} from "@/api/profileApi.ts";
 
 export function ProfileShare() {
     const [page, setPage] = useState(1)
-    const API = useAxios()
     const {t} = useTranslation();
     const {openModal} = useModal()
     const {setAlerts} = useAlerts()
 
-    const {data, isLoading} = useQuery(
-        ['shares', page],
-        async () => {
-            const response = await API.get('/admin/shares?page=' + page)
-            return apiProfileSharedSchemaType.parse(response.data)
-        },
-    );
+    const {data, isLoading} = useSharesProfileApi(page)
 
     const handleCopy = (id: string) => {
         navigator.clipboard.writeText(environmentVariables.VITE_API_URL + '/storages/share/dl/' + id)
@@ -78,13 +69,9 @@ export function ProfileShare() {
 
         {data &&
             <Pagination
-                from={data.from}
-                to={data.to}
                 currentPage={data.current_page}
                 totalPage={data.total_pages}
-                onPageChange={(p) => {
-                    setPage(p)
-                }}
+                onPageChange={(p) => {setPage(p)}}
             />
         }
     </div>

@@ -1,13 +1,19 @@
 import {
-    Sidebar, SidebarItemVersion, SidebarMenu, SidebarMenuContent,
+    Sidebar,
+    SidebarItemVersion,
+    SidebarMenu,
+    SidebarMenuContent,
     SidebarMenuItem,
     SidebarTitleMenu
 } from "@components/layouts/Sidebar.tsx";
 import {
     Archive,
     FolderPlus,
-    Home, Info,
-    LogOut, Menu, MoveUpRight,
+    Home,
+    Info,
+    LogOut,
+    Menu,
+    MoveUpRight,
     Settings,
     Share2,
     SquarePen,
@@ -37,6 +43,8 @@ import {ModalInformationMedia} from "../modals/ModalInformationMedia.tsx";
 import ProgressBar from "../../components/modules/ProgressBar.tsx";
 import {useProgressBar} from "@/stores/useProgressBar.ts";
 import {ModalShareMedia} from "../modals/shares/ModalShareMedia.tsx";
+import SearchBar from "@components/searchBar/SearchBar.tsx";
+import ImageGallery from "@components/imageGallery/ImageGallery.tsx";
 
 export function App() {
     const {openModal} = useModal()
@@ -71,9 +79,8 @@ export function App() {
                             </NavItem>
                         }
                         <NavItem>
-                            <div>
-                                <img src="/logo.png" alt="Logo" height="100" width="175" className="mx-auto"/>
-                            </div>
+                            <img src="/logo.png" alt="Logo" height="90" width="175" className="mx-auto"/>
+                            <SearchBar/>
                         </NavItem>
                     </NavItemsLeft>
                     <NavItemsRight>
@@ -97,7 +104,7 @@ export function App() {
                                                     onClick={() => openModal(() => <ModalDeleteMedia/>, "md")}/>
                                     )}
                                     <ButtonIcon svg={Info} title={t('tooltip.information')}
-                                        onClick={() => openModal(() => <ModalInformationMedia/>, "lg")}/>
+                                                onClick={() => openModal(() => <ModalInformationMedia/>, "lg")}/>
                                     <ButtonDownload/>
                                 </>
                             }
@@ -126,7 +133,7 @@ export function App() {
                     </SidebarMenu>
                     <SidebarMenu>
                         <SidebarTitleMenu>{t('title.nav.profile')}</SidebarTitleMenu>
-                        <SidebarMenuItem href="/profile"  active="/profile/*" svg={User}>
+                        <SidebarMenuItem href="/profile" active="/profile/*" svg={User}>
                             {t('title.nav.profile')}
                         </SidebarMenuItem>
                         <SidebarMenuItem svg={LogOut} onClick={() => handleClickLogout()}>
@@ -165,6 +172,7 @@ export function App() {
             </main>
         </div>
 
+        <ImageGallery/>
         <Modal/>
     </div>
 }

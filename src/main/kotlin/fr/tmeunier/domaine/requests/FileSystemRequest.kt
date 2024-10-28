@@ -3,7 +3,7 @@ package fr.tmeunier.domaine.requests
 import fr.tmeunier.domaine.services.serializer.UUIDSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import java.util.*
 
 // --- Storage
 @Serializable
@@ -63,6 +63,18 @@ data class DownloadRequest(
 
 // --- Uploads
 @Serializable
+data class VerifyUploadListRequest(
+    val files: List<VerifyUploadRequest>,
+)
+
+@Serializable
+data class VerifyUploadRequest(
+    val name: String,
+    @Serializable(with = UUIDSerializer::class)
+    @SerialName("parent_id") val parentId: UUID?
+)
+
+@Serializable
 data class InitialUploadRequest(
     val name: String,
     val size: Long,
@@ -71,11 +83,13 @@ data class InitialUploadRequest(
     @SerialName("web_relative_path") val webRelativePath: String?,
     @Serializable(with = UUIDSerializer::class)
     @SerialName("parent_id") val parentId: UUID?,
-    @SerialName("total_chunks") val totalChunks: Int
+    @SerialName("total_chunks") val totalChunks: Int,
+    @SerialName("is_exist") val isExist: Boolean,
 )
 
 @Serializable
 data class CompletedUpload(
     val filename: String,
     @SerialName("upload_id") val uploadId: String,
+    @SerialName("is_exist") val isExist: Boolean,
 )

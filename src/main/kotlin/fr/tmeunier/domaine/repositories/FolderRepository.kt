@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 object FolderRepository {
 
@@ -19,17 +19,11 @@ object FolderRepository {
     object Folders : Table("folders") {
         val id = uuid("id")
         val path = varchar("path", length = 255)
-        val parentId = (uuid("parent_id") references id).nullable()
+        val parentId = uuid("parent_id").references(id, onDelete =  ReferenceOption.CASCADE).nullable()
         val createdAt = datetime("created_at")
         val updatedAt = datetime("updated_at")
 
         override val primaryKey = PrimaryKey(id)
-    }
-
-    init {
-        transaction(database) {
-            SchemaUtils.create(Folders)
-        }
     }
 
     suspend fun findByPath(path: String): S3Folder? = dbQuery {

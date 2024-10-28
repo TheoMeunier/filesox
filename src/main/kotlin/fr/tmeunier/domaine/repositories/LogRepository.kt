@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 object LogRepository {
     private val database = Database.getConnexion()
 
-    object Logs : Table() {
+    object Logs : Table("logs") {
         val id: Column<Int> = integer("id").autoIncrement()
         val userId: Column<Int> = integer("user_id").references(UserRepository.Users.id)
         val action: Column<String> = varchar("action", length = 255)
@@ -18,12 +18,6 @@ object LogRepository {
         val createdAt: Column<LocalDateTime> = datetime("created_at")
 
         override val primaryKey = PrimaryKey(id)
-    }
-
-    init {
-        transaction(database) {
-            SchemaUtils.create(Logs)
-        }
     }
 
     fun findAll(): Query {

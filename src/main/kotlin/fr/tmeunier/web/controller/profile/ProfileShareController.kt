@@ -2,8 +2,6 @@ package fr.tmeunier.web.controller.profile
 
 import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.models.getPathFromShare
-import fr.tmeunier.domaine.repositories.FileRepository
-import fr.tmeunier.domaine.repositories.FolderRepository
 import fr.tmeunier.domaine.repositories.ShareRepository
 import fr.tmeunier.domaine.requests.DeleteShareRequest
 import fr.tmeunier.domaine.response.ProfileSharesResponse
@@ -26,7 +24,7 @@ object ProfileShareController {
             ProfileSharesResponse(
                 id = row[ShareRepository.Shares.id],
                 path = path,
-                expiredAt = formatDate(row[ShareRepository.Shares.expiredAt],"dd/MM/yyyy mm:HH"),
+                expiredAt = formatDate(row[ShareRepository.Shares.expiredAt],"dd/MM/yyyy HH:mm"),
                 createdAt = formatDate(row[ShareRepository.Shares.createdAt]),
             )
         }

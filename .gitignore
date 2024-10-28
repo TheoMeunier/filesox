@@ -38,5 +38,8 @@ out/
 
 ### docker ###
 storage-db/
-/.env
+front/.env
 .env
+
+### App ###
+storages/

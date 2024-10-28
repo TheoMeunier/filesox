@@ -1,6 +1,5 @@
 package fr.tmeunier.config
 
-import io.ktor.server.application.*
 import io.ktor.server.auth.jwt.*
 
 object Security {
@@ -27,5 +26,4 @@ object Security {
     const val DOWNLOAD = "Download"
     const val EDIT_FILE = "Edit file"
     const val SHARE_FILE = "Share files"
-    const val RENAME_FILE_FOLDER = "Rename file or folder"
 }

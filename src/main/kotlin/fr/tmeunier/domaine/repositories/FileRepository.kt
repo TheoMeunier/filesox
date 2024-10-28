@@ -1,41 +1,50 @@
 package fr.tmeunier.domaine.repositories
 
-import fr.tmeunier.config.Database
 import fr.tmeunier.config.Database.dbQuery
 import fr.tmeunier.config.Security
+import fr.tmeunier.domaine.repositories.FolderRepository.Folders
 import fr.tmeunier.domaine.requests.InitialUploadRequest
 import fr.tmeunier.domaine.response.S3File
 import fr.tmeunier.domaine.services.LogService
-import fr.tmeunier.domaine.services.filesSystem.StorageService
-import fr.tmeunier.domaine.services.filesSystem.StorageService.toHumanReadableValue
+import fr.tmeunier.domaine.services.filesSystem.service.StorageService
+import fr.tmeunier.domaine.services.filesSystem.service.StorageService.toHumanReadableValue
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 object FileRepository {
 
-    private val database = Database.getConnexion()
-
-    object Files : Table() {
+    object Files : Table("files") {
 
         val id = uuid("id")
         val name = varchar("name", length = 255)
         val size = long("size")
         val icon = varchar("icon", length = 255)
         val type = varchar("type", length = 255)
-        val parentId = (uuid("parent_id") references FolderRepository.Folders.id).nullable()
+        val parentId = uuid("parent_id").references(Folders.id, onDelete =  ReferenceOption.CASCADE).nullable()
         val updatedAt = datetime("updated_at")
 
         override val primaryKey = PrimaryKey(id)
     }
 
-    init {
-        transaction(database) {
-            SchemaUtils.create(Files)
+    suspend fun exists(name: String, parentId: UUID?): Boolean = dbQuery {
+        Files.select { Files.name eq name and (Files.parentId eq parentId) }.count() > 0
+    }
+
+    suspend fun search(search: String): List<S3File> = dbQuery {
+        Files.select { Files.name like "%$search%" }.map {
+            S3File(
+                it[Files.id],
+                it[Files.name],
+                it[Files.type],
+                it[Files.size].toHumanReadableValue(),
+                it[Files.parentId],
+                it[Files.icon]
+            )
         }
     }
 
@@ -71,11 +80,11 @@ object FileRepository {
         }
     }
 
-    suspend fun create(file: InitialUploadRequest, parentId: UUID?): UUID = dbQuery {
+    suspend fun create(id: UUID, file: InitialUploadRequest, parentId: UUID?): UUID = dbQuery {
         LogService.add(Security.getUserId(), LogService.ACTION_UPLOAD, "${file.name} file uploaded")
 
         Files.insert {
-            it[id] = UUID.randomUUID()
+            it[Files.id] = id
             it[name] = file.name
             it[size] = file.size
             it[type] = file.type
@@ -113,5 +122,9 @@ object FileRepository {
 
     suspend fun deleteByParentId(parentId: UUID) = dbQuery {
         Files.deleteWhere { Files.parentId eq parentId }
+    }
+
+    suspend fun deleteByParentIdAndName(name:String, parentId: UUID?) = dbQuery {
+        Files.deleteWhere { Files.name eq name and (Files.parentId eq parentId) }
     }
 }

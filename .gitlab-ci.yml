@@ -51,9 +51,9 @@ Build and push back docker image:
   image:
     name: quay.io/buildah/stable:v1.29.0
   script:
-    - buildah bud -f ./docker/back/Dockerfile --cache-from "$REGISTRY_URL"/filetransfer-backend --build-arg MODE=prod -t "$REGISTRY_URL"/filetransfer-backend:$TAG .
+    - buildah bud -f ./docker/back/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-backend --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-back:$TAG .
     - echo $REGISTRY_PASSWORD | buildah login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
-    - buildah push "$REGISTRY_URL"/filetransfer-backend:$TAG
+    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-backend:$TAG
   dependencies:
     - Build backend
 
@@ -66,9 +66,9 @@ Build and push front docker image:
   image:
     name: quay.io/buildah/stable:v1.29.0
   script:
-    - buildah bud -f ./docker/front/Dockerfile --cache-from "$REGISTRY_URL"/filetransfer-frontend --build-arg MODE=prod -t "$REGISTRY_URL"/filetransfer-frontend:$TAG .
+    - buildah bud -f ./docker/front/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-frontend --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-front:$TAG .
     - echo $REGISTRY_PASSWORD | buildah login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
-    - buildah push "$REGISTRY_URL"/filetransfer-frontend:$TAG
+    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-frontend:$TAG
   dependencies:
     - Build frontend
 
@@ -89,28 +89,3 @@ Substitute kubernetes env:
     when: "on_success"
     expire_in: 1 week
     paths:
-      - "./deployments"
-
-Deploy to cluster:
-  image: bitnami/kubectl:1.29
-  stage: deploy
-  only:
-    - tags
-  except:
-    - branches
-  script:
-    - cat $ENV_FILE > .env
-    - set -a
-    - source .env
-    - set +a
-
-    - kubectl create namespace $NAMESPACE || true
-
-    - kubectl delete configmap --namespace $NAMESPACE $APP_SLUG-env || true
-    - kubectl create configmap --namespace $NAMESPACE $APP_SLUG-env --from-env-file ./.env
-
-    - kubectl apply -f ./deployments/*.yml
-    - kubectl rollout restart deploy --namespace $NAMESPACE $APP_SLUG-backend
-    - kubectl rollout restart deploy --namespace $NAMESPACE $APP_SLUG-frontend
-  dependencies:
-    - Substitute kubernetes env
