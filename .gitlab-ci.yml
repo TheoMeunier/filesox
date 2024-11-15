@@ -51,9 +51,9 @@ Build and push back docker image:
   image:
     name: quay.io/buildah/stable:v1.29.0
   script:
-    - buildah bud -f ./docker/back/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-backend --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-back:$TAG .
+    - buildah bud -f ./docker/back/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-back --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-back:$TAG .
     - echo $REGISTRY_PASSWORD | buildah login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
-    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-backend:$TAG
+    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-back:$TAG
   dependencies:
     - Build backend
 
@@ -66,27 +66,8 @@ Build and push front docker image:
   image:
     name: quay.io/buildah/stable:v1.29.0
   script:
-    - buildah bud -f ./docker/front/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-frontend --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-front:$TAG .
+    - buildah bud -f ./docker/front/Dockerfile --cache-from "$REGISTRY_URL/$REGISTRY_APP"-front --build-arg MODE=prod -t "$REGISTRY_URL/$REGISTRY_APP"-front:$TAG .
     - echo $REGISTRY_PASSWORD | buildah login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
-    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-frontend:$TAG
+    - buildah push "$REGISTRY_URL/$REGISTRY_APP"-front:$TAG
   dependencies:
     - Build frontend
-
-Substitute kubernetes env:
-  stage: package
-  only:
-    - tags
-  except:
-    - branches
-  image:
-    name: debian:11
-  script:
-    - apt-get update && apt-get -y install gettext
-    - mkdir -p ./deployments
-    - envsubst < ./kubernetes/deployment.yml > ./deployments/deployment.yml
-  artifacts:
-    name: "deployments:$ARTIFACT_NAME:$CI_JOB_ID"
-    when: "on_success"
-    expire_in: 1 week
-    paths:
-      - "./deployments"
