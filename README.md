@@ -61,7 +61,7 @@ services:
     container_name: filemanager_front
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "8080:80"
     environment:
       REACT_APP_API_URL: http://localhost:8080
     networks:
