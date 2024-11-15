@@ -1,3 +1,6 @@
+### github
+.github/ .gitlab-ci.yml
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
