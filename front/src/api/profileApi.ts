@@ -33,7 +33,7 @@ export function useSharesProfileApi(page: number  ) {
     const {data, isLoading} = useQuery(
         ['shares', page],
         async () => {
-            const response = await API.get('/admin/shares?page=' + page)
+            const response = await API.get('/profile/shares?page=' + page)
             return apiProfileSharedSchemaType.parse(response.data)
         },
     );
