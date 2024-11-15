@@ -70,7 +70,7 @@ object AuthController
     suspend fun register(call: ApplicationCall)
     {
         val request = call.receive<UserRegisterRequest>()
-        val user = userRepository.create(request.name, request.email, request.password, null)
+        val user = userRepository.create(null, request.name, request.email, request.password, null)
 
         return call.respond(user)
     }

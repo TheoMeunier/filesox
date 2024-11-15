@@ -7,14 +7,16 @@ import fr.tmeunier.domaine.repositories.UserRepository
 import fr.tmeunier.domaine.repositories.UsersPermissionsRepository
 import fr.tmeunier.domaine.requests.AdminUpdateCreateRequest
 import fr.tmeunier.domaine.requests.AdminUserCreateRequest
+import fr.tmeunier.domaine.requests.UserPrincipal
 import fr.tmeunier.domaine.services.PaginationService
 import fr.tmeunier.domaine.services.utils.formatDate
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.jetbrains.exposed.sql.selectAll
-import java.util.UUID
+import java.util.*
 
 
 object AdminUserController {
@@ -43,16 +45,17 @@ object AdminUserController {
 
     suspend fun create(call: ApplicationCall) {
         val request = call.receive<AdminUserCreateRequest>()
+        val userPrincipal = call.principal<UserPrincipal>()
 
         // Assign or create a folder for the user
         var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id
 
         if (baseFolder === null && request.filePath !== null) {
-            baseFolder = request.filePath.let { FolderRepository.create(it, null) }
+            baseFolder = request.filePath.let { FolderRepository.create(userPrincipal?.id!!, it, null) }
         }
 
         // create the user
-        val user = UserRepository.create(request.name, request.email, request.password, baseFolder)
+        val user = UserRepository.create(userPrincipal?.id!!, request.name, request.email, request.password, baseFolder)
         request.permissions.let { UsersPermissionsRepository.create(user, request.permissions.toList()) }
 
         return call.respond(HttpStatusCode.Created)
@@ -60,17 +63,18 @@ object AdminUserController {
 
     suspend fun update(call: ApplicationCall) {
         val request = call.receive<AdminUpdateCreateRequest>()
+        val userPrincipal = call.principal<UserPrincipal>()
         val id = call.parameters["id"]?.toInt() ?: return call.respond(HttpStatusCode.BadRequest)
 
         // Assign or create a folder for the user
         var baseFolder: UUID? = request.filePath?.let { FolderRepository.findByPath(it) }?.id
 
         if (baseFolder === null && request.filePath !== null) {
-            baseFolder = request.filePath.let { FolderRepository.create(it, null) }
+            baseFolder = request.filePath.let { FolderRepository.create(userPrincipal?.id!!, it, null) }
         }
 
         // update the user
-        UserRepository.adminUpdate(id, request.name, request.email, baseFolder)
+        UserRepository.adminUpdate(userPrincipal?.id!!, id, request.name, request.email, baseFolder)
         request.permissions.let { UsersPermissionsRepository.sync(id, request.permissions.toList()) }
 
         return call.respond(HttpStatusCode.OK)

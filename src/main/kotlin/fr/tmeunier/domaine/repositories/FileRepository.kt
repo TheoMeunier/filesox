@@ -1,7 +1,6 @@
 package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database.dbQuery
-import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.repositories.FolderRepository.Folders
 import fr.tmeunier.domaine.requests.InitialUploadRequest
 import fr.tmeunier.domaine.response.S3File
@@ -80,8 +79,8 @@ object FileRepository {
         }
     }
 
-    suspend fun create(id: UUID, file: InitialUploadRequest, parentId: UUID?): UUID = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPLOAD, "${file.name} file uploaded")
+    suspend fun create(authUserId: Int, id: UUID, file: InitialUploadRequest, parentId: UUID?): UUID = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPLOAD, "${file.name} file uploaded")
 
         Files.insert {
             it[Files.id] = id
@@ -95,8 +94,8 @@ object FileRepository {
         } get Files.id
     }
 
-    suspend fun update(id: UUID, name: String, parentId: UUID?) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name file updated")
+    suspend fun update(authUserId: Int, id: UUID, name: String, parentId: UUID?) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$name file updated")
 
         Files.update({ Files.id eq id }) {
             it[Files.name] = name
@@ -105,8 +104,8 @@ object FileRepository {
         }
     }
 
-    suspend fun move(id: UUID, parentId: UUID?) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_MOVE, "$id file moved")
+    suspend fun move(authUserId: Int, id: UUID, parentId: UUID?) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_MOVE, "$id file moved")
 
         Files.update({ Files.id eq id }) {
             it[Files.parentId] = parentId
@@ -114,8 +113,8 @@ object FileRepository {
         }
     }
 
-    suspend fun delete(name: String, id: UUID) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_DELETE, "$name file deleted")
+    suspend fun delete(authUserId: Int, name: String, id: UUID) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_DELETE, "$name file deleted")
 
         Files.deleteWhere { Files.id eq id }
     }

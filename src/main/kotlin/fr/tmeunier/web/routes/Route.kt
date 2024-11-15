@@ -3,6 +3,9 @@ package fr.tmeunier.web.routes
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import fr.tmeunier.config.Security
+import fr.tmeunier.core.permissions.roleBased
+import fr.tmeunier.core.permissions.withRole
+import fr.tmeunier.domaine.requests.UserPrincipal
 import fr.tmeunier.web.routes.admin.adminLogRouting
 import fr.tmeunier.web.routes.admin.adminShareRouting
 import fr.tmeunier.web.routes.admin.adminUserRouting
@@ -12,8 +15,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
-import fr.tmeunier.core.permissions.roleBased
-import fr.tmeunier.core.permissions.withRole
 
 fun Application.configurationRoute() {
     install(ContentNegotiation) {
@@ -36,8 +37,10 @@ fun Application.configurationRoute() {
 
             roleBased {
                 extractRoles { principal ->
-                    (principal as JWTPrincipal).payload.claims?.get("roles")?.asList(String::class.java)?.toSet()
-                        ?: emptySet()
+                    when (principal) {
+                        is UserPrincipal -> principal.roles.toSet()
+                        else -> emptySet()
+                    }
                 }
             }
         }

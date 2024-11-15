@@ -2,7 +2,6 @@ package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
 import fr.tmeunier.config.Database.dbQuery
-import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.response.S3Folder
 import fr.tmeunier.domaine.services.LogService
 import org.jetbrains.exposed.sql.*
@@ -76,8 +75,8 @@ object FolderRepository {
         }
     }
 
-    suspend fun create(path: String, parentId: UUID?): UUID = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_CREATE, "$path folder created")
+    suspend fun create(authUserId: Int, path: String, parentId: UUID?): UUID = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_CREATE, "$path folder created")
 
         Folders.insert {
             it[id] = UUID.randomUUID()
@@ -88,8 +87,8 @@ object FolderRepository {
         } get Folders.id
     }
 
-    suspend fun update(id: UUID, path: String, parentId: UUID?) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$path folder updated")
+    suspend fun update(authUserId: Int, id: UUID, path: String, parentId: UUID?) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$path folder updated")
 
         Folders.update({ Folders.id eq id }) {
             it[Folders.path] = path
@@ -98,14 +97,14 @@ object FolderRepository {
         }
     }
 
-    suspend fun delete(id: UUID) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$id folder deleted")
+    suspend fun delete(authUserId: Int, id: UUID) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$id folder deleted")
 
         Folders.deleteWhere { Folders.id eq id }
     }
 
-    suspend fun deleteByParentId(parentId: UUID) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$parentId folder deleted")
+    suspend fun deleteByParentId(authUserId: Int, parentId: UUID) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$parentId folder deleted")
 
         transaction(database) {
             Folders.deleteWhere { Folders.parentId eq parentId }

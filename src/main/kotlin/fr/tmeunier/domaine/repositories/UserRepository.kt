@@ -2,7 +2,6 @@ package fr.tmeunier.domaine.repositories
 
 import fr.tmeunier.config.Database
 import fr.tmeunier.config.Database.dbQuery
-import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.models.User
 import fr.tmeunier.domaine.services.LogService
 import fr.tmeunier.domaine.services.utils.HashService
@@ -29,10 +28,8 @@ object UserRepository {
         override val primaryKey = PrimaryKey(id)
     }
 
-    suspend fun create(name: String, email: String, password: String, filePath: UUID?): Int = dbQuery {
-        if (Security.getUserId() != 0) {
-            LogService.add(Security.getUserId(), LogService.ACTION_CREATE, "$name created")
-        }
+    suspend fun create(authUserId: Int?, name: String, email: String, password: String, filePath: UUID?): Int = dbQuery {
+        authUserId?.let { LogService.add(it, LogService.ACTION_CREATE, "$name created") }
 
         Users.insert {
             it[Users.name] = name
@@ -44,8 +41,8 @@ object UserRepository {
         } get Users.id
     }
 
-    suspend fun update(id: Int, name: String, email: String): Int = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name updated")
+    suspend fun update(authUserId: Int, id: Int, name: String, email: String): Int = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$name updated")
 
         Users.update({ Users.id eq id }) {
             it[Users.name] = name
@@ -54,8 +51,8 @@ object UserRepository {
         }
     }
 
-    suspend fun adminUpdate(id: Int, name: String, email: String, filePath: UUID?) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "$name updated")
+    suspend fun adminUpdate(authUserId: Int, id: Int, name: String, email: String, filePath: UUID?) = dbQuery {
+        LogService.add(authUserId, LogService.ACTION_UPDATE, "$name updated")
 
         Users.update({ Users.id eq id }) {
             it[Users.name] = name
@@ -66,7 +63,7 @@ object UserRepository {
     }
 
     suspend fun updatePassword(id: Int, password: String) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_UPDATE, "updated account")
+        LogService.add(id, LogService.ACTION_UPDATE, "updated account")
 
         Users.update({ Users.id eq id }) {
             it[Users.password] = HashService.hashPassword(password)
@@ -75,7 +72,7 @@ object UserRepository {
     }
 
     suspend fun delete(id: Int) = dbQuery {
-        LogService.add(Security.getUserId(), LogService.ACTION_DELETE, "updated account")
+        LogService.add(id, LogService.ACTION_DELETE, "updated account")
         Users.deleteWhere { Users.id eq id }
     }
 

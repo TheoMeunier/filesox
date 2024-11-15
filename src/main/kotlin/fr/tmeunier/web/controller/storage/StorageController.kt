@@ -7,6 +7,7 @@ import fr.tmeunier.domaine.response.S3Response
 import fr.tmeunier.domaine.services.filesSystem.FileSystemServiceFactory
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 
@@ -41,18 +42,19 @@ object StorageController {
 
     suspend fun update(call: ApplicationCall) {
         val request = call.receive<UpdateStorageRequest>()
+        val user = call.principal<UserPrincipal>()
 
         if (request.name.endsWith('/')) {
             val folders = FolderRepository.findByIdOrPath(request.name)
 
             folders.forEach { folder ->
                 val name = folder.path.replace(request.name, request.newName)
-                FolderRepository.update(folder.id, name, folder.parentId)
+                FolderRepository.update(user?.id!!, folder.id, name, folder.parentId)
             }
 
-            FolderRepository.update(request.id, request.newName, request.parentId)
+            FolderRepository.update(user?.id!!, request.id, request.newName, request.parentId)
         } else {
-            FileRepository.update(request.id, request.newName, request.parentId)
+            FileRepository.update(user?.id!!, request.id, request.newName, request.parentId)
         }
 
         call.respond(HttpStatusCode.OK)
@@ -60,6 +62,7 @@ object StorageController {
 
     suspend fun move(call: ApplicationCall) {
         val request = call.receive<MoveStorageRequest>()
+        val user = call.principal<UserPrincipal>()
         val isFolder = request.path.endsWith('/')
 
         if (isFolder) {
@@ -69,11 +72,11 @@ object StorageController {
 
             folders.forEach { folder ->
                 val name = folder.path.replace(request.path, request.newPath)
-                FolderRepository.update(folder.id, name, newFolderParent?.id)
+                FolderRepository.update(user?.id!!, folder.id, name, newFolderParent?.id)
             }
         } else {
             val newParentFolder = FolderRepository.findByPath(request.newPath)
-            FileRepository.move(request.id, newParentFolder?.id )
+            FileRepository.move(user?.id!!, request.id, newParentFolder?.id )
         }
 
         call.respond(HttpStatusCode.OK)
@@ -81,6 +84,7 @@ object StorageController {
 
     suspend fun delete(call: ApplicationCall) {
         val request = call.receive<DeleteStorageRequest>()
+        val user = call.principal<UserPrincipal>()
 
         if (request.isFolder) {
             val folder = FolderRepository.findById(request.id)
@@ -96,12 +100,12 @@ object StorageController {
                 FileRepository.deleteByParentId(folder.id)
             }
 
-            folders?.forEach { folder -> FolderRepository.delete(folder.id) }
+            folders?.forEach { folder -> FolderRepository.delete(user?.id!!, folder.id) }
         } else {
             val file = FileRepository.findById(request.id)
 
             FileSystemServiceFactory.createStorageService().delete(file?.id.toString())
-            FileRepository.delete(file!!.name, request.id)
+            FileRepository.delete(user?.id!!, file!!.name, request.id)
         }
 
         call.respond(HttpStatusCode.OK)

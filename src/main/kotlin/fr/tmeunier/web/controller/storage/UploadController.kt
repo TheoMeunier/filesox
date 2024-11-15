@@ -6,6 +6,7 @@ import fr.tmeunier.domaine.repositories.FolderRepository
 import fr.tmeunier.domaine.repositories.UploadedFileRepository
 import fr.tmeunier.domaine.requests.CompletedUpload
 import fr.tmeunier.domaine.requests.InitialUploadRequest
+import fr.tmeunier.domaine.requests.UserPrincipal
 import fr.tmeunier.domaine.requests.VerifyUploadListRequest
 import fr.tmeunier.domaine.response.UploadCompleteResponse
 import fr.tmeunier.domaine.services.filesSystem.FileSystemServiceFactory
@@ -13,6 +14,7 @@ import fr.tmeunier.domaine.services.filesSystem.service.StorageService
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
@@ -36,13 +38,14 @@ object UploadController {
 
     suspend fun initUploader(call: ApplicationCall) {
         val request = call.receive<InitialUploadRequest>()
+        val user = call.principal<UserPrincipal>()
         val fileUuid: UUID = UUID.randomUUID()
 
         // Create folder if it doesn't exist
         val parentId = if (request.webRelativePath === "") {
             request.parentId
         } else {
-            request.webRelativePath?.let { it1 -> createFolderUploadFile(it1, request.parentId) }
+            request.webRelativePath?.let { it1 -> createFolderUploadFile(user?.id!!, it1, request.parentId) }
         }
 
         val filename = fileUuid.toString() + '.' + StorageService.pathinfo(request.name)["extension"]
@@ -51,7 +54,7 @@ object UploadController {
         if (request.isExist) {
             UploadedFileRepository.create(fileUuid, request, parentId, UUID.fromString(uploadId))
         } else {
-            FileRepository.create(fileUuid, request, parentId)
+            FileRepository.create(user?.id!!, fileUuid, request, parentId)
         }
 
         if (uploadId != null) {
@@ -113,6 +116,7 @@ object UploadController {
 
     suspend fun completedUpload(call: ApplicationCall) {
         val request = call.receive<CompletedUpload>()
+        val user = call.principal<UserPrincipal>()
 
         runBlocking {
             try {
@@ -124,7 +128,7 @@ object UploadController {
                     FileRepository.deleteByParentIdAndName(file.name, file.parentId)
 
                     FileRepository.create(
-                        file.id, InitialUploadRequest(file.name, file.size, file.type, file.lastModified, null, file.parentId, 0, false),
+                        user?.id!!, file.id, InitialUploadRequest(file.name, file.size, file.type, file.lastModified, null, file.parentId, 0, false),
                         file.parentId
                     )
                 }
@@ -136,7 +140,7 @@ object UploadController {
         }
     }
 
-    private suspend fun createFolderUploadFile(path: String, parentId: UUID?): UUID {
+    private suspend fun createFolderUploadFile(authUserId : Int, path: String, parentId: UUID?): UUID {
         val folderPathRequest = path.substringBeforeLast("/") + '/'
         val folderParent = parentId?.let { FolderRepository.findById(it) }
         val folderParentPath = if (folderParent !== null) folderParent.path else ""
@@ -147,6 +151,6 @@ object UploadController {
         }
 
         val folderPath = (folderParent?.path ?: "") + folderPathRequest
-        return  FolderRepository.create(folderPath, parentId ?: folderParent?.id)
+        return  FolderRepository.create(authUserId, folderPath, parentId ?: folderParent?.id)
     }
 }

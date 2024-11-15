@@ -1,9 +1,10 @@
 package fr.tmeunier.domaine.requests
 
 import fr.tmeunier.domaine.services.serializer.UUIDSerializer
+import io.ktor.server.auth.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import java.util.*
 
 @Serializable
 data class UserRequest(
@@ -69,3 +70,12 @@ data class UserUpdatePasswordRequest(
     val password: String,
     @SerialName("confirm_password") val confirmPassword: String,
 )
+
+// User Principal JWT
+@Serializable
+data class UserPrincipal(
+    val id: Int,
+    val name: String,
+    val email: String,
+    val roles: List<String>,
+) : Principal

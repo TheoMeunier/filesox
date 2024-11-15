@@ -1,14 +1,15 @@
 package fr.tmeunier.web.controller.storage
 
-import fr.tmeunier.config.Security
 import fr.tmeunier.domaine.repositories.FileRepository
 import fr.tmeunier.domaine.repositories.ShareRepository
 import fr.tmeunier.domaine.requests.CheckPasswordShareRequest
 import fr.tmeunier.domaine.requests.CreateShareRequest
+import fr.tmeunier.domaine.requests.UserPrincipal
 import fr.tmeunier.domaine.services.filesSystem.FileSystemServiceFactory
 import fr.tmeunier.domaine.services.utils.HashService
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import java.util.*
@@ -16,6 +17,7 @@ import java.util.*
 object ShareController {
     suspend fun share(call: ApplicationCall) {
         val request = call.receive<CreateShareRequest>()
+        val user = call.principal<UserPrincipal>()
 
         val expiredAt = when (request.typeDuration) {
             "hours" -> java.time.LocalDateTime.now().plusHours(request.duration.toLong())
@@ -25,7 +27,7 @@ object ShareController {
             else -> throw IllegalArgumentException("Invalid type duration")
         }
 
-        ShareRepository.create(request.storageId, request.type, Security.getUserId(), request.password, expiredAt)
+        ShareRepository.create(request.storageId, request.type, user?.id!!, request.password, expiredAt)
         call.respond(HttpStatusCode.OK)
     }
 
