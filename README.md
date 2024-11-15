@@ -109,7 +109,7 @@ networks:
 Your default admin credentials are:
 
 - Email: `admin@filesox.fr`
-- Password: `filesox`
+- Password: `adminadmin`
 
 It is strongly recommended that you change this password immediately after your first login for security reasons.
 
