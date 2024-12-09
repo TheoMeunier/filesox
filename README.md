@@ -76,7 +76,7 @@ services:
     volumes:
       - ./cache:/app/storages/cache
       - ./storage:/app/storages/uploads
-      - ./env:/app/.env
+      - ./.env:/app/.env
     depends_on:
       - mariadb
     networks:
