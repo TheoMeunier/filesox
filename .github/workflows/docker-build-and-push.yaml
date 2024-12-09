@@ -19,7 +19,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Frontend
-        run: docker build -t $DOCKER_USERNAME/filesox-front:latest -f docker/front/Dockerfile .
+        run: docker build . -f docker/front/Dockerfile -t $DOCKER_USERNAME/filesox-front:latest
 
       - name: Push Frontend
         run: docker push $DOCKER_USERNAME/filesox-front:latest
@@ -33,7 +33,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Backend
-        run: docker build -t $DOCKER_USERNAME/filesox-back:latest -f docker/back/Dockerfile .
+        run: docker build . -f docker/back/Dockerfile -t $DOCKER_USERNAME/filesox-back:latest
 
       - name: Push Backend
         run: docker push $DOCKER_USERNAME/filesox-back:latest
