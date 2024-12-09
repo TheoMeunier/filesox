@@ -36,4 +36,4 @@ jobs:
         run: docker build -t $DOCKER_USERNAME/filesox-back:latest" -f docker/back/Dockerfile .
 
       - name: Push Backend
-        run: docker push $DOCKER_USERNAME/filesox-back:latest"
+        run: docker push $DOCKER_USERNAME/filesox-back:latest"n
