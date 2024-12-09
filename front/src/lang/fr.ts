@@ -101,6 +101,7 @@ export const fr = {
             description: {
                 move_storage : "Si vous voulez déplacer le dossier à la racine remplicer le champs",
                 create_user: "Si vous souhaitez que l'utilisateur est l'espace de stockage racine, remplisser le champs",
+                create_folder: "Pour créer un dossier vous devez finir par un",
             }
         },
 
