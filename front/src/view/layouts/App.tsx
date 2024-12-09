@@ -14,7 +14,6 @@ import {
     LogOut,
     Menu,
     MoveUpRight,
-    Settings,
     Share2,
     SquarePen,
     Trash2,
@@ -145,9 +144,6 @@ export function App() {
                             <SidebarTitleMenu>
                                 {t('title.nav.sub.administration')}
                             </SidebarTitleMenu>
-                            <SidebarMenuItem href="/admin/settings" active="/admin/settings" svg={Settings}>
-                                {t('title.nav.settings')}
-                            </SidebarMenuItem>
                             <SidebarMenuItem href="/admin/users" active="/admin/users" svg={Users}>
                                 {t('title.nav.users')}
                             </SidebarMenuItem>
@@ -161,7 +157,7 @@ export function App() {
                     )}
                 </SidebarMenuContent>
                 <SidebarMenuContent>
-                    <SidebarItemVersion>v 0.0.1</SidebarItemVersion>
+                    <SidebarItemVersion>v 0.1.0</SidebarItemVersion>
                 </SidebarMenuContent>
             </Sidebar>
 
