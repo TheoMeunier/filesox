@@ -57,18 +57,18 @@ management for businesses and developers.
 ```yml
 services:
   front:
-    image: theomeunier/filesox-front
+    image: theomeunier/filesox-front:latest
     container_name: filemanager_front
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8888:80"
     environment:
-      REACT_APP_API_URL: http://localhost:8080
+      VITE_API_URL: http://localhost:8080
     networks:
       - app_network
 
   back:
-    image: theomeunier/filesox-back
+    image: theomeunier/filesox-back:latest
     container_name: filemanager_back
     restart: unless-stopped
     ports:
@@ -76,14 +76,15 @@ services:
     volumes:
       - ./cache:/app/storages/cache
       - ./storage:/app/storages/uploads
-    env_file:
-      - .env
+      - ./env:/app/.env
+    depends_on:
+      - mariadb
     networks:
       - app_network
 
   mariadb:
     image: mariadb:latest
-    container_name: mariadb_tmeunier_cdn_database
+    container_name: filemanager_db
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -94,7 +95,6 @@ services:
       MYSQL_ROOT_PASSWORD: filesox
     volumes:
       - ./storage-db:/var/lib/mysql/
-      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app_network
 
