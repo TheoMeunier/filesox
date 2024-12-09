@@ -4,6 +4,9 @@ env:
   STORAGE_DRIVER: "vfs"
 
 on:
+  push:
+    branches:
+      - "*"
   pull_request:
     branches:
       - "*"
@@ -39,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
