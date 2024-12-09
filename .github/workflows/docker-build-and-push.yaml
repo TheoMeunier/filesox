@@ -1,5 +1,9 @@
 name: Docker build and push
 
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
 on:
   push:
     tags:
@@ -12,13 +16,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Frontend
-        run: docker build -t "${{ secrets.DOCKER_USERNAME }}/filesox-front:latest" -f docker/front/Dockerfile .
+        run: docker build -t $DOCKER_USERNAME/filesox-front:latest" -f docker/front/Dockerfile .
 
       - name: Push Frontend
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/filesox-front:latest"
+        run: docker push $DOCKER_USERNAME/filesox-front:latest"
 
   docker-build-back:
     runs-on: ubuntu-latest
@@ -26,10 +30,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Backend
-        run: docker build -t "${{ secrets.DOCKER_USERNAME }}/filesox-back:latest" -f docker/back/Dockerfile .
+        run: docker build -t $DOCKER_USERNAME/filesox-back:latest" -f docker/back/Dockerfile .
 
       - name: Push Backend
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/filesox-back:latest"
+        run: docker push $DOCKER_USERNAME/filesox-back:latest"n
