@@ -23,17 +23,12 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build Frontend
-        run: docker build . -f docker/front/Dockerfile -t $DOCKER_URL/filesox-front
-
-      - name: Tag Frontend
-        run: |
-          docker tag $DOCKER_URL/filesox-front $DOCKER_URL/filesox-front:${{ env.RELEASE_VERSION }}
-          docker tag $DOCKER_URL/filesox-front $DOCKER_URL/filesox-front:latest
+        run:  docker build . -f docker/front/Dockerfile -t theomeunier/filesox-front:${{ env.RELEASE_VERSION }} -t theomeunier/filesox-front:latest
 
       - name: Push Frontend
         run: |
-          docker push $DOCKER_URL/filesox-front:${{ env.RELEASE_VERSION }}
-          docker push $DOCKER_URL/filesox-front:latest
+          docker push theomeunier/filesox-front:${{ env.RELEASE_VERSION }}
+          docker push theomeunier/filesox-front:latest
 
   docker-build-back:
     runs-on: ubuntu-latest
@@ -47,14 +42,9 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build Backend
-        run: docker build . -f docker/back/Dockerfile -t $DOCKER_URL/filesox-back
-
-      - name: Tags Backend
-        run: |
-          docker build . -f docker/back/Dockerfile -t $DOCKER_URL/filesox-back:${{ env.RELEASE_VERSION }}
-          docker build . -f docker/back/Dockerfile -t $DOCKER_URL/filesox-back:latest
+        run: docker build . -f docker/back/Dockerfile -t theomeunier/filesox-back:${{ env.RELEASE_VERSION }} -t theomeunier/filesox-back:latest
 
       - name: Push Backend
         run: |
-          docker push $DOCKER_URL/filesox-back:${{ env.RELEASE_VERSION }}
-          docker push $DOCKER_URL/filesox-back:latest
+          docker push theomeunier/filesox-back:${{ env.RELEASE_VERSION }}
+          docker push theomeunier/filesox-back:latest
