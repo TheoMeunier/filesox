@@ -15,7 +15,6 @@ import {ClipboardCopy, Share2, Trash2} from "lucide-react";
 import {useModal} from "@hooks/useModal.ts";
 import {ModalDeleteShares} from "../modals/shares/ModalDeleteShare.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
-import {environmentVariables} from "@config/env.ts";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {useAdminSharesApi} from "@/api/admin/adminApi.ts";
 
@@ -28,7 +27,7 @@ export function AdminShares() {
     const {data, isLoading} = useAdminSharesApi(page)
 
     const handleCopy = (id: string) => {
-        navigator.clipboard.writeText(environmentVariables.VITE_API_URL + '/storages/share/dl/' + id)
+        navigator.clipboard.writeText(import.meta.env.VITE_API_URL + '/storages/share/dl/' + id)
         setAlerts('success', t('alerts.success.shares.copy'))
     }
 

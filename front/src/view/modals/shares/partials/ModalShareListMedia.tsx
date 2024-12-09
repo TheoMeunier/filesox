@@ -4,7 +4,6 @@ import {ClipboardCopy, Trash2} from "lucide-react";
 import {ModalDeleteShares} from "../ModalDeleteShare.tsx";
 import {useModal} from "@hooks/useModal.ts";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
-import {environmentVariables} from "@config/env.ts";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {useSharesByStorageId} from "@/api/shareApi.ts";
 
@@ -16,7 +15,7 @@ export function ModalShareListMedia() {
     const {data, isLoading} = useSharesByStorageId()
 
     const handleCopy = (id: string) => {
-        navigator.clipboard.writeText(environmentVariables.VITE_API_URL + '/storages/share/dl/' + id)
+        navigator.clipboard.writeText(import.meta.env.VITE_API_URL + '/storages/share/dl/' + id)
         setAlerts('success', t('alerts.success.shares.copy'))
     }
 
