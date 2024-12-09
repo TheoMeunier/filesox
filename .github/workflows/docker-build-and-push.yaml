@@ -1,0 +1,36 @@
+name: Docker build and push
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  docker-build-front:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Frontend
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/filesox-front:latest -f docker/front/Dockerfile .
+
+      - name: Push Frontend
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/filesox-front:latest
+
+  docker-build-back:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Backend
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/filesox-back:latest -f docker/back/Dockerfile .
+
+      - name: Push Backend
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/filesox-back:latest
