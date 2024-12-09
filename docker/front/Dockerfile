@@ -1,17 +1,20 @@
-FROM docker.io/nginx:1.27-alpine
-
-COPY ./docker/front/nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./front/dist /usr/share/nginx/html
+FROM node:22.4.1-slim as build
 
 WORKDIR /app
-RUN chown -R nginx:nginx /app && chmod -R 755 /app && \
-        chown -R nginx:nginx /var/cache/nginx && \
-        chown -R nginx:nginx /var/log/nginx && \
-        chown -R nginx:nginx /etc/nginx/conf.d
-RUN touch /var/run/nginx.pid && \
-        chown -R nginx:nginx /var/run/nginx.pid
 
-USER nginx
-EXPOSE 80
+COPY ./front/package*.json ./
 
-CMD ["nginx", "-g", "daemon off;"]
+RUN npm install
+
+COPY ./front/ .
+
+RUN npm run build
+
+FROM nginx:1.27.0-alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./docker/front/nginx.conf /etc/nginx/conf.d/default.conf
+
+# add env.sh to docker-entrypoint.d
+COPY  ./docker/front/env.sh /docker-entrypoint.d/env.sh
+RUN chmod +x /docker-entrypoint.d/env.sh
