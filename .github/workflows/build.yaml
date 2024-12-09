@@ -1,0 +1,54 @@
+name: Build app
+
+env:
+  STORAGE_DRIVER: "vfs"
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+
+  build-front:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Go to the directory
+        run: cd front
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Front
+        run: npm run build
+
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend
+          path: front/dist
+
+
+  build-back:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: gradle/gradle-build-action@v4
+        with:
+          gradle-version: 8.7.0
+          arguments: build
+
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend
+          path: build/libs/filesox-all.jar
