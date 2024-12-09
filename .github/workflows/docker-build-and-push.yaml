@@ -3,6 +3,7 @@ name: Docker build and push
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_URL: ${{ secrets.DOCKER_PASSWORD }}
 
 on:
   push:
@@ -19,10 +20,10 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Frontend
-        run: docker build . -f docker/front/Dockerfile -t $DOCKER_USERNAME/filesox-front:latest
+        run: docker build . -f docker/front/Dockerfile -t $DOCKER_URL/filesox-front:latest
 
       - name: Push Frontend
-        run: docker push $DOCKER_USERNAME/filesox-front:latest
+        run: docker push$DOCKER_URL/filesox-front:latest
 
   docker-build-back:
     runs-on: ubuntu-latest
@@ -33,7 +34,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Backend
-        run: docker build . -f docker/back/Dockerfile -t $DOCKER_USERNAME/filesox-back:latest
+        run: docker build . -f docker/back/Dockerfile -t $DOCKER_URL/filesox-back:latest
 
       - name: Push Backend
-        run: docker push $DOCKER_USERNAME/filesox-back:latest
+        run: docker push $DOCKER_URL/filesox-back:latest
