@@ -101,6 +101,7 @@ export const en = {
             description: {
                 move_storage : "If you want to move the storage space of the user, fill in the field",
                 create_user: "If you want the user to be the root storage space, fill in the field",
+                create_folder: "To create a folder you must end with a",
             }
         },
 

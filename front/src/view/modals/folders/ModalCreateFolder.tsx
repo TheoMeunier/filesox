@@ -1,5 +1,5 @@
 import {ModalBody, ModalFooter, ModalHeader} from "@components/modules/Modal.tsx";
-import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
+import {FormDescription, FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
 import {Button} from "@components/modules/Button.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useMutation, useQueryClient} from "react-query";
@@ -11,6 +11,7 @@ import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
 import {FilePaths, useLocalStorage} from "@hooks/useLocalStorage.ts";
 import {FolderPlus} from "lucide-react";
+import {TypoCode} from "@components/modules/Typo.tsx";
 
 const schema = z.object({
     path: z.string().min(2)
@@ -64,6 +65,10 @@ export function ModalCreateFolder() {
 
         <FormFields onSubmit={handleSubmit(onSubmit)}>
             <ModalBody>
+                <FormDescription>
+                    {t('input.description.move_storage')}: <TypoCode>./</TypoCode>.
+                </FormDescription>
+
                 <FormLabel htmlFor="name">
                     {t('input.label.name')}
                 </FormLabel>
