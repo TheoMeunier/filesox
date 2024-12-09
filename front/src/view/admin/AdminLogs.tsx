@@ -1,4 +1,12 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableNoData,
+    TableRow
+} from "@components/modules/Table.tsx";
 import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
 import {Pill} from "@components/modules/Pill.tsx";
@@ -35,15 +43,18 @@ export function AdminLogs() {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data && data.data.map((log) =>
-                    <TableRow key={log.id}>
-                        <TableCell>{log.username}</TableCell>
-                        <TableCell>{log.subject}</TableCell>
-                        <TableCell>
-                            <Pill type={log.action}>{log.action}</Pill>
-                        </TableCell>
-                        <TableCell>{log.created_at}</TableCell>
-                    </TableRow>
+                {data && data.data.length > 0 ? (
+                    data.data.map((log) =>
+                        <TableRow key={log.id}>
+                            <TableCell>{log.username}</TableCell>
+                            <TableCell>{log.subject}</TableCell>
+                            <TableCell>
+                                <Pill type={log.action}>{log.action}</Pill>
+                            </TableCell>
+                            <TableCell>{log.created_at}</TableCell>
+                        </TableRow>
+                    )) : (
+                    <TableNoData text={t('table.no_data')} colspan={8}/>
                 )}
             </TableBody>
         </Table>
