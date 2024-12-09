@@ -1,4 +1,12 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@components/modules/Table.tsx";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableNoData,
+    TableRow
+} from "@components/modules/Table.tsx";
 import {Pagination} from "@components/modules/Pagination.tsx";
 import {useState} from "react";
 import {Pill} from "@components/modules/Pill.tsx";
@@ -8,7 +16,7 @@ import {useTranslation} from "react-i18next";
 
 export function ProfileLog() {
     const {t} = useTranslation()
-    const [page , setPage] = useState(1)
+    const [page, setPage] = useState(1)
     const {data, isLoading} = useLogsProfileApi(page)
 
     if (isLoading) {
@@ -25,15 +33,19 @@ export function ProfileLog() {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data && data.data.map((log) =>
-                    <TableRow key={log.id}>
-                        <TableCell>{log.subject}</TableCell>
-                        <TableCell>
-                            <Pill type={log.action}>{log.action}</Pill>
-                        </TableCell>
-                        <TableCell>{log.created_at}</TableCell>
-                    </TableRow>
+                {data && data.data.length > 0 ? (
+                    data.data.map((log) =>
+                        <TableRow key={log.id}>
+                            <TableCell>{log.subject}</TableCell>
+                            <TableCell>
+                                <Pill type={log.action}>{log.action}</Pill>
+                            </TableCell>
+                            <TableCell>{log.created_at}</TableCell>
+                        </TableRow>
+                    )) : (
+                    <TableNoData text={t('table.no_data')} colspan={8}/>
                 )}
+
             </TableBody>
         </Table>
 
@@ -41,7 +53,9 @@ export function ProfileLog() {
             <Pagination
                 currentPage={data.current_page}
                 totalPage={data.total_pages}
-                onPageChange={(p) => {setPage(p)}}
+                onPageChange={(p) => {
+                    setPage(p)
+                }}
             />
         }
     </div>;
