@@ -32,7 +32,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     const logout = async () => {
-        let response = await axios.post(BASE_URL + "/auth/logout", {refresh_token: refreshToken})
+        const response = await axios.post(BASE_URL + "/auth/logout", {refresh_token: refreshToken})
 
         if (response.status === 200) {
             setToken(null)
@@ -48,10 +48,10 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         localStorage.setItem(AuthEnum.TOKEN, token);
         localStorage.setItem(AuthEnum.REFRESH_TOKEN, refreshToken);
 
-        let user = jwtDecode<User>(token)
+        const user = jwtDecode<User>(token)
         setUser(user)
-        localStorage.setItem(FilePaths.path, user!!.file_path);
-        localStorage.setItem(FilePaths.id, user!!.path_id);
+        localStorage.setItem(FilePaths.path, user!.file_path);
+        localStorage.setItem(FilePaths.id, user!.path_id);
     }
 
     useEffect(() => {

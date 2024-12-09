@@ -18,7 +18,7 @@ export function useUploadApi() {
     const {openModal} = useModal();
     const {setAlerts} = useAlerts()
 
-    const handleFileUpload = async (files: File[], isExist: Boolean) => {
+    const handleFileUpload = async (files: File[], isExist: boolean) => {
         const chunkSize = 1024 * 1024 * 5; // 5MB
         const totalChunksFiles = files.map(file => Math.ceil(file.size / chunkSize)).reduce((a, b) => a + b, 0);
         const parent_id = getItem(FilePaths.id) === 'null' ? null : getItem(FilePaths.id);

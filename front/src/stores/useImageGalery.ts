@@ -1,7 +1,7 @@
 import {create} from "zustand";
 
 type State = {
-    showImageGallery: Boolean;
+    showImageGallery: boolean;
     imageGalleryIndex: number;
 };
 
