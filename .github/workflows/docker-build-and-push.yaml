@@ -23,7 +23,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build Frontend
-        run:  docker build . -f docker/front/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/filesox-front:${{ env.RELEASE_VERSION }} -t ${{ secrets.DOCKER_USERNAME }}/filesox-front:latest
+        run:  docker build . -f docker/front/Dockerfile -t tmeunier/filesox-front:${{ env.RELEASE_VERSION }} -t tmeunier/filesox-front:latest
 
       - name: Push Frontend
         run: |
@@ -42,7 +42,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build Backend
-        run: docker build . -f docker/back/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/filesox-back:${{ env.RELEASE_VERSION }} -t ${{ secrets.DOCKER_USERNAME }}/filesox-back:latest
+        run: docker build . -f docker/back/Dockerfile -t tmeunier/filesox-back:${{ env.RELEASE_VERSION }} -t tmeunier/filesox-back:latest
 
       - name: Push Backend
         run: |
