@@ -1,13 +1,12 @@
 import axios from "axios";
 import {useAuth} from "../context/modules/AuthContext.tsx";
-import {environmentVariables} from "./env.ts";
 
 export enum AuthEnum {
     TOKEN = 'token',
     REFRESH_TOKEN = 'refresh_token'
 }
 
-export const BASE_URL = environmentVariables.VITE_API_URL;
+export const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const useAxios = () => {
     const {setAllTokens, logout} = useAuth()
