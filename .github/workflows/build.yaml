@@ -4,9 +4,6 @@ env:
   STORAGE_DRIVER: "vfs"
 
 on:
-  push:
-    branches:
-      - "*"
   pull_request:
     branches:
       - "*"
