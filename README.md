@@ -63,7 +63,7 @@ services:
     ports:
       - "8888:80"
     environment:
-      VITE_API_URL: http://localhost:8080
+      APP_API_URL: http://localhost:8080
     networks:
       - app_network
 
