@@ -1,0 +1,23 @@
+services:
+
+  # Mariadb Service
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_tmeunier_cdn_database
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: filesox
+      MYSQL_USER: filesox
+      MYSQL_PASSWORD: filesox
+      MYSQL_ROOT_PASSWORD: filesox
+    volumes:
+      - ./storage-db:/var/lib/mysql/
+    networks:
+      - app_network
+
+# Docker Networks
+networks:
+  app_network:
+    driver: bridge
