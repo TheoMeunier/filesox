@@ -1,0 +1,35 @@
+.alerts {
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 16px;
+    position: absolute;
+}
+
+.alert {
+    width: 350px;
+    height: 60px;
+    background: white;
+    margin: 12px 0;
+    box-shadow: 0 0 10px rgba(95, 95, 95, 0.3);
+    display: flex;
+    align-items: center;
+    position: relative;
+    transform: translateX(100%);
+    animation: moveleft 0.5s linear forwards;
+}
+
+.alert svg {
+    width: 28px;
+    height: 28px;
+    margin: 0 15px;
+}
+
+@keyframes moveleft {
+    100% {
+        transform: translateX(0);
+    }
+}

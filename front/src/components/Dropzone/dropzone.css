@@ -1,0 +1,39 @@
+.dropzone__file {
+    pointer-events: none;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    color: #fff;
+}
+
+.dropzone__file::before,
+.dropzone__file::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.dropzone__file::after {
+    margin: 10px;
+    border-radius: 4px;
+    @apply border-dashed border-2 border-indigo-500;
+}
+
+.dropzone__file::before {
+    @apply bg-indigo-400;
+    opacity: 0.6;
+}
+
+.active {
+    opacity: 1;
+}

@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* grid tailwind */
+.grid-2 {
+  @apply grid grid-cols-2;
+}
+.grid-3 {
+  @apply grid grid-cols-3;
+}
+.grid-4 {
+  @apply grid grid-cols-4;
+}
+.grid-5 {
+  @apply grid grid-cols-5;
+}
+.grid-6 {
+  @apply grid grid-cols-6;
+}
+.grid-7 {
+  @apply grid grid-cols-7;
+}
+.grid-8 {
+  @apply grid grid-cols-7;
+}
+.grid-9 {
+  @apply grid grid-cols-9;
+}
+.grid-10 {
+  @apply grid grid-cols-10;
+}
+.grid-10 {
+  @apply grid grid-cols-11;
+}
+.grid-10 {
+  @apply grid grid-cols-12;
+}
