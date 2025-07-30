@@ -1,8 +1,6 @@
 package tmeunier.fr.actions.auth
 
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.ws.rs.BadRequestException
-import jakarta.ws.rs.ForbiddenException
 import tmeunier.fr.databases.entities.RefreshTokenEntity
 import tmeunier.fr.dtos.requests.AuthRefreshTokenRequest
 import tmeunier.fr.dtos.responses.LoginResponse
