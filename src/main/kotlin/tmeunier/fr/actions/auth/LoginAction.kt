@@ -1,6 +1,8 @@
 package tmeunier.fr.actions.auth
 
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.NotFoundException
+import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.databases.entities.UserEntity
 import tmeunier.fr.dtos.requests.LoginRequest
 import tmeunier.fr.dtos.responses.LoginResponse
@@ -20,8 +22,10 @@ class LoginAction(
         if (user === null) throw UserNotFountException(request.email)
 
         if (passwordService.verifyPassword(request.password, user.password)) {
+            val rootFolderUser = FolderEntity.findById(user.filePath) ?: throw NotFoundException("Root folder not found for user ${user.name}")
+
             return LoginResponse(
-                token = authService.generateToken(user),
+                token = authService.generateToken(user, rootFolderUser.path),
                 refreshToken = authService.generateRefreshToken(user)
             )
         } else {

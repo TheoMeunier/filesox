@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Response
 import tmeunier.fr.actions.auth.RegisterAction
 import tmeunier.fr.dtos.requests.RegisterRequest
 import tmeunier.fr.dtos.responses.RegisterResponse
+import java.util.UUID
 
 @Path("/api/auth/register")
 @Produces(MediaType.APPLICATION_JSON)

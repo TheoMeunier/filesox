@@ -1,12 +1,23 @@
 services:
+  # Reverse Proxy Service
+  nginx:
+    image: nginx:alpine
+    container_name: filesox_nginx
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app_network
 
   # Mariadb Service
   mariadb:
     image: mariadb:latest
-    container_name: mariadb_tmeunier_cdn_database
+    container_name: filesox_mariadb
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_DATABASE: filesox
       MYSQL_USER: filesox

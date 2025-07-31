@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response
 import tmeunier.fr.actions.auth.RefreshTokenAction
 import tmeunier.fr.dtos.requests.AuthRefreshTokenRequest
 
-@Path("/api/auth/refresh-token")
+@Path("/api/auth/refresh")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class RefreshTokenResource(

@@ -53,5 +53,9 @@ class FolderEntity : PanacheEntityBase {
         fun findByPath(path: String): FolderEntity? {
             return find("path", path).firstResult()
         }
+
+        fun findAllByParentId(parentId: UUID): List<FolderEntity> {
+            return find("parent.id", parentId).list()
+        }
     }
 }

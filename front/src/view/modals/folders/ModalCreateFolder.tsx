@@ -37,8 +37,8 @@ export function ModalCreateFolder() {
 
     const {mutate} = useMutation(
         async ({path} :{path: string}) => {
-            await API.post("/folders/create", {
-                path:  getItem(FilePaths.path) === 'null' ? '' + path : getItem(FilePaths.path) + path,
+            await API.post("/storages/folders/create", {
+                path:  path,
                 parent_id: getItem(FilePaths.id) === 'null' ? null : getItem(FilePaths.id)
             })
         }, {

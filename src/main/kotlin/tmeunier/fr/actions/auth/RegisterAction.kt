@@ -2,6 +2,7 @@ package tmeunier.fr.actions.auth
 
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.BadRequestException
+import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.databases.entities.UserEntity
 import tmeunier.fr.dtos.requests.LoginRequest
 import tmeunier.fr.dtos.requests.RegisterRequest
@@ -24,7 +25,7 @@ class RegisterAction(
             id = UUID.randomUUID()
             name = request.name
             email = request.email
-            filePath = request.filePath ?: "default/path/${request.name}"
+            filePath = UUID.randomUUID()
             password = passwordService.hashPassword(request.password)
         }
 

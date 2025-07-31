@@ -41,10 +41,6 @@ class FileEntity : PanacheEntityBase {
     @JoinColumn(name = "parent_id", nullable = true)
     var parent: FolderEntity? = null
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    lateinit var createdAt: LocalDateTime
-
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     lateinit var updatedAt: LocalDateTime
@@ -58,7 +54,7 @@ class FileEntity : PanacheEntityBase {
             return find("name", name).firstResult()
         }
 
-        fun findByParentId(parentId: UUID): List<FileEntity> {
+        fun findAllByParentId(parentId: UUID): List<FileEntity> {
             return list("parent.id", parentId)
         }
     }

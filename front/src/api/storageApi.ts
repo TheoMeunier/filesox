@@ -24,7 +24,7 @@ export function useStoragesApi() {
         ["storage", currentPath],
         async () => {
             const response = await API.post("/storages", {
-                path: currentPath === null ? 'null' : currentPath
+                path: currentPath,
             })
             return response.data
         }
@@ -120,7 +120,7 @@ export function useMoveStorageApi() {
     })
 
     const mutation = useMutation(
-        async (data: MoveStorageFormFields ) => {
+        async (data: MoveStorageFormFields) => {
             await API.post("/storages/move", {
                 id: activeStorage!.id,
                 path: getPathOrName(),
