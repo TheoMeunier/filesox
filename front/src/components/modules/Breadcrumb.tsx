@@ -10,8 +10,6 @@ export function Breadcrumb() {
     const {t} = useTranslation()
     const pathnames = currentPath?.split("/").filter((x: string) => x) ?? []
 
-    console.log(currentPath)
-
     return <div className="mb-8">
         <div className="flex items-center gap-3">
             <BreadcrumbItem
