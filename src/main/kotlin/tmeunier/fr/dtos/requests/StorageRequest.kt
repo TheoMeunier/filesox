@@ -36,12 +36,8 @@ data class MoveStorageRequest(
     @field:NotNull(message = "Storage ID is required")
     val id: UUID,
 
-    @field:NotBlank(message = "The path is required")
-    val path: String,
-
     @field:NotBlank(message = "The move path is required")
     val newPath: String,
-
 
     val parentId: UUID?,
 )

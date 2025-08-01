@@ -123,7 +123,6 @@ export function useMoveStorageApi() {
         async (data: MoveStorageFormFields) => {
             await API.post("/storages/move", {
                 id: activeStorage!.id,
-                path: getPathOrName(),
                 new_path: data.path,
                 parent_id: activeStorage!.parent_id
             })

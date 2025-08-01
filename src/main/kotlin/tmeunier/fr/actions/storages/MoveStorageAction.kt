@@ -4,14 +4,18 @@ import jakarta.enterprise.context.ApplicationScoped
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.dtos.requests.MoveStorageRequest
+import tmeunier.fr.dtos.responses.S3Folder
 import tmeunier.fr.exceptions.common.UnauthorizedException
 import java.time.LocalDateTime
 
 @ApplicationScoped
 class MoveStorageAction
 {
+    val ROOT_PATH = "./"
+    val ROOT_FOLDER = "/"
+
     fun execute(request: MoveStorageRequest): Any {
-        val isFolder = request.path.endsWith("/")
+        val isFolder = request.newPath.endsWith("/")
 
         return if (isFolder) {
             moveFolder(request)
@@ -20,18 +24,47 @@ class MoveStorageAction
         }
     }
 
-    private fun moveFolder(request: MoveStorageRequest): FolderEntity {
-        val newPath = request.newPath.replace(request.path, "")
-        val parentFolder = FolderEntity.findByPath(newPath) ?: throw UnauthorizedException()
-        val folders = FolderEntity.list("path like ?1", "${request.path}%")
+    private fun moveFolder(request: MoveStorageRequest): S3Folder {
+        val folder = FolderEntity.findById(request.id) ?: throw UnauthorizedException()
 
-        folders.forEach {
-            it.path = it.path.replace(request.path, request.newPath)
-            it.parent = parentFolder
-            it.persist()
+        //Verify if new folder parent exists
+        val movePath = if (request.newPath == ROOT_PATH) ROOT_FOLDER else "/${request.newPath}"
+        val newParent = request.parentId?.let { FolderEntity.findByPath(movePath) } ?: throw UnauthorizedException()
+
+        val actualNewPath =  if (movePath === ROOT_FOLDER) {
+            "/${folder.path.split("/").reversed()[1]}/"
+        } else {
+            "${newParent.path}${folder.path.trim('/')}/"
         }
 
-        return FolderEntity.findById(request.id)!!
+        val folders = FolderEntity
+            .list("path like ?1", "${folder.path}%")
+            .sortedBy { it.path.count { chart -> chart == '/'} }
+
+        folders.forEach { folderToMove ->
+            val oldPath = folderToMove.path
+
+            val newFolderPath = if (folderToMove.id == folder.id) {
+                actualNewPath
+            } else {
+                oldPath.replace(folder.path, actualNewPath)
+            }
+
+            folderToMove.path = newFolderPath
+
+            // update the parent folder
+            if (folderToMove.id == folder.id) {
+                folderToMove.parent = newParent
+            } else {
+                val parentPath = newFolderPath.substringBeforeLast("/")
+                folderToMove.parent = FolderEntity.findByPath(parentPath)
+            }
+
+            folderToMove.persist()
+        }
+
+
+        return S3Folder(folder.id, folder.path, newParent.id)
     }
 
     private fun moveFile(request: MoveStorageRequest): FileEntity {
