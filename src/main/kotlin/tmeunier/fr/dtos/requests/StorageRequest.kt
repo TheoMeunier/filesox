@@ -23,9 +23,6 @@ data class UpdateStorageRequest(
     @field:NotNull(message = "Storage ID is required")
     val id: UUID,
 
-    @field:NotBlank(message = "Storage name is required")
-    val name: String,
-
     @field:NotBlank(message = "Storage update name is required")
     val newName: String,
 

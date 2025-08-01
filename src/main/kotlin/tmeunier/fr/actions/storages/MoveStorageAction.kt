@@ -27,7 +27,7 @@ class MoveStorageAction
     private fun moveFolder(request: MoveStorageRequest): S3Folder {
         val folder = FolderEntity.findById(request.id) ?: throw UnauthorizedException()
 
-        //Verify if new folder parent exists
+        // Verify if new folder parent exists
         val movePath = if (request.newPath == ROOT_PATH) ROOT_FOLDER else "/${request.newPath}"
         val newParent = request.parentId?.let { FolderEntity.findByPath(movePath) } ?: throw UnauthorizedException()
 

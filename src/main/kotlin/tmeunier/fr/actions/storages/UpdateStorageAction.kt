@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 class UpdateStorageAction
 {
     fun execute(request: UpdateStorageRequest): Any {
-        val isFolder = request.name.endsWith("/") || request.name.startsWith("/")
+        val isFolder = request.newName.endsWith("/")
 
         return if (isFolder) {
             updateFolder(request)
@@ -25,14 +25,16 @@ class UpdateStorageAction
 
     private fun updateFolder(request: UpdateStorageRequest): S3Folder {
         val folder = FolderEntity.findById(request.id) ?: throw UnauthorizedException()
-        val folders = FolderEntity.list("path like ?1", "${request.name}%")
+        val folders = FolderEntity.list("path like ?1", "${folder.path}%")
+
+        val updateNewPath = "/${request.newName}"
 
         folders.forEach {
-            it.path = it.path.replace(request.name, request.newName)
+            it.path = it.path.replace(folder.path, updateNewPath)
             it.persist()
         }
 
-        folder.path = request.newName
+        folder.path = updateNewPath
         folder.updatedAt = LocalDateTime.now()
         folder.persist()
 
