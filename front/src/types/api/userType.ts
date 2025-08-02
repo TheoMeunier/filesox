@@ -2,12 +2,12 @@ import {z} from "zod";
 import {paginationSchemaType} from "../components/paginationType.ts";
 
 export interface UserType {
-    id: number;
+    id: string;
     name: string;
     email: string;
     created_at: string;
     permissions: string[];
-    file_path: string | null;
+    //file_path: string | null;
     layout?: boolean;
 }
 
@@ -42,16 +42,15 @@ export interface PermissionType {
 }
 
 // schema zod
-export const usersSchemaType = paginationSchemaType(
-    z.array(z.object({
-        id: z.number(),
-        name: z.string(),
-        email: z.string(),
-        file_path: z.string().nullable(),
-        created_at: z.string(),
-        permissions: z.array(z.string()),
-    })),
-)
+export const usersSchemaType = z.array(z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    email: z.string(),
+    //file_path: z.string().nullable(),
+    created_at: z.string(),
+    permissions: z.array(z.string()),
+}))
+
 export const logsProfileSchemaType = paginationSchemaType(
     z.array(z.object({
         id: z.number(),
@@ -70,7 +69,7 @@ export const profileSchemaType = z.object({
     permissions: z.array(z.string()),
 })
 
-export const permissionsSchemaType  = z.array(z.object({
+export const permissionsSchemaType = z.array(z.object({
     id: z.number(),
     name: z.string(),
 }))

@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import {Trash2} from "lucide-react";
 import {useAdminDeleteUserApi} from "@/api/admin/adminUserApi.ts";
 
-export function AdminDeleteUserModal({userId}: {userId: number}) {
+export function AdminDeleteUserModal({userId}: {userId: string}) {
     const {closeModal} = useModal()
     const {t}  = useTranslation()
 

@@ -14,13 +14,13 @@ import {
 } from "@/types/form/adminFormType.ts";
 import {useRoles} from "@hooks/useRoles.ts";
 
-export function useUserApi(page: number) {
+export function useUserApi() {
     const API = useAxios()
 
     const {data, isLoading} = useQuery(
-        ['users', page],
+        ['users'],
         async () => {
-            const response = await API.get('/admin/users?page=' + page)
+            const response = await API.get('/admin/users')
             return usersSchemaType.parse(response.data)
         }
     );
@@ -75,7 +75,7 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         defaultValues: {
             name: user.name,
             email: user.email,
-            file_path: user.file_path || './',
+            //file_path: user.file_path || './',
             permissions: permissions ? getPermissionsValue(permissions, user.permissions) : undefined,
         }
     })
@@ -103,7 +103,7 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
     return {form, onSubmit, isLoading: mutation.isLoading}
 }
 
-export function useAdminDeleteUserApi(userId: number) {
+export function useAdminDeleteUserApi(userId: string) {
     const {closeModal} = useModal()
     const {setAlerts} = useAlerts()
     const API = useAxios()
