@@ -20,13 +20,6 @@ data class MultipartUploadContext(
     }
 }
 
-data class MultipartUploadStatus(
-    val uploadId: String,
-    val status: String,
-    val completedParts: Int,
-    val totalParts: Int
-)
-
 @ApplicationScoped
 class UploadMultipartService(
     private val s3Client: S3Client
