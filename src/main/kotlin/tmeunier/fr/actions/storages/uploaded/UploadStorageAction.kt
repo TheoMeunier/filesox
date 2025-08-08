@@ -3,6 +3,7 @@ package tmeunier.fr.actions.storages.uploaded
 import jakarta.enterprise.context.ApplicationScoped
 import org.jboss.resteasy.reactive.multipart.FileUpload
 import tmeunier.fr.dtos.responses.UploadPartResult
+import tmeunier.fr.exceptions.storage.FileChunkIsEmptyException
 import tmeunier.fr.services.files_system.UploadMultipartService
 import tmeunier.fr.services.logger
 import kotlin.io.path.inputStream
@@ -16,7 +17,7 @@ class UploadStorageAction(
         logger.info { "Processing chunk $chunkNumber/$totalChunks for upload $uploadId" }
 
         if (file.size() <= 0) {
-            throw IllegalArgumentException("File chunk is empty")
+            throw FileChunkIsEmptyException()
         }
 
         val inputStream = file.uploadedFile().inputStream()

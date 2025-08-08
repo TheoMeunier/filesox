@@ -4,6 +4,7 @@ import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.*
 import software.amazon.awssdk.core.sync.RequestBody
 import jakarta.enterprise.context.ApplicationScoped
+import tmeunier.fr.exceptions.storage.UploadIdNotFoundException
 import tmeunier.fr.services.logger
 import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
@@ -36,28 +37,24 @@ class UploadMultipartService(
                 .contentType(contentType)
                 .build()
 
-            logger.info { "Initializing multipart upload for key: $key with content type: $contentType" }
 
             val response = s3Client.createMultipartUpload(request)
             val uploadId = response.uploadId()
 
-           logger.info { "Multipart upload initialized for key: $key with upload ID: $uploadId" }
 
             val context = MultipartUploadContext(uploadId, bucketName, key,)
-            logger.info { "Upload context created for key: $key with upload ID: $uploadId" }
             activeUploads[uploadId] = context
 
             uploadId
 
         } catch (e: Exception) {
-            logger.error(e) { "Failed to initialize multipart upload for key: $key" }
             throw RuntimeException("Failed to initialize multipart upload for key: $key", e)
         }
     }
 
     fun uploadPart(uploadId: String, partData: InputStream, partSize: Long): String {
         val context = activeUploads[uploadId]
-            ?: throw IllegalArgumentException("Upload ID non trouvé: $uploadId")
+            ?: throw UploadIdNotFoundException("Upload id not found: $uploadId")
 
         return try {
             val partNumber = context.nextPartNumber
@@ -91,7 +88,7 @@ class UploadMultipartService(
 
     fun completeUpload(uploadId: String): String {
         val context = activeUploads[uploadId]
-            ?: throw IllegalArgumentException("Upload ID non trouvé: $uploadId")
+            ?: throw UploadIdNotFoundException("Upload id not found: $uploadId")
 
         return try {
             val completedUpload = CompletedMultipartUpload.builder()
@@ -112,7 +109,7 @@ class UploadMultipartService(
 
             response.location()
         } catch (e: Exception) {
-            throw RuntimeException("Erreur lors de la finalisation de l'upload", e)
+            throw RuntimeException("Error while finalizing the upload", e)
         }
     }
 }

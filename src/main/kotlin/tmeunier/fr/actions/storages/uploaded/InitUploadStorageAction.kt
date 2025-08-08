@@ -5,6 +5,7 @@ import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.dtos.requests.InitUploadMultipartRequest
 import tmeunier.fr.dtos.responses.UploadResponse
+import tmeunier.fr.exceptions.storage.StorageAlreadyExistException
 import tmeunier.fr.services.files_system.StorageService
 import tmeunier.fr.services.files_system.UploadMultipartService
 import java.util.UUID
@@ -28,7 +29,7 @@ class InitUploadStorageAction(
         val uploadId = uploader.initUpload(filename, request.type)
 
         if (request.isExist) {
-            throw IllegalStateException("File $filename already exists in the storage.")
+            throw StorageAlreadyExistException("File $filename already exist in storage")
         } else {
             createFile(fileUUID, request, parentId)
         }

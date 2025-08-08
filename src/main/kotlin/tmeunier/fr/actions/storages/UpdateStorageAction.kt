@@ -8,6 +8,7 @@ import tmeunier.fr.dtos.requests.UpdateStorageRequest
 import tmeunier.fr.dtos.responses.S3File
 import tmeunier.fr.dtos.responses.S3Folder
 import tmeunier.fr.exceptions.common.UnauthorizedException
+import tmeunier.fr.exceptions.storage.StorageNotFoundException
 import java.time.LocalDateTime
 
 @ApplicationScoped
@@ -24,7 +25,7 @@ class UpdateStorageAction
     }
 
     private fun updateFolder(request: UpdateStorageRequest): S3Folder {
-        val folder = FolderEntity.findById(request.id) ?: throw UnauthorizedException()
+        val folder = FolderEntity.findById(request.id) ?: throw StorageNotFoundException("Folder ${request.id} not found")
         val folders = FolderEntity.list("path like ?1", "${folder.path}%")
 
         val updateNewPath = "/${request.newName}"
@@ -43,7 +44,7 @@ class UpdateStorageAction
 
     private fun updateFile(request: UpdateStorageRequest): S3File {
         val file = FileEntity.findById(request.id)
-            ?: throw UnauthorizedException()
+            ?: throw StorageNotFoundException("File ${request.id} not found")
 
         file.name = request.newName
         file.updatedAt = LocalDateTime.now()

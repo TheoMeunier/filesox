@@ -7,6 +7,7 @@ import tmeunier.fr.dtos.requests.MoveStorageRequest
 import tmeunier.fr.dtos.responses.S3File
 import tmeunier.fr.dtos.responses.S3Folder
 import tmeunier.fr.exceptions.common.UnauthorizedException
+import tmeunier.fr.exceptions.storage.StorageNotFoundException
 import tmeunier.fr.services.logger
 import java.time.LocalDateTime
 
@@ -31,7 +32,7 @@ class MoveStorageAction
 
         // Verify if new folder parent exists
         val movePath = if (request.newPath == ROOT_PATH) ROOT_FOLDER else "/${request.newPath}"
-        val newParent = request.parentId?.let { FolderEntity.findByPath(movePath) } ?: throw UnauthorizedException()
+        val newParent = request.parentId.let { FolderEntity.findByPath(movePath) } ?: throw StorageNotFoundException("Folder $movePath not found")
 
         val actualNewPath =  if (movePath === ROOT_FOLDER) {
             "/${folder.path.split("/").reversed()[1]}/"
@@ -70,13 +71,13 @@ class MoveStorageAction
     }
 
     private fun moveFile(request: MoveStorageRequest): S3File {
-        val file = FileEntity.findById(request.id) ?: throw UnauthorizedException()
+        val file = FileEntity.findById(request.id) ?: throw StorageNotFoundException("File ${request.id} not found")
 
         val parentFolder = request.newPath.let {
             val folderPath = if (it == ROOT_PATH) ROOT_FOLDER else "/$it"
 
             FolderEntity.findByPath(folderPath)
-                ?: throw UnauthorizedException()
+                ?: throw StorageNotFoundException("Folder $folderPath not found")
         }
 
         file.parent = parentFolder
