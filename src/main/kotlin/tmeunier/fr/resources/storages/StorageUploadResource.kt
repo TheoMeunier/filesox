@@ -65,32 +65,16 @@ class StorageUploadResource(
         @RestForm("file") file: FileUpload
     ): Response {
         return try {
-            val result = uploadStorageAction.execute(uploadId, chunkNumber, totalChunks, file)
+            uploadStorageAction.execute(uploadId, chunkNumber, totalChunks, file)
 
-            when (result) {
-                is UploadPartResult.PartUploaded -> {
-                    Response.ok(
-                        mapOf(
-                            "status" to "chunk_uploaded",
-                            "uploadId" to uploadId,
-                            "chunkNumber" to chunkNumber,
-                            "totalChunks" to totalChunks,
-                            "etag" to result.etag
-                        )
-                    ).build()
-                }
+            Response.ok(
+                mapOf(
+                    "uploadId" to uploadId,
+                    "chunkNumber" to chunkNumber,
+                    "totalChunks" to totalChunks,
+                )
+            ).build()
 
-                is UploadPartResult.Completed -> {
-                    Response.ok(
-                        mapOf(
-                            "status" to "upload_completed",
-                            "uploadId" to uploadId,
-                            "s3Location" to result.s3Location,
-                            "finalEtag" to result.etag
-                        )
-                    ).build()
-                }
-            }
         } catch (e: Exception) {
             Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(mapOf("error" to (e.message ?: "Unknown error")))
