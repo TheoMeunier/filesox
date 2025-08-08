@@ -23,7 +23,12 @@ data class S3Response(
     val files: List<S3File>,
 )
 
-data class UploadCompleteResponse(
+data class UploadResponse(
     val uploadId: String,
-    val filename: String,
+    val fileId: UUID,
 )
+
+sealed class UploadPartResult {
+    data class PartUploaded(val etag: String) : UploadPartResult()
+    data class Completed(val etag: String, val s3Location: String) : UploadPartResult()
+}

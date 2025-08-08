@@ -19,7 +19,7 @@ export function useUploadApi() {
     const {setAlerts} = useAlerts()
 
     const handleFileUpload = async (files: File[], isExist: boolean) => {
-        const chunkSize = 1024 * 1024 * 5; // 5MB
+        const chunkSize = 1024 * 1024 * 25; // 25MB
         const totalChunksFiles = files.map(file => Math.ceil(file.size / chunkSize)).reduce((a, b) => a + b, 0);
         const parent_id = getItem(FilePaths.id) === 'null' ? null : getItem(FilePaths.id);
         setUploadLogin(true);
@@ -44,6 +44,7 @@ export function useUploadApi() {
                 });
 
             const uploadResponse = initResponse.data;
+            console.log(uploadResponse);
             const chunks = createFileChunks(file, chunkSize);
 
             for (let index = 0; index < chunks.length; index++) {
@@ -65,7 +66,7 @@ export function useUploadApi() {
 
             await API.post("/files/upload/complete", {
                 upload_id: uploadResponse.upload_id,
-                filename: uploadResponse.filename,
+                file_id: uploadResponse.file_id,
                 is_exist: isExist,
             });
 

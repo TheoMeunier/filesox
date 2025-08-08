@@ -37,6 +37,9 @@ class FileEntity : PanacheEntityBase {
     @Column(nullable = false, length = 100)
     lateinit var type: String
 
+    @Column(name = "is_exist", nullable = false)
+    var isExist: Boolean = false
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = true)
     var parent: FolderEntity? = null

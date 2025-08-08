@@ -20,6 +20,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
 
     //auth
     implementation("io.quarkus:quarkus-smallrye-jwt")
@@ -32,6 +33,10 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("io.quarkus:quarkus-flyway")
     implementation("org.flywaydb:flyway-mysql")
+
+    //s3
+    implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3:3.9.1")
+    implementation("software.amazon.awssdk:url-connection-client:2.32.13")
 }
 
 group = "tmenier.fr"

@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS `files`
+       ADD COLUMN `is_exist` BOOLEAN NOT NULL DEFAULT false;
