@@ -4,8 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.dtos.requests.MoveStorageRequest
+import tmeunier.fr.dtos.responses.S3File
 import tmeunier.fr.dtos.responses.S3Folder
 import tmeunier.fr.exceptions.common.UnauthorizedException
+import tmeunier.fr.services.logger
 import java.time.LocalDateTime
 
 @ApplicationScoped
@@ -15,7 +17,7 @@ class MoveStorageAction
     val ROOT_FOLDER = "/"
 
     fun execute(request: MoveStorageRequest): Any {
-        val isFolder = request.newPath.endsWith("/")
+        val isFolder = request.storageName.endsWith("/")
 
         return if (isFolder) {
             moveFolder(request)
@@ -67,12 +69,13 @@ class MoveStorageAction
         return S3Folder(folder.id, folder.path, newParent.id)
     }
 
-    private fun moveFile(request: MoveStorageRequest): FileEntity {
-        val file = FileEntity.findById(request.id)
-            ?: throw UnauthorizedException()
+    private fun moveFile(request: MoveStorageRequest): S3File {
+        val file = FileEntity.findById(request.id) ?: throw UnauthorizedException()
 
         val parentFolder = request.newPath.let {
-            FolderEntity.findByPath(request.newPath)
+            val folderPath = if (it == ROOT_PATH) ROOT_FOLDER else "/$it"
+
+            FolderEntity.findByPath(folderPath)
                 ?: throw UnauthorizedException()
         }
 
@@ -80,6 +83,13 @@ class MoveStorageAction
         file.updatedAt = LocalDateTime.now()
         file.persist()
 
-        return file
+        return S3File(
+            id = file.id,
+            name = file.name,
+            type = file.type,
+            size = file.size.toString(),
+            parentId = file.parent?.id,
+            icon = file.icon
+        )
     }
 }
