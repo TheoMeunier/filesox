@@ -5,7 +5,7 @@ export const fr = {
             folders: 'Dossiers',
             files: 'Fichiers',
             auth: {
-                sign_in_to_tour_account: 'Connectez-vous à votre compte',
+                sign_in_to_tour_account: 'Connectez-vous',
                 register: 'Créer un compte',
             },
             profile: {
