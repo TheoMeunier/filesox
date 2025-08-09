@@ -17,7 +17,6 @@ import {
     Share2,
     SquarePen,
     Trash2,
-    Upload,
     User,
     Users
 } from "lucide-react";
@@ -107,9 +106,6 @@ export function App() {
                                     <ButtonDownload/>
                                 </>
                             }
-                            {role([RoleEnum.CREATE_OBJECT], user!.roles) && (
-                                <ButtonIcon svg={Upload} title={t('tooltip.upload')}/>
-                            )}
                         </NavItem>
                     </NavItemsRight>
                 </>
