@@ -19,9 +19,8 @@ import tmeunier.fr.dtos.requests.DeleteStorageRequest
 class StorageDeleteResource(
     private val storageDeleteAction: DeleteStorageAction
 ) {
-    @Authenticated
     @Transactional
-    @RolesAllowed("Administrator", "Delete file or folder")
+    @RolesAllowed("Administration", "Delete file or folder")
     @POST
     fun deleteStorage(@Valid request: DeleteStorageRequest): Response {
         storageDeleteAction.execute(request)

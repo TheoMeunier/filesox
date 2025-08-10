@@ -24,9 +24,8 @@ import java.util.UUID
 @Consumes(MediaType.APPLICATION_JSON)
 class StorageCreateFolderResource {
 
-    @Authenticated
     @Transactional
-    @RolesAllowed("Administrator", "Create file or folder")
+    @RolesAllowed("Administration", "Create file or folder")
     @POST
     fun storageCreateFolder(@Valid request: FolderCreateRequest): Response {
         val parentFolder = request.parentId.let { FolderEntity.findById(it) }

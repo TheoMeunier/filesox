@@ -18,7 +18,6 @@ import tmeunier.fr.actions.storages.uploaded.VerifyUploadStorageAction
 import tmeunier.fr.dtos.requests.CompleteMultipartUploadRequest
 import tmeunier.fr.dtos.requests.InitUploadMultipartRequest
 import tmeunier.fr.dtos.requests.VerifyUploadMultipartRequest
-import tmeunier.fr.dtos.responses.UploadPartResult
 
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)

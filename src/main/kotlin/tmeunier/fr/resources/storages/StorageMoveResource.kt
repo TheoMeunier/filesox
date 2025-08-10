@@ -19,9 +19,8 @@ import tmeunier.fr.dtos.requests.MoveStorageRequest
 class StorageMoveResource(
     private val moveStorageAction: MoveStorageAction
 ) {
-    @Authenticated
     @Transactional
-    @RolesAllowed("Administrator", "Edit file")
+    @RolesAllowed("Administration", "Edit file")
     @POST
     fun moveStorage(@Valid request: MoveStorageRequest): Response {
         val result = moveStorageAction.execute(request)
