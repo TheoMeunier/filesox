@@ -7,7 +7,7 @@ export interface UserType {
     email: string;
     created_at: string;
     permissions: string[];
-    //file_path: string | null;
+    file_path: string | null;
     layout?: boolean;
 }
 
@@ -70,6 +70,6 @@ export const profileSchemaType = z.object({
 })
 
 export const permissionsSchemaType = z.array(z.object({
-    id: z.number(),
+    id: z.string().uuid(),
     name: z.string(),
 }))

@@ -12,7 +12,7 @@ export const adminUserCreateSchema = z.object({
     name: z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
-    file_path: z.string().nullable(),
+    file_path: z.string().min(1),
     permissions: z.array(selectValueSchema),
 })
 

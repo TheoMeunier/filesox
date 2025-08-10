@@ -8,5 +8,10 @@ data class UserResponse(
     val name: String,
     val email: String,
     val permissions: List<String>,
-    val createdAt: String
+    val createdAt: String? = null
+)
+
+data class PermissionResponse(
+    val id: UUID,
+    val name: String,
 )

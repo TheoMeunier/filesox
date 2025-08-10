@@ -14,7 +14,7 @@ import tmeunier.fr.dtos.responses.UserResponse
 @Path("/api/admin/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class ListingUserResource {
+class GetAllUserResource {
 
     @RolesAllowed("Administration")
     @Transactional

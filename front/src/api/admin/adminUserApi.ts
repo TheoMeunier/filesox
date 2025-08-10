@@ -44,7 +44,7 @@ export function useAdminCreateUserApi() {
             await API.post('/admin/users/create',
                 {
                     ...data,
-                    permissions: Array.isArray(data.permissions) ? data.permissions.map((p) => parseInt(p.value)) : []
+                    permissions: Array.isArray(data.permissions) ? data.permissions.map((p) => p.value) : []
                 })
         },
         {
@@ -75,7 +75,7 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         defaultValues: {
             name: user.name,
             email: user.email,
-            //file_path: user.file_path || './',
+            file_path: user.file_path,
             permissions: permissions ? getPermissionsValue(permissions, user.permissions) : undefined,
         }
     })
@@ -84,7 +84,7 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         async (formData: AdminUserEditFormFields) => {
             await API.post('/admin/users/update/' + user.id, {
                 ...formData,
-                permissions: Array.isArray(formData.permissions) ? formData.permissions.map((p) => parseInt(p.value)) : [],
+                permissions: Array.isArray(formData.permissions) ? formData.permissions.map((p) => p.value) : [],
             })
         }
         , {

@@ -35,8 +35,8 @@ class PermissionEntity : PanacheEntityBase {
             return find("name", name).firstResult()
         }
 
-        fun findByNames(names: List<String>): List<PermissionEntity> {
-            return find("name in ?1", names).list()
+        fun findById(uuid: UUID): PermissionEntity? {
+            return find("id = ?1", uuid).firstResult()
         }
     }
 }

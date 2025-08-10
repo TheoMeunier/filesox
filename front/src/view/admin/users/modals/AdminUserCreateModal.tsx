@@ -87,7 +87,7 @@ export function AdminCreateUserModal() {
                                 isClearable={false}
                                 value={field.value}
                                 primaryColor={"indigo"}
-                                options={permissions?.map((p) => ({label: p.name, value: p.id.toString()})) || []}
+                                options={permissions?.map((p) => ({label: p.name, value: p.id})) || []}
                                 onChange={(v) => field.onChange(v)}
                             />
                         )}
