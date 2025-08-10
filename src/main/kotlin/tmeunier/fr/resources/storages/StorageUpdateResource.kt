@@ -1,6 +1,7 @@
 package tmeunier.fr.resources.storages
 
 import io.quarkus.security.Authenticated
+import jakarta.annotation.security.RolesAllowed
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import jakarta.ws.rs.Consumes
@@ -27,6 +28,7 @@ class StorageUpdateResource(
 ) {
     @Authenticated
     @Transactional
+    @RolesAllowed("Administrator", "Edit file")
     @POST
     fun updateStorage(@Valid request: UpdateStorageRequest): Response {
       val result = updateStorageAction.execute(request)

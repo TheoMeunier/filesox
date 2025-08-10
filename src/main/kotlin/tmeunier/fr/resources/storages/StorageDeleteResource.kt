@@ -1,6 +1,7 @@
 package tmeunier.fr.resources.storages
 
 import io.quarkus.security.Authenticated
+import jakarta.annotation.security.RolesAllowed
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import jakarta.ws.rs.Consumes
@@ -20,6 +21,7 @@ class StorageDeleteResource(
 ) {
     @Authenticated
     @Transactional
+    @RolesAllowed("Administrator", "Delete file or folder")
     @POST
     fun deleteStorage(@Valid request: DeleteStorageRequest): Response {
         storageDeleteAction.execute(request)

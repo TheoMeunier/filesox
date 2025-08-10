@@ -1,6 +1,7 @@
 package tmeunier.fr.resources.storages
 
 import io.quarkus.security.Authenticated
+import jakarta.annotation.security.RolesAllowed
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import jakarta.ws.rs.Consumes
@@ -22,8 +23,10 @@ import java.util.UUID
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class StorageCreateFolderResource {
+
     @Authenticated
     @Transactional
+    @RolesAllowed("Administrator", "Create file or folder")
     @POST
     fun storageCreateFolder(@Valid request: FolderCreateRequest): Response {
         val parentFolder = request.parentId.let { FolderEntity.findById(it) }
