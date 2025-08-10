@@ -5,6 +5,8 @@ import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse
+import tmeunier.fr.exceptions.storage.DownloadChunkFileException
+import tmeunier.fr.services.logger
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -25,23 +27,18 @@ class DownloadFileService(
             val start = bytesDownloaded
             val end = min(bytesDownloaded + CHUNK_SIZE - 1, fileSize - 1)
 
-            println("Téléchargement chunk $chunkNumber: bytes $start-$end (${end - start + 1} bytes)")
-
             try {
                 downloadAndWriteChunk(objectKey, start, end, output)
                 bytesDownloaded = end + 1
                 chunkNumber++
 
-                // Log du progrès
-                val progress = (bytesDownloaded.toDouble() / fileSize * 100).toInt()
-                println("Progrès: $progress% ($bytesDownloaded/$fileSize bytes)")
-
             } catch (e: Exception) {
-                throw RuntimeException("Erreur lors du téléchargement du chunk $chunkNumber", e)
+                throw DownloadChunkFileException("Error downloading chunk $chunkNumber for file $objectKey: ${e.message}").apply {
+                    logger.error { "Error downloading chunk $chunkNumber for file $objectKey: ${e.message}" }
+                }
             }
         }
 
-        println("Téléchargement terminé: $chunkNumber chunks, $bytesDownloaded bytes")
     }
 
     fun downloadAndWriteChunk(objectKey: String, start: Long, end: Long, output: OutputStream) {
@@ -56,7 +53,7 @@ class DownloadFileService(
                 transferData(s3Object, output)
             }
         } catch (e: IOException) {
-            throw RuntimeException("Erreur lors du streaming du chunk bytes=$start-$end", e)
+            logger.error { "Error while streaming chunk bytes=$start-$end, message: ${e.message}" }
         }
     }
 
@@ -71,12 +68,12 @@ class DownloadFileService(
 
     @Throws(IOException::class)
     fun transferData(input: InputStream, output: OutputStream) {
-        val buffer = ByteArray(8192) // Buffer plus petit pour le transfert de chaque chunk
+        val buffer = ByteArray(8192)
         var bytesRead: Int
 
         while ((input.read(buffer).also { bytesRead = it }) != -1) {
             output.write(buffer, 0, bytesRead)
-            output.flush() // Important pour le streaming temps réel
+            output.flush()
         }
     }
 

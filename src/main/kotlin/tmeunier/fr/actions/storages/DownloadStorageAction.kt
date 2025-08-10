@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.StreamingOutput
 import software.amazon.awssdk.services.s3.model.S3Exception
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.exceptions.storage.ErrorCreatingZipException
+import tmeunier.fr.exceptions.storage.ErrorS3Exception
 import tmeunier.fr.exceptions.storage.StorageNotFoundException
 import tmeunier.fr.services.files_system.download.DownloadFileService
 import tmeunier.fr.services.files_system.StorageService
@@ -54,11 +55,10 @@ class DownloadStorageAction(
 
         } catch (e: S3Exception) {
             if (e.statusCode() == 404) {
-                return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Fichier non trouvé: $objectKey")
-                    .build()
+                throw StorageNotFoundException("File $objectKey not found")
             }
-            throw RuntimeException("Erreur lors de l'accès à S3", e)
+
+            throw ErrorS3Exception("Error while downloading file $objectKey: ${e.message}")
         }
     }
 
