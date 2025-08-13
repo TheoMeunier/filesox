@@ -1,7 +1,6 @@
 import {ModalShareFormMedia} from "./partials/ModalShareFormMedia.tsx";
 import {Share2} from "lucide-react";
 import {ModalHeader} from "@components/modules/Modal.tsx";
-import {ModalShareListMedia} from "./partials/ModalShareListMedia.tsx";
 import {useTranslation} from "react-i18next";
 
 export function ModalShareMedia() {
@@ -14,8 +13,6 @@ export function ModalShareMedia() {
                 {t('title.modal.share_media')}
             </h2>
         </ModalHeader>
-
-        <ModalShareListMedia/>
         <ModalShareFormMedia/>
     </>
 }

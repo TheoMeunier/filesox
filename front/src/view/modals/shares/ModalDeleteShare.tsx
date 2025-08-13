@@ -6,8 +6,8 @@ import {useDeleteShare} from "@/api/shareApi.ts";
 import {useModal} from "@hooks/useModal.ts";
 import {useTranslation} from "react-i18next";
 
-export function ModalDeleteShares({url, shareId}: { url: string, shareId: string }) {
-    const {form, onSubmit} = useDeleteShare({url, shareId})
+export function ModalDeleteShares({url}: { url: string}) {
+    const {form, onSubmit} = useDeleteShare({url})
     const {closeModal} = useModal()
     const {t} = useTranslation()
 

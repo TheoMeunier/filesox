@@ -17,13 +17,13 @@ export function useAdminLogsApi(page: number) {
     return {data, isLoading}
 }
 
-export function useAdminSharesApi(page: number) {
+export function useAdminSharesApi() {
     const API = useAxios()
 
     const {data, isLoading} = useQuery(
-        ['shares', page],
+        ['admin-shares'],
         async () => {
-            const response = await API.get('/admin/shares?page=' + page)
+            const response = await API.get('/admin/shares')
             return adminSharesSchemaType.parse(response.data)
         },
     );

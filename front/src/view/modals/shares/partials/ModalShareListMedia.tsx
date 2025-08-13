@@ -39,7 +39,7 @@ export function ModalShareListMedia() {
                                     <ButtonIcon title="copy" onClick={() => handleCopy(share.id)}
                                                 svg={ClipboardCopy}/>
                                     <ButtonIcon title="delete" onClick={() => openModal(() => <ModalDeleteShares
-                                        url={`/profile/shares/delete`} shareId={share.id}/>, 'md')} svg={Trash2}/>
+                                        url={`/shares/delete/${share.id}`} />, 'md')} svg={Trash2}/>
                                 </div>
                             </li>
                         </ul>

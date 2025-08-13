@@ -27,13 +27,13 @@ export function useLogsProfileApi(page: number) {
     return {data, isLoading}
 }
 
-export function useSharesProfileApi(page: number  ) {
+export function useSharesProfileApi() {
     const API = useAxios()
 
     const {data, isLoading} = useQuery(
-        ['shares', page],
+        ['shares'],
         async () => {
-            const response = await API.get('/profile/shares?page=' + page)
+            const response = await API.get('/profile/shares')
             return apiProfileSharedSchemaType.parse(response.data)
         },
     );

@@ -39,9 +39,9 @@ export function useCreateShare() {
 
     const mutation = useMutation(
         async (data: ShareStorageFormFields) => {
-            await API.post("/storages/share", {
+            await API.post("/shares/create", {
                 storage_id: activeStorage!.id,
-                type: !isFolder ? "file" : "folder",
+                type: !isFolder ? "folder" : "file",
                 password: data.password === "" ? null : data.password,
                 duration: data.duration,
                 type_duration: data.type_duration
@@ -60,7 +60,7 @@ export function useCreateShare() {
     return {form, onSubmit}
 }
 
-export function useDeleteShare({url, shareId}: {url: string, shareId: string}) {
+export function useDeleteShare({url}: {url: string}) {
     const {setAlerts} = useAlerts()
     const {closeModal} = useModal()
     const client = useQueryClient()
@@ -71,9 +71,7 @@ export function useDeleteShare({url, shareId}: {url: string, shareId: string}) {
 
     const {mutate} = useMutation(
         async () => {
-            await API.post(url, {
-                id: shareId
-            })
+            await API.delete(url)
         }, {
             onSuccess: () => {
                 client.invalidateQueries('shares')

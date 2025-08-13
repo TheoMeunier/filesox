@@ -10,7 +10,6 @@ class DownloadStorageResource(
     private val downloadStorageAction: DownloadStorageAction
 )
 {
-
     @GET
     @RolesAllowed("Administration", "Download")
     @Path("/{objectKey}")

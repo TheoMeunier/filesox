@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {
     Table,
     TableBody,
@@ -8,7 +7,6 @@ import {
     TableNoData,
     TableRow
 } from "@components/modules/Table.tsx";
-import {Pagination} from "@components/modules/Pagination.tsx";
 import {useTranslation} from "react-i18next";
 import {ButtonIcon} from "@components/modules/Button.tsx";
 import {ClipboardCopy, Share2, Trash2} from "lucide-react";
@@ -19,12 +17,11 @@ import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {useAdminSharesApi} from "@/api/admin/adminApi.ts";
 
 export function AdminShares() {
-    const [page, setPage] = useState(1)
     const {t} = useTranslation();
     const {openModal} = useModal()
     const {setAlerts} = useAlerts()
 
-    const {data, isLoading} = useAdminSharesApi(page)
+    const {data, isLoading} = useAdminSharesApi()
 
     const handleCopy = (id: string) => {
         navigator.clipboard.writeText(import.meta.env.VITE_API_URL + '/storages/share/dl/' + id)
@@ -54,8 +51,8 @@ export function AdminShares() {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data && data.data.length > 0 ? (
-                    data.data.map((share) =>
+                {data && data.length > 0 ? (
+                    data.map((share) =>
                         <TableRow key={share.id}>
                             <TableCell>{share.username}</TableCell>
                             <TableCell>{share.path}</TableCell>
@@ -65,7 +62,7 @@ export function AdminShares() {
                                 <div className="flex items-center gap-2">
                                     <ButtonIcon title="copy" onClick={() => handleCopy(share.id)} svg={ClipboardCopy}/>
                                     <ButtonIcon title="delete" onClick={() => openModal(() => <ModalDeleteShares
-                                        url={`/admin/shares/delete}`} shareId={share.id}/>, 'md')} svg={Trash2}/>
+                                        url={`/admin/shares/delete}`}/>, 'md')} svg={Trash2}/>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -74,15 +71,5 @@ export function AdminShares() {
                 )}
             </TableBody>
         </Table>
-
-        {data &&
-            <Pagination
-                currentPage={data.current_page}
-                totalPage={data.total_pages}
-                onPageChange={(p) => {
-                    setPage(p)
-                }}
-            />
-        }
     </div>
 }
