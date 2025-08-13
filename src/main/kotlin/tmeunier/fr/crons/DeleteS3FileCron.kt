@@ -16,7 +16,7 @@ class DeleteS3FileCron(
 
     @Scheduled(every = "10m")
     fun execute() {
-        val files = FileEntity.find("deletedAt != IS NULL", System.currentTimeMillis()).list()
+        val files = FileEntity.find("deletedAt IS NOT NULL").list()
 
         files.forEach {
             val s3Filename = it.id.toString() + "." + storageService.pathInfo(it.name)["extension"]
