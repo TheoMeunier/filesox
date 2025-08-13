@@ -21,6 +21,7 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("io.quarkus:quarkus-scheduler:3.25.2")
 
     //auth
     implementation("io.quarkus:quarkus-smallrye-jwt")

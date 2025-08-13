@@ -48,6 +48,9 @@ class FileEntity : PanacheEntityBase {
     @Column(name = "updated_at", nullable = false)
     lateinit var updatedAt: LocalDateTime
 
+    @Column(name = "deleted_at", nullable = true)
+    var deletedAt: LocalDateTime? = null
+
     companion object : PanacheCompanion<FileEntity> {
         fun findById(id: UUID): FileEntity? {
             return find("id = ?1", id).firstResult()
@@ -58,7 +61,7 @@ class FileEntity : PanacheEntityBase {
         }
 
         fun findAllByParentId(parentId: UUID): List<FileEntity> {
-            return list("parent.id", parentId)
+            return list("parent.id AND deletedAt IS NULL", parentId)
         }
     }
 }

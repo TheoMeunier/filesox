@@ -4,15 +4,22 @@ import jakarta.enterprise.context.ApplicationScoped
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.dtos.requests.DeleteStorageRequest
+import tmeunier.fr.exceptions.storage.StorageNotFoundException
+import java.time.LocalDateTime
 
 @ApplicationScoped
-class DeleteStorageAction
-{
+class DeleteStorageAction {
     fun execute(request: DeleteStorageRequest): Long {
-        return if (request.isFolder) {
-           FolderEntity.delete("id = ?1", request.id)
+        return (if (request.isFolder) {
+            val folder = FolderEntity.findById(request.id) ?: throw StorageNotFoundException("Folder ${request.id} not found")
+            FileEntity.update("deletedAt = ?1 where parent = null where path = ?2", LocalDateTime.now(), folder.path + "%", )
+
+            folder.delete()
         } else {
-            FileEntity.delete("id = ?1", request.id)
-        }
+            val file = FileEntity.findById(request.id) ?: throw StorageNotFoundException("File ${request.id} not found")
+
+            file.deletedAt = LocalDateTime.now()
+            file.persist()
+        }) as Long
     }
 }
