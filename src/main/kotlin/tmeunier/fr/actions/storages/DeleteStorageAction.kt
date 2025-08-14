@@ -9,10 +9,10 @@ import java.time.LocalDateTime
 
 @ApplicationScoped
 class DeleteStorageAction {
-    fun execute(request: DeleteStorageRequest): Long {
-        return (if (request.isFolder) {
+    fun execute(request: DeleteStorageRequest) {
+        (if (request.isFolder) {
             val folder = FolderEntity.findById(request.id) ?: throw StorageNotFoundException("Folder ${request.id} not found")
-            FileEntity.update("deletedAt = ?1 where parent = null where path = ?2", LocalDateTime.now(), folder.path + "%", )
+            FileEntity.update("deletedAt = ?1 where path = ?2", LocalDateTime.now(), folder.path + "%", )
 
             folder.delete()
         } else {
@@ -20,6 +20,6 @@ class DeleteStorageAction {
 
             file.deletedAt = LocalDateTime.now()
             file.persist()
-        }) as Long
+        })
     }
 }

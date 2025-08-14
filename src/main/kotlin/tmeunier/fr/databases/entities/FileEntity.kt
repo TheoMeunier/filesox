@@ -61,7 +61,7 @@ class FileEntity : PanacheEntityBase {
         }
 
         fun findAllByParentId(parentId: UUID): List<FileEntity> {
-            return list("parent.id AND deletedAt IS NULL", parentId)
+            return list("parent.id = ?1 AND deletedAt IS NULL", parentId)
         }
     }
 }

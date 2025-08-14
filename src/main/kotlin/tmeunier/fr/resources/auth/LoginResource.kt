@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import tmeunier.fr.actions.auth.LoginAction
 import tmeunier.fr.dtos.requests.LoginRequest
+import tmeunier.fr.services.CacheService
 
 @Path("/api/auth/login")
 @Produces(MediaType.APPLICATION_JSON)

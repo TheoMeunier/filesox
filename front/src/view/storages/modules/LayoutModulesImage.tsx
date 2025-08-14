@@ -10,19 +10,14 @@ export function LayoutModules({file, height = 48, width = 48}: { file: FileType,
             const fetchImages = async () => {
                 try {
                     const urls: Record<string, any> = {};
-                    const type = file.type === 'image/svg+xml' ? 'text' : 'blob';
 
                     if (file.icon === 'image') {
-                        const response = await API.post("/images", {
-                            path: file.id,
-                            type: file.type
-                        }, {
-                            responseType: type
+                        const response = await API.get(`/images/${file.id}`, {
+                            responseType: 'blob'
                         });
 
                         if (file.type === 'image/svg+xml') {
-                            const blob = new Blob([response.data], {type: 'image/svg+xml'});
-                            urls[file.id] = URL.createObjectURL(blob);
+                            urls[file.id] = URL.createObjectURL(response.data);
                         } else {
                             urls[file.id] = URL.createObjectURL(response.data);
                         }
@@ -32,6 +27,7 @@ export function LayoutModules({file, height = 48, width = 48}: { file: FileType,
                 } catch (error) {
                     console.error('Error on loading file : ', error);
                 }
+
             }
 
             fetchImages();

@@ -38,6 +38,9 @@ dependencies {
     //s3
     implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3:3.9.1")
     implementation("software.amazon.awssdk:url-connection-client:2.32.13")
+
+    // redis
+    implementation("io.quarkus:quarkus-redis-client:3.25.3")
 }
 
 group = "tmenier.fr"

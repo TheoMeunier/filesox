@@ -4,14 +4,14 @@ import io.quarkus.scheduler.Scheduled
 import jakarta.enterprise.context.ApplicationScoped
 import tmeunier.fr.databases.entities.ShareEntity
 import tmeunier.fr.services.logger
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @ApplicationScoped
 class ClearShareExpiredCron {
 
     @Scheduled(every="10m")
     fun execute() {
-        val shares = ShareEntity.find("expiredAt < ?1", LocalDate.now()).list()
+        val shares = ShareEntity.find("expiredAt < ?1", LocalDateTime.now()).list()
 
         shares.forEach {
            it.delete()

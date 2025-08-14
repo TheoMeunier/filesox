@@ -28,6 +28,19 @@ services:
     networks:
       - app_network
 
+  # Redis Service
+  redis:
+    image: redis:latest
+    container_name: filesox_redis
+    restart: unless-stopped
+    command: redis-server --requirepass filesox-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    environment:
+      REDIS_PASSWORD: filesox-redis
+    networks:
+      - app_network
+
 # Docker Networks
 networks:
   app_network:
