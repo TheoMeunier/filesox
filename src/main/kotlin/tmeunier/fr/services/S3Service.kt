@@ -28,12 +28,14 @@ class S3Service(
 
     fun deleteObject(key: String) {
         try {
-            s3Client.deleteObject {
-                DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build()
-            }
+            logger.info { "S3 bucket $bucketName: deleting object $key" }
+
+            val request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build()
+
+            s3Client.deleteObject(request)
         } catch (e: Exception) {
             throw S3DeleteObjectException("Error while deleting object $key: ${e.message}")
         }

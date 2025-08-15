@@ -31,7 +31,7 @@ class GetImageStorageAction(
             return Pair(cacheFile, minuteType)
         }
 
-        val imageData = s3Service.downloadObject(nameFileS3)
+        val imageData = s3Service.downloadObject(nameFileS3) ?: throw StorageNotFoundException("Image $imageId not found in S3")
 
         if (imageData.isEmpty()) {
             throw StorageNotFoundException("Image $imageId not found in S3")

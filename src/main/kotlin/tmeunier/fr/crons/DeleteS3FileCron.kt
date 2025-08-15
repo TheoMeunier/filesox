@@ -2,8 +2,7 @@ package tmeunier.fr.crons
 
 import io.quarkus.scheduler.Scheduled
 import jakarta.enterprise.context.ApplicationScoped
-import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
+import jakarta.transaction.Transactional
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.services.S3Service
 import tmeunier.fr.services.files_system.StorageService
@@ -16,6 +15,7 @@ class DeleteS3FileCron(
 ) {
 
     @Scheduled(every = "10m")
+    @Transactional
     fun execute() {
         val files = FileEntity.find("deletedAt IS NOT NULL").list()
 
