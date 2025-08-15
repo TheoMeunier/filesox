@@ -3,9 +3,9 @@ package tmeunier.fr.services
 import io.quarkus.redis.datasource.RedisDataSource
 import io.quarkus.redis.datasource.value.ValueCommands
 import jakarta.enterprise.context.ApplicationScoped
-import tmeunier.fr.exceptions.redis.ErrorDeleteKeyRedisException
-import tmeunier.fr.exceptions.redis.ErrorGetKeyRedisException
-import tmeunier.fr.exceptions.redis.ErrorSetKeyRedisException
+import tmeunier.fr.exceptions.redis.RedisDeleteKeyException
+import tmeunier.fr.exceptions.redis.RedisGetKeyException
+import tmeunier.fr.exceptions.redis.RedisSetKeyException
 import java.util.Base64
 
 @ApplicationScoped
@@ -22,7 +22,7 @@ class CacheService(
                 Base64.getDecoder().decode(encodedData)
             }
         } catch (e: Exception) {
-            throw ErrorGetKeyRedisException("Error getting key $cacheKey from Redis: ${e.message}")
+            throw RedisGetKeyException("Error getting key $cacheKey from Redis: ${e.message}")
         }
     }
 
@@ -32,7 +32,7 @@ class CacheService(
             valueCommands.setex(cacheKey, 86400, encoded)
 
         } catch (e: Exception) {
-            throw ErrorSetKeyRedisException("Error setting key $cacheKey in Redis: ${e.message}")
+            throw RedisSetKeyException("Error setting key $cacheKey in Redis: ${e.message}")
         }
     }
 
@@ -40,7 +40,7 @@ class CacheService(
         try {
             redisDataSource.key().del(cacheKey)
         } catch (e: Exception) {
-            throw ErrorDeleteKeyRedisException("Error deleting key $cacheKey from Redis: ${e.message}")
+            throw RedisDeleteKeyException("Error deleting key $cacheKey from Redis: ${e.message}")
         }
     }
 
@@ -49,7 +49,7 @@ class CacheService(
         return try {
             redisDataSource.key().exists(cacheKey) > false
         } catch (e: Exception) {
-            throw ErrorGetKeyRedisException("Error getting key $cacheKey from Redis: ${e.message}")
+            throw RedisGetKeyException("Error getting key $cacheKey from Redis: ${e.message}")
         }
     }
 }
