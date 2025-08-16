@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EntityListeners
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
@@ -14,12 +15,15 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import tmeunier.fr.databases.interfaces.AuditableInterface
+import tmeunier.fr.databases.listeners.AuditListener
 import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
 @Table(name = "folders")
-class FolderEntity : PanacheEntityBase {
+@EntityListeners(AuditListener::class)
+class FolderEntity : PanacheEntityBase, AuditableInterface {
     @Id
     @Column(nullable = false)
     lateinit var id: UUID
@@ -44,6 +48,12 @@ class FolderEntity : PanacheEntityBase {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     lateinit var updatedAt: LocalDateTime
+
+    override fun getAuditId() = id.toString()
+
+    override fun getAuditName() = path
+
+    override fun getEntityType() = "FOLDER"
 
     companion object : PanacheCompanion<FolderEntity> {
         fun findById(id: UUID): FolderEntity? {
