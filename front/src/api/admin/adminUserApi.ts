@@ -1,4 +1,3 @@
-import {useMutation, useQuery, useQueryClient} from "react-query";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useAxios} from "@config/axios.ts";
@@ -13,16 +12,18 @@ import {
     adminUserEditSchema
 } from "@/types/form/adminFormType.ts";
 import {useRoles} from "@hooks/useRoles.ts";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 
 export function useUserApi() {
     const API = useAxios()
 
-    const {data, isLoading} = useQuery(
-        ['users'],
-        async () => {
+    const {data, isLoading} = useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
             const response = await API.get('/admin/users')
             return usersSchemaType.parse(response.data)
         }
+        },
     );
 
     return {data, isLoading}
@@ -39,27 +40,28 @@ export function useAdminCreateUserApi() {
         resolver: zodResolver(adminUserCreateSchema),
     })
 
-    const mutation = useMutation(
-        async (data: AdminUserCreateFormFields) => {
-            await API.post('/admin/users/create',
-                {
-                    ...data,
-                    permissions: Array.isArray(data.permissions) ? data.permissions.map((p) => p.value) : []
-                })
-        },
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries('users')
+    const mutation = useMutation({
+        mutationKey: ['create-user'],
+        mutationFn: async (data: AdminUserCreateFormFields) => {
+            await API.post('/admin/users/create', {
+                ...data,
+                permissions: Array.isArray(data.permissions) ? data.permissions.map((p) => p.value) : []
+            })
+            },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['users']}).then(() => {
                 setAlerts('success', t('alerts.success.user.create'))
                 closeModal()
-            }
-        })
+                }
+            )
+        }
+    })
 
     const onSubmit: SubmitHandler<AdminUserCreateFormFields> = (data: AdminUserCreateFormFields) => {
         mutation.mutate(data)
     }
 
-    return {form, onSubmit, isLoading: mutation.isLoading}
+    return {form, onSubmit, isLoading: mutation.isPending}
 }
 
 export function useAdminEditUserApi({user, permissions}: { user: UserType, permissions: PermissionType[] | undefined }) {
@@ -80,27 +82,27 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         }
     })
 
-    const mutation = useMutation(
-        async (formData: AdminUserEditFormFields) => {
+    const mutation = useMutation({
+        mutationFn:  async (formData: AdminUserEditFormFields) => {
             await API.post('/admin/users/update/' + user.id, {
                 ...formData,
                 permissions: Array.isArray(formData.permissions) ? formData.permissions.map((p) => p.value) : [],
             })
-        }
-        , {
-            onSuccess: () => {
-                queryClient.invalidateQueries('users')
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['users']}).then(() => {
                 setAlerts('success', t('alerts.success.user.edit'))
                 closeModal()
-            },
-        })
+            })
+        },
+    })
 
     const onSubmit: SubmitHandler<AdminUserEditFormFields> = (formData: AdminUserEditFormFields) => {
         mutation.mutate(formData)
     }
 
 
-    return {form, onSubmit, isLoading: mutation.isLoading}
+    return {form, onSubmit, isLoading: mutation.isPending}
 }
 
 export function useAdminDeleteUserApi(userId: string) {
@@ -110,13 +112,15 @@ export function useAdminDeleteUserApi(userId: string) {
     const queryClient = useQueryClient()
     const {t} = useTranslation()
 
-    const {mutate} = useMutation(async () => {
-        await API.delete('/admin/users/delete/' + userId)
-    }, {
+    const {mutate} = useMutation({
+        mutationFn: async () => {
+            await API.delete('/admin/users/delete/' + userId)
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries('users');
-            setAlerts('success', t('alerts.success.user.delete'));
-            closeModal();
+            queryClient.invalidateQueries({queryKey: ['users']}).then(() => {
+                setAlerts('success', t('alerts.success.user.delete'));
+                closeModal();
+            });
         }
     });
 

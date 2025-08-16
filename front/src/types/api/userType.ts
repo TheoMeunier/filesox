@@ -42,7 +42,7 @@ export interface PermissionType {
 
 // schema zod
 export const usersSchemaType = z.array(z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     name: z.string(),
     email: z.string(),
     //file_path: z.string().nullable(),
@@ -51,7 +51,7 @@ export const usersSchemaType = z.array(z.object({
 }))
 
 export const logsProfileSchemaType =   z.array(z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
         action: z.string(),
         details: z.string(),
         created_at: z.string(),
@@ -67,6 +67,6 @@ export const profileSchemaType = z.object({
 })
 
 export const permissionsSchemaType = z.array(z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     name: z.string(),
 }))

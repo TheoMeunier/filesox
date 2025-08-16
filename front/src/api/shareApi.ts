@@ -1,4 +1,3 @@
-import {useMutation, useQuery, useQueryClient} from "react-query";
 import {useAxios} from "@config/axios.ts";
 import {useTranslation} from "react-i18next";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -9,17 +8,18 @@ import {useFileStore} from "@stores/useFileStore.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useStorage} from "@hooks/useStorage.ts";
 import {ShareStorageFormFields, shareStorageSchema} from "@/types/form/shareFormTypes.ts";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 
 export function useSharesByStorageId() {
     const API = useAxios()
     const {activeStorage} = useFileStore()
 
-    const {data, isLoading} = useQuery(
-        ['shares', activeStorage!.id],
-        async () => {
+    const {data, isLoading} = useQuery({
+        queryKey: ['shares', activeStorage!.id],
+        queryFn:  async () => {
             const response = await API.get('/storages/share/' + activeStorage!.id)
             return ListModalShareSchemaType.parse(response.data)
-        },
+        }}
     );
 
     return  {data, isLoading}
@@ -37,8 +37,8 @@ export function useCreateShare() {
         resolver: zodResolver(shareStorageSchema),
     })
 
-    const mutation = useMutation(
-        async (data: ShareStorageFormFields) => {
+    const mutation = useMutation({
+        mutationFn: async (data: ShareStorageFormFields) => {
             await API.post("/shares/create", {
                 storage_id: activeStorage!.id,
                 type: !isFolder ? "folder" : "file",
@@ -46,12 +46,12 @@ export function useCreateShare() {
                 duration: data.duration,
                 type_duration: data.type_duration
             })
-        }, {
+        },
             onSuccess: () => {
                 setAlerts('success', t('alerts.success.shares.create'))
                 closeModal()
             }
-        })
+    })
 
     const onSubmit: SubmitHandler<ShareStorageFormFields> = (data: ShareStorageFormFields) => {
         mutation.mutate(data)
@@ -69,16 +69,17 @@ export function useDeleteShare({url}: {url: string}) {
 
     const form = useForm()
 
-    const {mutate} = useMutation(
-        async () => {
+    const {mutate} = useMutation({
+        mutationFn: async () => {
             await API.delete(url)
-        }, {
+        },
             onSuccess: () => {
-                client.invalidateQueries('shares')
-                setAlerts('success', t('alerts.success.shares.delete'))
-                closeModal()
+                client.invalidateQueries({queryKey: ['shares']}).then(() => {
+                    setAlerts('success', t('alerts.success.shares.delete'))
+                    closeModal()
+                })
             }
-        })
+    })
 
     const onSubmit = () => {
         mutate()

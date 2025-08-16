@@ -3,10 +3,10 @@ import {ModalVerifyFileExistUpload} from "@/view/modals/uploads/ModalVerifyFileE
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useAxios} from "@config/axios.ts";
-import {useQueryClient} from "react-query";
 import {useProgressBar} from "@stores/useProgressBar.ts";
 import {useModal} from "@hooks/useModal.ts";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
+import {useQueryClient} from "@tanstack/react-query";
 
 export function useUploadApi() {
     const [_, setFileIsExist] = useState(false);
@@ -70,7 +70,7 @@ export function useUploadApi() {
                 is_exist: isExist,
             });
 
-            await queryClient.invalidateQueries("storage")
+            await queryClient.invalidateQueries({queryKey: ["storage"]})
         }
 
         setUploadLogin(false);

@@ -1,6 +1,5 @@
 import {useCurrentPath} from "@context/modules/CurrentPathContext.tsx";
 import {useAxios} from "@config/axios.ts";
-import {useMutation, useQuery, useQueryClient} from "react-query";
 import {useFileStore} from "@stores/useFileStore.ts";
 import {useTranslation} from "react-i18next";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -14,28 +13,30 @@ import {
     MoveStorageFormFields,
     moveStorageSchema
 } from "@/types/form/storageFormType.ts";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useEffect} from "react";
 
 export function useStoragesApi() {
     const {setFiles, setFolders} = useFileStore();
     const {currentPath, setPath} = useCurrentPath()
     const API = useAxios()
 
-    const {isLoading} = useQuery(
-        ["storage", currentPath],
-        async () => {
+    const {data, isSuccess, isLoading} = useQuery({
+        queryKey: ["storage", currentPath],
+        queryFn: async () => {
             const response = await API.post("/storages", {
                 path: currentPath,
             })
             return response.data
+        }})
+
+    useEffect(() => {
+        if (isSuccess && data) {
+            setPath(data.folder?.path, data.folder?.id)
+            setFiles(data.files)
+            setFolders(data.folders)
         }
-        ,
-        {
-            onSuccess: (data) => {
-                setPath(data.folder?.path, data.folder?.id)
-                setFiles(data.files)
-                setFolders(data.folders)
-            }
-        })
+    }, [isSuccess, data, setPath, setFiles, setFolders])
 
     return {isLoading}
 }
@@ -44,20 +45,19 @@ export function useSearchStorageApi(search: string) {
     const {setFolders, setFiles} = useFileStore()
     const API = useAxios()
 
-    const {isLoading} = useQuery(
-        ['storage', search],
-        async () => {
+    const {data, isSuccess, isLoading} = useQuery({
+        queryKey:['storage', search],
+        queryFn: async () => {
             const response = await API.get(`/storages?search=${search}`)
             return response.data
         },
-        {
-            enabled: search.length >= 3,
-            keepPreviousData: true,
-            onSuccess: (data) => {
-                setFolders(undefined)
-                setFiles(data.files)
-            },
-        })
+        enabled: search.length >= 3,
+    })
+
+    if (isSuccess) {
+        setFolders(undefined)
+        setFiles(data.files)
+    }
 
     return {isLoading}
 }
@@ -78,21 +78,22 @@ export function useEditStorageApi() {
         }
     })
 
-    const mutation = useMutation(
-        async (data: EditStorageFormFields) => {
+    const mutation = useMutation({
+        mutationFn: async (data: EditStorageFormFields) => {
             await API.post("/storages/update", {
                 id: activeStorage!.id,
                 name: getPathOrName(),
                 new_name: data.name,
                 parent_id: activeStorage?.parent_id || null
             })
-        }, {
+        },
             onSuccess: () => {
-                client.invalidateQueries('storage')
-                setAlerts('success', 'Votre media à bien été modifier')
-                closeModal()
+                client.invalidateQueries({queryKey: ['storage']}).then(() => {
+                    setAlerts('success', 'Votre media à bien été modifier')
+                    closeModal()
+                })
             }
-        })
+    })
 
 
     const onSubmit: SubmitHandler<EditStorageFormFields> = (data: EditStorageFormFields) => {
@@ -119,21 +120,22 @@ export function useMoveStorageApi() {
         }
     })
 
-    const mutation = useMutation(
-        async (data: MoveStorageFormFields) => {
+    const mutation = useMutation({
+        mutationFn: async (data: MoveStorageFormFields) => {
             await API.post("/storages/move", {
                 id: activeStorage!.id,
                 storage_name: getPathOrName(),
                 new_path: data.path,
                 parent_id: activeStorage!.parent_id
             })
-        }, {
+        },
             onSuccess: () => {
-                client.invalidateQueries('storage')
-                setAlerts('success', t('alerts.success.folder.move'))
-                closeModal()
+                client.invalidateQueries({queryKey: ['storage']}).then(() => {
+                    setAlerts('success', t('alerts.success.folder.move'))
+                    closeModal()
+                })
             }
-        })
+    })
 
     const onSubmit: SubmitHandler<MoveStorageFormFields> = (data: MoveStorageFormFields) => {
         mutation.mutate(data)
@@ -153,19 +155,20 @@ export function useDeleteStorageApi() {
 
     const form = useForm()
 
-    const mutation = useMutation(
-        async () => {
+    const mutation = useMutation({
+        mutationFn: async () => {
             await API.post("/storages/delete", {
                 id: activeStorage!.id,
                 is_folder: isFolder()
             })
-        }, {
+        },
             onSuccess: () => {
-                client.invalidateQueries('storage')
-                setAlerts('success', t('alerts.success.folder.delete'))
-                closeModal()
+                client.invalidateQueries({queryKey: ['storage']}).then(() => {
+                    setAlerts('success', t('alerts.success.folder.delete'))
+                    closeModal()
+                })
             }
-        })
+    })
 
     const onSubmit = () => {
         mutation.mutate()

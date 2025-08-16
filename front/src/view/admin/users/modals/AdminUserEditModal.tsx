@@ -3,28 +3,18 @@ import {ModalBody, ModalFooter, ModalHeader} from "@components/modules/Modal.tsx
 import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
 import {Button} from "@components/modules/Button.tsx";
 import {Row} from "@components/modules/Grid.tsx";
-import {useQuery} from "react-query";
-import {permissionsSchemaType, PermissionType, UserType} from "@/types/api/userType.ts";
-import {useAxios} from "@config/axios.ts";
+import {PermissionType, UserType} from "@/types/api/userType.ts";
 import {useTranslation} from "react-i18next";
 import {UserPen} from "lucide-react";
 import Select from "react-tailwindcss-select";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAdminEditUserApi} from "@/api/admin/adminUserApi.ts";
+import {useAdminPermissionsApi} from "@/api/admin/adminApi.ts";
 
 export function AdminEditUserModal({user}: { user: UserType }) {
     const {t} = useTranslation()
-    const API = useAxios()
 
-    const {isLoading, data: permissions} = useQuery(
-        'permissions',
-        async () => {
-            const response = await API.get('/admin/permissions')
-            return permissionsSchemaType.parse(response.data)
-        },
-        {
-            refetchOnWindowFocus: false
-        })
+    const {isLoading, permissions} = useAdminPermissionsApi()
 
     if (isLoading) return <div><Loader/></div>;
 

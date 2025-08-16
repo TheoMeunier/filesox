@@ -9,7 +9,6 @@ import {Dashboard} from "./view/Dashboard.tsx";
 import {Profile} from "./view/profile/Profile.tsx";
 import {ProfileEdit} from "./view/profile/modules/EditProfile.tsx";
 import {ProfileShare} from "./view/profile/modules/ShareProfile.tsx";
-import {QueryClient, QueryClientProvider} from "react-query";
 import {ProtectedRouteProvider} from "./context/protectedRoute/ProtectedRouteProvider.tsx";
 import {ProfileLog} from "./view/profile/modules/LogProfile.tsx";
 import {AlertsProvider} from "./context/modules/AlertContext.tsx";
@@ -24,6 +23,7 @@ import {initReactI18next} from "react-i18next";
 import i18n from "i18next";
 import {fr} from "./lang/fr.ts";
 import {en} from "./lang/en.ts";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const queryClient = new QueryClient()
 

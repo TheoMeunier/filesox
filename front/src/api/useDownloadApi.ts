@@ -9,7 +9,6 @@ export function useDownloadApi() {
     const API = useAxios()
 
     const handleClickDownload = async (filePath? : string) => {
-        console.log('Download file:', filePath)
         try {
             const response = await API.post("/storages/download", {
                 id: activeStorage?.id,

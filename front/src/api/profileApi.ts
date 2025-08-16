@@ -1,4 +1,3 @@
-import {useMutation, useQuery} from "react-query";
 import {logsProfileSchemaType} from "@/types/api/userType.ts";
 import {useAxios} from "@config/axios.ts";
 import {apiProfileSharedSchemaType} from "@/types/api/apiProfileType.ts";
@@ -12,17 +11,18 @@ import {
     profileEditPasswordSchema,
     profileEditSchema
 } from "@/types/form/profileFormType.ts";
+import {useMutation, useQuery} from "@tanstack/react-query";
 
 export function useLogsProfileApi() {
     const API = useAxios()
 
-    const {data, isLoading} = useQuery(
-        ['logs'],
-        async () => {
+    const {data, isLoading} = useQuery({
+        queryKey: ['profile-logs'],
+        queryFn:  async () => {
             const response = await API.get('/profile/logs' )
             return logsProfileSchemaType.parse(response.data)
         },
-    );
+    });
 
     return {data, isLoading}
 }
@@ -30,13 +30,13 @@ export function useLogsProfileApi() {
 export function useSharesProfileApi() {
     const API = useAxios()
 
-    const {data, isLoading} = useQuery(
-        ['shares'],
-        async () => {
+    const {data, isLoading} = useQuery({
+        queryKey: ['profile-shares'],
+        queryFn:  async () => {
             const response = await API.get('/profile/shares')
             return apiProfileSharedSchemaType.parse(response.data)
         },
-    );
+    });
 
     return {data, isLoading}
 }
@@ -56,18 +56,17 @@ export function useEditProfileApi()
         }
     )
 
-    const mutation = useMutation(
-        async (data: ProfileEditFormFields) => {
+    const mutation = useMutation({
+        mutationFn:   async (data: ProfileEditFormFields) => {
             await API.post('/profile/update', {
                 name: data.name,
                 email: data.email,
                 layout: user?.layout
             })
-        }, {
-            onSuccess: () => {
-                setAlerts('success', 'Profile information updated')
-            }
-        })
+        },
+        onSuccess: () => {
+    setAlerts('success', 'Profile information updated')
+    }})
 
     const onSubmit: SubmitHandler<ProfileEditFormFields> = (data: ProfileEditFormFields) => {
         mutation.mutate(data)
@@ -86,18 +85,18 @@ export function useProfileEditPasswordApi() {
         resolver: zodResolver(profileEditPasswordSchema),
     })
 
-    const mutation = useMutation(
-        async ({password, confirm_password}: {password: string,  confirm_password: string}) => {
+    const mutation = useMutation({
+        mutationFn: async ({password, confirm_password}: {password: string,  confirm_password: string}) => {
             await API.post('/profile/update/password',{
                 password: password,
                 confirm_password: confirm_password
             })
-        }, {
-            onSuccess: () => {
-                form.reset({password: '', confirm_password: ''})
-                setAlerts('success', 'Password updated successfully')
-            },
-        })
+        },
+        onSuccess: () => {
+            form.reset({password: '', confirm_password: ''})
+            setAlerts('success', 'Password updated successfully')
+        },
+    })
 
     const onSubmit: SubmitHandler<ProfileEditPasswordFormFields> = (data: ProfileEditPasswordFormFields) => {
         mutation.mutate(data)

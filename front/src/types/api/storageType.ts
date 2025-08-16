@@ -19,7 +19,7 @@ export type ActiveStorageType<T> = T | null;
 
 export const ListModalShareSchemaType = z.array(
     z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
         expired_at: z.string(),
         created_at: z.string(),
     })

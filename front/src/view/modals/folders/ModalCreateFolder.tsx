@@ -2,7 +2,6 @@ import {ModalBody, ModalFooter, ModalHeader} from "@components/modules/Modal.tsx
 import {FormDescription, FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
 import {Button} from "@components/modules/Button.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {useMutation, useQueryClient} from "react-query";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -12,6 +11,7 @@ import {useTranslation} from "react-i18next";
 import {FilePaths, useLocalStorage} from "@hooks/useLocalStorage.ts";
 import {FolderPlus} from "lucide-react";
 import {TypoCode} from "@components/modules/Typo.tsx";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 const schema = z.object({
     path: z.string().min(2)
@@ -35,18 +35,19 @@ export function ModalCreateFolder() {
         resolver: zodResolver(schema),
     })
 
-    const {mutate} = useMutation(
-        async ({path} :{path: string}) => {
+    const {mutate} = useMutation({
+        mutationFn:async ({path} :{path: string}) => {
             await API.post("/storages/folders/create", {
                 path:  path,
                 parent_id: getItem(FilePaths.id) === 'null' ? null : getItem(FilePaths.id)
             })
-        }, {
-        onSuccess: () => {
-            client.invalidateQueries('storage')
-            setAlerts('success', t('alerts.success.folder.create'))
-            closeModal()
-        }
+        },
+            onSuccess: () => {
+                client.invalidateQueries({queryKey: ['storage']}).then(() => {
+                    setAlerts('success', t('alerts.success.folder.create'))
+                    closeModal()
+                })
+            }
     })
 
     const onSubmit: SubmitHandler<FormFields> = (data: FormFields) => {

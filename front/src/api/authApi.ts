@@ -4,11 +4,11 @@ import {useNavigate} from "react-router-dom";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useMutation} from "react-query";
 import axios from "axios";
 import {BASE_URL} from "@config/axios.ts";
 import {loginSchemaType} from "@/types/api/authType.ts";
 import {loginSchema, LoginSchemaFormFields} from "@/types/form/authFormType.ts";
+import {useMutation} from "@tanstack/react-query";
 
 export function useLoginApi() {
     const {login} = useAuth()
@@ -20,23 +20,21 @@ export function useLoginApi() {
         resolver: zodResolver(loginSchema)
     })
 
-    const mutation = useMutation(
-        async (data :  LoginSchemaFormFields ) => {
+    const mutation = useMutation({
+        mutationFn: async (data :  LoginSchemaFormFields ) => {
             return await axios.post(BASE_URL + '/auth/login', {
                 email: data.email,
                 password: data.password
             });
         },
-        {
-            onSuccess: (response: any) => {
-                login(loginSchemaType.parse(response.data));
-                nav("/");
-            },
-            onError: () => {
-                setAlerts('danger',  t('alerts.error.auth.login'))
-            }
+        onSuccess: (response: any) => {
+            login(loginSchemaType.parse(response.data));
+            nav("/");
+        },
+        onError: () => {
+            setAlerts('danger',  t('alerts.error.auth.login'))
         }
-    );
+    });
 
 
     const onSubmit: SubmitHandler<LoginSchemaFormFields> = async (data: LoginSchemaFormFields) => {
@@ -46,6 +44,6 @@ export function useLoginApi() {
     return {
         form,
         onSubmit,
-        isLoading: mutation.isLoading,
+        isLoading: mutation.isPending,
     }
 }

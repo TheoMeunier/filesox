@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 export const profileEditSchema = z.object({
-    email: z.string().email(),
+    email: z.email(),
     name: z.string().min(3)
 })
 
