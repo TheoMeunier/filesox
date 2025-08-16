@@ -13,13 +13,13 @@ import {
     profileEditSchema
 } from "@/types/form/profileFormType.ts";
 
-export function useLogsProfileApi(page: number) {
+export function useLogsProfileApi() {
     const API = useAxios()
 
     const {data, isLoading} = useQuery(
-        ['logs', page],
+        ['logs'],
         async () => {
-            const response = await API.get('/profile/logs?page=' + page)
+            const response = await API.get('/profile/logs' )
             return logsProfileSchemaType.parse(response.data)
         },
     );

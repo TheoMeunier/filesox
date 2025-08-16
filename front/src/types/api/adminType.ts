@@ -1,15 +1,12 @@
 import {z} from "zod";
-import {paginationSchemaType} from "../components/paginationType.ts";
 
-export const adminLogsSchemaType = paginationSchemaType(
-    z.array(z.object({
-        id: z.number(),
+export const adminLogsSchemaType = z.array(z.object({
+        id: z.string().uuid(),
         action: z.string(),
-        subject: z.string(),
+        details: z.string(),
         created_at: z.string(),
         username: z.string(),
-    })),
-)
+    }))
 
 export const adminSharesSchemaType = z.array(z.object({
         id: z.string().uuid(),

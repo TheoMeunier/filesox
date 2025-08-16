@@ -3,13 +3,13 @@ import {useAxios} from "@config/axios.ts";
 import {adminLogsSchemaType, adminSharesSchemaType} from "@/types/api/adminType.ts";
 import {permissionsSchemaType} from "@/types/api/userType.ts";
 
-export function useAdminLogsApi(page: number) {
+export function useAdminLogsApi() {
     const API = useAxios()
 
     const {data, isLoading} = useQuery(
-        ['logs', page],
+        ['logs'],
         async () => {
-            const response = await API.get('/admin/logs?page=' + page)
+            const response = await API.get('/admin/logs')
             return adminLogsSchemaType.parse(response.data)
         },
     );

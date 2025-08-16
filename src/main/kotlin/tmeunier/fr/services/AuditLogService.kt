@@ -5,6 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.core.SecurityContext
 import tmeunier.fr.databases.entities.AuditLogEntity
+import tmeunier.fr.databases.entities.UserEntity
 import tmeunier.fr.databases.interfaces.AuditableInterface
 import tmeunier.fr.enums.AuditAction
 import java.util.UUID
@@ -24,7 +25,7 @@ class AuditService(
             this.entityId = entity.getAuditId()
             this.entityName = entity.getAuditName()
             this.details = details ?: generateDefaultDetails(action, entity)
-            this.userId = getCurrentUserId()
+            this.user = getCurrentUser()
             this.ipAddress = getClientIpAddress()
         }
 
@@ -44,11 +45,12 @@ class AuditService(
         }
     }
 
-    private fun getCurrentUserId(): String? {
+    private fun getCurrentUser(): UserEntity? {
         return try {
-            securityContext.userPrincipal?.name
+            val userId = UUID.fromString(securityContext.userPrincipal.name)
+            UserEntity.findById(userId)
         } catch (e: Exception) {
-            "system"
+            null
         }
     }
 

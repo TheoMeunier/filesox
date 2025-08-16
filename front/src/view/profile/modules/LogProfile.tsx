@@ -7,8 +7,6 @@ import {
     TableNoData,
     TableRow
 } from "@components/modules/Table.tsx";
-import {Pagination} from "@components/modules/Pagination.tsx";
-import {useState} from "react";
 import {Pill} from "@components/modules/Pill.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useLogsProfileApi} from "@/api/profileApi.ts";
@@ -16,8 +14,7 @@ import {useTranslation} from "react-i18next";
 
 export function ProfileLog() {
     const {t} = useTranslation()
-    const [page, setPage] = useState(1)
-    const {data, isLoading} = useLogsProfileApi(page)
+    const {data, isLoading} = useLogsProfileApi()
 
     if (isLoading) {
         return <Loader/>;
@@ -33,10 +30,10 @@ export function ProfileLog() {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data && data.data.length > 0 ? (
-                    data.data.map((log) =>
+                {data && data.length > 0 ? (
+                    data.map((log) =>
                         <TableRow key={log.id}>
-                            <TableCell>{log.subject}</TableCell>
+                            <TableCell>{log.details}</TableCell>
                             <TableCell>
                                 <Pill type={log.action}>{log.action}</Pill>
                             </TableCell>
@@ -48,15 +45,5 @@ export function ProfileLog() {
 
             </TableBody>
         </Table>
-
-        {data &&
-            <Pagination
-                currentPage={data.current_page}
-                totalPage={data.total_pages}
-                onPageChange={(p) => {
-                    setPage(p)
-                }}
-            />
-        }
     </div>;
 }

@@ -1,5 +1,4 @@
 import {z} from "zod";
-import {paginationSchemaType} from "../components/paginationType.ts";
 
 export interface UserType {
     id: string;
@@ -51,15 +50,13 @@ export const usersSchemaType = z.array(z.object({
     permissions: z.array(z.string()),
 }))
 
-export const logsProfileSchemaType = paginationSchemaType(
-    z.array(z.object({
-        id: z.number(),
+export const logsProfileSchemaType =   z.array(z.object({
+        id: z.string().uuid(),
         action: z.string(),
-        subject: z.string(),
+        details: z.string(),
         created_at: z.string(),
         username: z.string().nullable(),
-    })),
-)
+    }))
 
 export const profileSchemaType = z.object({
     id: z.number(),

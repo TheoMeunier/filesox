@@ -8,8 +8,10 @@ CREATE TABLE audit_logs
     details     TEXT,
     old_values  TEXT,
     new_values  TEXT,
-    user_id     VARCHAR(100),
+    user_id     BINARY(16),
     ip_address  VARCHAR(45),
-    timestamp   DATETIME
+    timestamp   DATETIME NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 )
 

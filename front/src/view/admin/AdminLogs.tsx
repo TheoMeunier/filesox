@@ -7,8 +7,6 @@ import {
     TableNoData,
     TableRow
 } from "@components/modules/Table.tsx";
-import {Pagination} from "@components/modules/Pagination.tsx";
-import {useState} from "react";
 import {Pill} from "@components/modules/Pill.tsx";
 import {useTranslation} from "react-i18next";
 import {Archive} from "lucide-react";
@@ -16,10 +14,9 @@ import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAdminLogsApi} from "@/api/admin/adminApi.ts";
 
 export function AdminLogs() {
-    const [page, setPage] = useState(1)
     const {t} = useTranslation();
 
-    const {data, isLoading} = useAdminLogsApi(page)
+    const {data, isLoading} = useAdminLogsApi()
 
     if (isLoading) {
         return <Loader/>;
@@ -43,11 +40,11 @@ export function AdminLogs() {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data && data.data.length > 0 ? (
-                    data.data.map((log) =>
+                {data && data.length > 0 ? (
+                    data.map((log) =>
                         <TableRow key={log.id}>
                             <TableCell>{log.username}</TableCell>
-                            <TableCell>{log.subject}</TableCell>
+                            <TableCell>{log.details}</TableCell>
                             <TableCell>
                                 <Pill type={log.action}>{log.action}</Pill>
                             </TableCell>
@@ -58,15 +55,5 @@ export function AdminLogs() {
                 )}
             </TableBody>
         </Table>
-
-        {data &&
-            <Pagination
-                currentPage={data.current_page}
-                totalPage={data.total_pages}
-                onPageChange={(p) => {
-                    setPage(p)
-                }}
-            />
-        }
     </div>
 }
