@@ -1,12 +1,12 @@
 import {SubmitHandler, useForm} from "react-hook-form"
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {FormFields, FormError, FormLabel, FormField} from "@components/modules/Form.tsx";
+import {FormError, FormField, FormFields, FormLabel} from "@components/modules/Form.tsx";
 import {useTranslation} from "react-i18next";
 
 const schema = z.object({
     username: z.string().min(3),
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(8),
 })
 

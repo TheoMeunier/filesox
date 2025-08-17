@@ -46,9 +46,7 @@ export function useEditProfileApi()
     const API = useAxios()
     const {setAlerts} = useAlerts()
     const {user, setUser} = useUserStore()
-
-    console.log(user)
-
+    
     const form = useForm<ProfileEditFormFields>({
             resolver: zodResolver(profileEditSchema),
             defaultValues: {

@@ -44,7 +44,6 @@ export function useUploadApi() {
                 });
 
             const uploadResponse = initResponse.data;
-            console.log(uploadResponse);
             const chunks = createFileChunks(file, chunkSize);
 
             for (let index = 0; index < chunks.length; index++) {
