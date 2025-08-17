@@ -15,6 +15,7 @@ import {ButtonIcon} from "@components/modules/Button.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {useSharesProfileApi} from "@/api/profileApi.ts";
+import {formatDate} from "@/utils/date.ts";
 
 export function ProfileShare() {
     const {t} = useTranslation();
@@ -47,8 +48,8 @@ export function ProfileShare() {
                     data.map((share) =>
                         <TableRow key={share.id}>
                             <TableCell>{share.path}</TableCell>
-                            <TableCell>{share.expired_at}</TableCell>
-                            <TableCell>{share.created_at}</TableCell>
+                            <TableCell>{formatDate(share.expired_at)}</TableCell>
+                            <TableCell>{formatDate(share.created_at)}</TableCell>
                             <TableCell>
                                 <div className="flex items-center gap-2">
                                     <ButtonIcon title="copy" onClick={() => handleCopy(share.id)} svg={ClipboardCopy}/>

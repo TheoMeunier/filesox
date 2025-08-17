@@ -9,6 +9,7 @@ import {Pill} from "@components/modules/Pill.tsx";
 import {useTranslation} from "react-i18next";
 import {useUserApi} from "@/api/admin/adminUserApi.ts";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
+import {formatDate} from "@/utils/date.ts";
 
 export function AdminUsers() {
     const {openModal} = useModal()
@@ -53,7 +54,7 @@ export function AdminUsers() {
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.permissions[0] === 'Administration' ? <Pill type={"danger"}>{user.permissions}</Pill> : ''}</TableCell>
                         <TableCell>./</TableCell>
-                        <TableCell>{user.created_at}</TableCell>
+                        <TableCell>{formatDate(user.created_at)}</TableCell>
                         <TableCell height="py-2.5">
                             <div className="flex gap-2">
                                 <ButtonIcon title="edit" onClick={() => openModal(() => <AdminEditUserModal user={user}/>)} svg={SquarePen}/>

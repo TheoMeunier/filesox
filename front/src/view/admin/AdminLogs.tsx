@@ -12,6 +12,7 @@ import {useTranslation} from "react-i18next";
 import {Archive} from "lucide-react";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAdminLogsApi} from "@/api/admin/adminApi.ts";
+import {formatDate} from "@/utils/date.ts";
 
 export function AdminLogs() {
     const {t} = useTranslation();
@@ -48,7 +49,7 @@ export function AdminLogs() {
                             <TableCell>
                                 <Pill type={log.action}>{log.action}</Pill>
                             </TableCell>
-                            <TableCell>{log.created_at}</TableCell>
+                            <TableCell>{formatDate(log.created_at)}</TableCell>
                         </TableRow>
                     )) : (
                     <TableNoData text={t('table.no_data')} colspan={8}/>

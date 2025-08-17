@@ -15,6 +15,7 @@ import {ModalDeleteShares} from "../modals/shares/ModalDeleteShare.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAlerts} from "@context/modules/AlertContext.tsx";
 import {useAdminSharesApi} from "@/api/admin/adminApi.ts";
+import {formatDate} from "@/utils/date.ts";
 
 export function AdminShares() {
     const {t} = useTranslation();
@@ -56,8 +57,8 @@ export function AdminShares() {
                         <TableRow key={share.id}>
                             <TableCell>{share.username}</TableCell>
                             <TableCell>{share.path}</TableCell>
-                            <TableCell>{share.expired_at}</TableCell>
-                            <TableCell>{share.created_at}</TableCell>
+                            <TableCell>{formatDate(share.expired_at)}</TableCell>
+                            <TableCell>{formatDate(share.created_at)}</TableCell>
                             <TableCell>
                                 <div className="flex items-center gap-2">
                                     <ButtonIcon title="copy" onClick={() => handleCopy(share.id)} svg={ClipboardCopy}/>

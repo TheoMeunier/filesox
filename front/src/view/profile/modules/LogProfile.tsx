@@ -11,6 +11,7 @@ import {Pill} from "@components/modules/Pill.tsx";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useLogsProfileApi} from "@/api/profileApi.ts";
 import {useTranslation} from "react-i18next";
+import {formatDate} from "@/utils/date.ts";
 
 export function ProfileLog() {
     const {t} = useTranslation()
@@ -37,7 +38,7 @@ export function ProfileLog() {
                             <TableCell>
                                 <Pill type={log.action}>{log.action}</Pill>
                             </TableCell>
-                            <TableCell>{log.created_at}</TableCell>
+                            <TableCell>{formatDate(log.created_at)}</TableCell>
                         </TableRow>
                     )) : (
                     <TableNoData text={t('table.no_data')} colspan={8}/>
