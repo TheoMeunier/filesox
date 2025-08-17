@@ -47,11 +47,13 @@ export function useEditProfileApi()
     const {setAlerts} = useAlerts()
     const {user, setUser} = useUserStore()
 
+    console.log(user)
+
     const form = useForm<ProfileEditFormFields>({
             resolver: zodResolver(profileEditSchema),
             defaultValues: {
                 email: user?.email,
-                name: user?.name
+                name: user?.username
             }
         }
     )
