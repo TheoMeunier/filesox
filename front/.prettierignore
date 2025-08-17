@@ -1,0 +1,8 @@
+.dockerignore
+.env.exemple
+.env
+.env.production
+.eslintrc.cjs
+.gitignore
+.prettierignore
+.prettierrc.js

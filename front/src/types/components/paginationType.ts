@@ -1,6 +1,7 @@
-import {z} from "zod";
+import { z } from 'zod';
 
-export const paginationSchemaType = <T extends z.ZodTypeAny>(dataSchema: T) => z.object({
+export const paginationSchemaType = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.object({
     total: z.number(),
     total_pages: z.number(),
     current_page: z.number(),
@@ -8,4 +9,4 @@ export const paginationSchemaType = <T extends z.ZodTypeAny>(dataSchema: T) => z
     from: z.number(),
     to: z.number(),
     data: dataSchema,
-});
+  });

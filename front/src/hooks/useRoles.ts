@@ -1,29 +1,29 @@
-import {RoleEnum} from "../types/enum/RoleEnum.ts";
-import {PermissionType} from "../types/api/userType.ts";
+import { RoleEnum } from '../types/enum/RoleEnum.ts';
+import { PermissionType } from '../types/api/userType.ts';
 
 export function useRoles() {
-    const getPermissionsValue = (
-        permissions: PermissionType[],
-        userPermissions: string[]): string[] | undefined =>
-    {
-        return permissions
-        .filter(permission => userPermissions.includes(permission.name))
-        .map(permission => permission.id);
+  const getPermissionsValue = (
+    permissions: PermissionType[],
+    userPermissions: string[]
+  ): string[] | undefined => {
+    return permissions
+      .filter((permission) => userPermissions.includes(permission.name))
+      .map((permission) => permission.id);
+  };
+
+  const role = (permissions: string[], userPermissions: string[]) => {
+    if (userPermissions.includes(RoleEnum.ADMIN)) {
+      return true;
     }
 
-    const role = (permissions: string[], userPermissions : string[]) => {
-        if (userPermissions.includes(RoleEnum.ADMIN)) {
-            return true
-        }
-
-        for (let i = 0; i < permissions.length; i++) {
-            if (userPermissions.includes(permissions[i])) {
-                return true
-            }
-        }
-
-        return false
+    for (let i = 0; i < permissions.length; i++) {
+      if (userPermissions.includes(permissions[i])) {
+        return true;
+      }
     }
 
-    return {getPermissionsValue, role}
+    return false;
+  };
+
+  return { getPermissionsValue, role };
 }

@@ -1,9 +1,9 @@
-import './loader.css'
+import './loader.css';
 
 export function Loader() {
-    return (
-        <div className="flex justify-center items-center h-[89vh]">
-            <div className="loader"></div>
-        </div>
-    );
+  return (
+    <div className="flex justify-center items-center h-[89vh]">
+      <div className="loader"></div>
+    </div>
+  );
 }

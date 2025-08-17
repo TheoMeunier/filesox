@@ -1,6 +1,6 @@
-import {ReactNode} from "react";
+import { ReactNode } from 'react';
 
 export interface RowProps {
-    children: ReactNode;
-    cols?: number;
+  children: ReactNode;
+  cols?: number;
 }

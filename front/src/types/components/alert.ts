@@ -1,11 +1,11 @@
-import {ReactNode} from "react";
+import { ReactNode } from 'react';
 
 export interface AlertsProviderProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 export interface AlertsContextProps {
-    alerts: any[];
-    setAlerts: (type: string, message: string) => void;
-    deleteAlert: (index: number) => void;
+  alerts: any[];
+  setAlerts: (type: string, message: string) => void;
+  deleteAlert: (index: number) => void;
 }
