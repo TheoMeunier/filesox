@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAlerts } from '@context/hooks/useAlert.tsx';
 
 export function useUploadApi() {
-  const [_, setFileIsExist] = useState(false);
+  const [, setFileIsExist] = useState(false);
   const { t } = useTranslation();
   const API = useAxios();
   const queryClient = useQueryClient();

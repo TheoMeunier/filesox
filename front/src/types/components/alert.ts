@@ -5,7 +5,10 @@ export interface AlertsProviderProps {
 }
 
 export interface AlertsContextProps {
-  alerts: any[];
+  alerts: {
+    type: string;
+    message: string;
+  }[];
   setAlerts: (type: string, message: string) => void;
   deleteAlert: (index: number) => void;
 }

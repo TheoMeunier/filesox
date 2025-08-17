@@ -1,4 +1,4 @@
-import { ComponentType, InputHTMLAttributes, ReactNode } from 'react';
+import { ComponentType, InputHTMLAttributes, JSX, ReactNode } from 'react';
 import { FormFieldsProps, LabelProps } from '@/types/components/form.ts';
 
 export function FormFields({ children, onSubmit, id }: FormFieldsProps) {
