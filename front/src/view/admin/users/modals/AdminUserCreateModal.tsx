@@ -4,12 +4,12 @@ import {Button} from "@components/modules/Button.tsx";
 import {Row} from "@components/modules/Grid.tsx";
 import {useTranslation} from "react-i18next";
 import {UserPlus} from "lucide-react";
-import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {TypoCode} from "@components/modules/Typo.tsx";
 import {useAdminPermissionsApi} from "@/api/admin/adminApi.ts";
 import {useAdminCreateUserApi} from "@/api/admin/adminUserApi.ts";
+import {Loader} from "@/components/modules/Loader/Loader";
 import {Controller} from "react-hook-form";
-import Select from "react-select/base";
+import CustomMultiSelect from "@/components/modules/Inputs/Select";
 
 export function AdminCreateUserModal() {
     const {permissions, isLoading: isLoadingPagination} = useAdminPermissionsApi()
@@ -80,18 +80,15 @@ export function AdminCreateUserModal() {
                     <Controller
                         name="permissions"
                         control={form.control}
-                        render={({field}) => (
-                            <Select
-                                isMulti
-                                value={permissions
-                                    ?.filter(p => field.value.includes(p.id.toString()))
-                                    .map(p => ({ label: p.name, value: p.id.toString() })) || []
-                                }
-                                options={permissions?.map((p) => ({ label: p.name, value: p.id.toString() })) || []}
-                                onChange={(selectedOptions) => {
-                                    const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
-                                    field.onChange(values);
-                                }}
+                        render={({ field }) => (
+                            <CustomMultiSelect
+                                options={permissions?.map((p) => ({ value: p.id, label: p.name })) || []}
+                                value={field.value}
+                                isMultiple={true}
+                                isSearchable={false}
+                                onChange={field.onChange}
+                                placeholder={t('input.placeholder.permissions')}
+                                className="w-full"
                             />
                         )}
                     />

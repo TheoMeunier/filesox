@@ -36,7 +36,7 @@ export interface UpdateUserType {
 }
 
 export interface PermissionType {
-    id: number;
+    id: string;
     name: string;
 }
 

@@ -45,9 +45,8 @@ export function useAdminCreateUserApi() {
         mutationFn: async (data: AdminUserCreateFormFields) => {
             await API.post('/admin/users/create', {
                 ...data,
-                permissions: Array.isArray(data.permissions) ? data.permissions.map((p) => p.value) : []
             })
-            },
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['users']}).then(() => {
                 setAlerts('success', t('alerts.success.user.create'))
@@ -86,7 +85,6 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         mutationFn:  async (formData: AdminUserEditFormFields) => {
             await API.post('/admin/users/update/' + user.id, {
                 ...formData,
-                permissions: Array.isArray(formData.permissions) ? formData.permissions.map((p) => p.value) : [],
             })
         },
         onSuccess: () => {

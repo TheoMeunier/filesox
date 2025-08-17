@@ -9,12 +9,13 @@ import {UserPen} from "lucide-react";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAdminEditUserApi} from "@/api/admin/adminUserApi.ts";
 import {useAdminPermissionsApi} from "@/api/admin/adminApi.ts";
-import Select from "react-select/base";
+import CustomMultiSelect from "@components/modules/Inputs/Select.tsx";
 
 export function AdminEditUserModal({user}: { user: UserType }) {
     const {t} = useTranslation()
 
     const {isLoading, permissions} = useAdminPermissionsApi()
+    console.log(user)
 
     if (isLoading) return <div><Loader/></div>;
 
@@ -42,7 +43,7 @@ export function AdminEditUserModal({user}: { user: UserType }) {
     </>
 }
 
-const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: PermissionType[] | undefined }) => {
+const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions?: PermissionType[] }) => {
     const {t} = useTranslation()
     const {form, onSubmit} = useAdminEditUserApi({user, permissions})
 
@@ -82,17 +83,14 @@ const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: P
                 name="permissions"
                 control={form.control}
                 render={({field}) => (
-                    <Select
-                        isMulti
-                        value={permissions
-                            ?.filter(p => field.value.includes(p.id.toString()))
-                            .map(p => ({ label: p.name, value: p.id.toString() })) || []
-                        }
-                        options={permissions?.map((p) => ({ label: p.name, value: p.id.toString() })) || []}
-                        onChange={(selectedOptions) => {
-                            const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
-                            field.onChange(values);
-                        }}
+                    <CustomMultiSelect
+                        options={permissions?.map((p) => ({ value: p.id, label: p.name })) || []}
+                        value={field.value}
+                        isMultiple={true}
+                        isSearchable={false}
+                        onChange={field.onChange}
+                        placeholder={t('input.placeholder.permissions')}
+                        className="w-full"
                     />
                 )}
             />

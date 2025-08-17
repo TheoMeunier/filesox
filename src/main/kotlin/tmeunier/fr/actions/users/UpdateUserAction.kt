@@ -9,22 +9,16 @@ import tmeunier.fr.dtos.responses.UserResponse
 import tmeunier.fr.exceptions.common.NotFoundException
 import tmeunier.fr.exceptions.storage.StorageNotFoundException
 import tmeunier.fr.services.logger
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
 class UpdateUserAction {
 
     fun execute(payload: UpdateUserRequest, userId: UUID): UserResponse {
-        logger.info { "Updating user $userId" }
-
         val user = UserEntity.findById(userId) ?: throw NotFoundException()
-
-        logger.info { "Found user ${user.name}" }
-        logger.info { "Update file path to ${payload.filePath} for user ${user.filePath}" }
 
         val rootFolderUser = getRootFolderUser(payload.filePath, user.filePath)
 
-        logger.info { "updated user ${user.name} with new path ${rootFolderUser.path}" }
 
         user.name = payload.name
         user.email = payload.email
@@ -44,9 +38,14 @@ class UpdateUserAction {
 
     private fun getRootFolderUser(rootFolderUser: String, userFilePath: UUID): FolderEntity {
         val userRootFolder = FolderEntity.findById(userFilePath) ?: throw NotFoundException()
+        logger.info("User root folder: $userRootFolder")
 
-        if (userRootFolder.path !== "/$rootFolderUser") {
-            return FolderEntity.findByPath("/$rootFolderUser") ?: throw StorageNotFoundException("Root folder not found.")
+        val rootFolderPath = if (rootFolderUser == "./") "/" else "/$rootFolderUser"
+
+
+        if (userRootFolder.path !== rootFolderPath) {
+            return FolderEntity.findByPath(rootFolderPath)
+                ?: throw StorageNotFoundException("Root folder not found.")
         }
 
         return userRootFolder
@@ -56,8 +55,6 @@ class UpdateUserAction {
         user.permissions.clear()
 
         request.forEach { permission ->
-            logger.info { "Adding permission $permission to user ${user.name}" }
-
             user.permissions.add(
                 PermissionEntity.findById(permission)
                     ?: throw IllegalArgumentException("Permission '$permission' does not exist.")
