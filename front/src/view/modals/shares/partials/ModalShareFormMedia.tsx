@@ -20,14 +20,14 @@ export function ModalShareFormMedia() {
                                 type="number"
                                 {...form.register("duration", {valueAsNumber: true})}
                                 placeholder={t('input.placeholder.share_duration')}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                             <FormError>{form.formState.errors.duration?.message}</FormError>
                         </FormField>
                         <FormField>
                             <select
                                 {...form.register("type_duration")}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             >
                                 <option value="hours">{t('input.options.shares.hours')}</option>
                                 <option value="days">{t('input.options.shares.days')}</option>
@@ -46,7 +46,7 @@ export function ModalShareFormMedia() {
                             type="password"
                             {...form.register("password")}
                             placeholder={t('input.placeholder.password')}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                         <FormError>{form.formState.errors.password?.message}</FormError>
                     </FormField>

@@ -5,7 +5,7 @@ import {ChevronLeft} from "lucide-react";
 export function Sidebar({children, sidebarOpen, setter}: { children: ReactNode, sidebarOpen: boolean, setter: (value: boolean) => void}) {
     return <>
         <aside
-            className={`bg-white ${sidebarOpen ? 'translate-x-0' : ''} fixed  z-20 h-full top-0 left-0 pt-16 lg:flex flex-shrink-0 flex-col w-64  transition-transform -translate-x-full xl:translate-x-0`}>
+            className={`bg-white ${sidebarOpen ? 'translate-x-0' : ''} fixed  z-20 h-full top-0 left-0 pt-16 lg:flex shrink-0 flex-col w-64  transition-transform -translate-x-full xl:translate-x-0`}>
             <div className="relative flex-1 flex flex-col justify-between  min-h-full border-r border-gray-200 bg-white pt-0">
                     {children}
 

@@ -44,7 +44,7 @@ export function Pagination({currentPage, totalPage, onPageChange}: {
 
     return <>
         {totalPage > 1 && (
-            <div className="max-w-screen-xl mx-auto mt-12 px-4 text-gray-600 md:px-8">
+            <div className="max-w-(--breakpoint-xl) mx-auto mt-12 px-4 text-gray-600 md:px-8">
                 <div className="hidden items-center justify-between sm:flex" aria-label="Pagination">
                     <a onClick={currentPage > 1 ? () => handlePageChange(currentPage - 1) : undefined}
                        className={`${currentPage > 1 ? 'cursor-pointer hover:text-indigo-600 flex items-center gap-x-2' : 'text-gray-400 flex items-center gap-x-2'} `}>

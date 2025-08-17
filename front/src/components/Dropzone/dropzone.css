@@ -26,11 +26,11 @@
 .dropzone__file::after {
     margin: 10px;
     border-radius: 4px;
-    @apply border-dashed border-2 border-indigo-500;
+    border: 2px dashed #6366f1; /* indigo-500 */
 }
 
 .dropzone__file::before {
-    @apply bg-indigo-400;
+    background-color: #818cf8; /* indigo-400 */
     opacity: 0.6;
 }
 

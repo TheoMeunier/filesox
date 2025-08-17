@@ -6,10 +6,10 @@ import {Row} from "@components/modules/Grid.tsx";
 import {PermissionType, UserType} from "@/types/api/userType.ts";
 import {useTranslation} from "react-i18next";
 import {UserPen} from "lucide-react";
-import Select from "react-tailwindcss-select";
 import {Loader} from "@components/modules/Loader/Loader.tsx";
 import {useAdminEditUserApi} from "@/api/admin/adminUserApi.ts";
 import {useAdminPermissionsApi} from "@/api/admin/adminApi.ts";
+import Select from "react-select/base";
 
 export function AdminEditUserModal({user}: { user: UserType }) {
     const {t} = useTranslation()
@@ -53,7 +53,7 @@ const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: P
                 <input
                     {...form.register('name')}
                     type="text"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 <FormError>{form.formState.errors.name?.message}</FormError>
             </FormField>
@@ -62,7 +62,7 @@ const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: P
                 <input
                     {...form.register('email')}
                     type="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 <FormError>{form.formState.errors.email?.message}</FormError>
             </FormField>
@@ -72,7 +72,7 @@ const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: P
             <input
                 {...form.register('file_path')}
                 type="text"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
             <FormError>{form.formState.errors.file_path?.message}</FormError>
         </FormField>
@@ -83,13 +83,16 @@ const AdminEditUserForm = ({user, permissions}: { user: UserType, permissions: P
                 control={form.control}
                 render={({field}) => (
                     <Select
-                        isMultiple={true}
-                        isSearchable={false}
-                        isClearable={false}
-                        value={field.value}
-                        primaryColor={"indigo"}
-                        options={permissions?.map((p) => ({label: p.name, value: p.id.toString()})) || []}
-                        onChange={(v) => field.onChange(v)}
+                        isMulti
+                        value={permissions
+                            ?.filter(p => field.value.includes(p.id.toString()))
+                            .map(p => ({ label: p.name, value: p.id.toString() })) || []
+                        }
+                        options={permissions?.map((p) => ({ label: p.name, value: p.id.toString() })) || []}
+                        onChange={(selectedOptions) => {
+                            const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+                            field.onChange(values);
+                        }}
                     />
                 )}
             />

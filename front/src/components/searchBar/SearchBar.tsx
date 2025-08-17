@@ -24,7 +24,7 @@ export default function SearchBar() {
     };
 
     return (
-        <div className="relative ml-[6.5rem]">
+        <div className="relative ml-26">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 {isLoading ?
                     <LoaderCircle  className="animate-spin text-indigo-500"/>:
@@ -36,7 +36,7 @@ export default function SearchBar() {
                 value={search}
                 onChange={handleSearch}
                 placeholder={t('input.placeholder.search')}
-                className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
         </div>
     )

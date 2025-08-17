@@ -14,7 +14,7 @@ export function Button({children, color, ...props}: { children: ReactNode, color
     const colorClass = getColor(color)
 
     return <button
-        className={`${colorClass} flex items-center text-sm py-2 px-4 rounded`}
+        className={`${colorClass} flex items-center text-sm py-2 px-4 rounded-sm`}
         {...props}
     >
         {children}
@@ -25,7 +25,7 @@ export function ButtonBig({children, color, ...props}: { children: ReactNode, co
     const colorClass = getColor(color)
 
     return <button
-        className={`${colorClass} flex items-center text-md py-3 px-10 rounded`}
+        className={`${colorClass} flex items-center text-md py-3 px-10 rounded-sm`}
         {...props}
     >
         {children}

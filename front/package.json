@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-query": "^5.85.3",
     "@vitejs/plugin-react": "^4.3.2",
     "axios": "^1.6.8",
@@ -23,7 +24,7 @@
     "react-hook-form": "^7.62.0",
     "react-i18next": "^15.6.1",
     "react-router-dom": "^7.8.1",
-    "react-tailwindcss-select": "^1.8.5",
+    "react-select": "^5.10.2",
     "use-debounce": "^10.0.5",
     "vite-tsconfig-paths": "^5.0.1",
     "zod": "^4.0.17",
@@ -32,19 +33,17 @@
   "devDependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@types/node": "^22.7.4",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "postcss": "^8.4.38",
     "prettier": "3.2.5",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.2.2",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.7.2",
     "vite": "^7.0.6"
   }
 }

@@ -4,7 +4,7 @@ export function Pill({children, type} : {children: ReactNode, type: string}) {
     const className = getClass(type)
 
     return <button
-        className={`${className} px-2 py-0.5 rounded border`}
+        className={`${className} px-2 py-0.5 rounded-sm border`}
     >
         {children}
     </button>

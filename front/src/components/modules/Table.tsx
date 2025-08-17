@@ -1,7 +1,7 @@
 import {ReactNode} from "react";
 
 export function Table({children}: { children: ReactNode }) {
-  return <div className="shadow-sm border rounded-lg overflow-x-auto">
+  return <div className="shadow-xs border rounded-lg overflow-x-auto">
       <table className="w-full table-auto text-sm text-left">
           {children}
       </table>

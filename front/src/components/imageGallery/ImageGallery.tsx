@@ -37,7 +37,7 @@ export default function ImageGallery() {
                     {file.name}
                 </h2>
                 <button
-                    className="text-white hover:text-gray-300 transition-colors focus:outline-none"
+                    className="text-white hover:text-gray-300 transition-colors focus:outline-hidden"
                     onClick={() => setImageGalleryShow(false)}
                     aria-label="Close gallery"
                 >
@@ -53,7 +53,7 @@ export default function ImageGallery() {
                     <ChevronLeft size={48}/>
                 </button>
 
-                <div className="flex-grow flex flex-col justify-center items-center w-full h-full">
+                <div className="grow flex flex-col justify-center items-center w-full h-full">
                     <div className="relative max-w-[80vw] max-h-[70vh] flex justify-center items-center">
                         <LayoutModules
                             file={file}

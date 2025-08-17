@@ -1,6 +1,6 @@
+import './assets/style/app.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './assets/style/app.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Login from "./view/auth/Login.tsx";
 import Register from "./view/auth/Register.tsx";
