@@ -19,12 +19,11 @@ import {AdminShares} from "./view/admin/AdminShares.tsx";
 import {AdminLogs} from "./view/admin/AdminLogs.tsx";
 import {AuthProvider} from "./context/modules/AuthContext.tsx";
 import {CurrentPathProvider} from "./context/modules/CurrentPathContext.tsx";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {QueryClientProvider} from "@tanstack/react-query";
 import {i18nConfig} from "@config/i18n.config.ts";
+import {queryClient} from "@config/react-query.config.ts";
 
-const queryClient = new QueryClient()
-
-i18nConfig
+i18nConfig()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
