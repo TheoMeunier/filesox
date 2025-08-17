@@ -19,26 +19,12 @@ import {AdminShares} from "./view/admin/AdminShares.tsx";
 import {AdminLogs} from "./view/admin/AdminLogs.tsx";
 import {AuthProvider} from "./context/modules/AuthContext.tsx";
 import {CurrentPathProvider} from "./context/modules/CurrentPathContext.tsx";
-import {initReactI18next} from "react-i18next";
-import i18n from "i18next";
-import {fr} from "./lang/fr.ts";
-import {en} from "./lang/en.ts";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {i18nConfig} from "@config/i18n.config.ts";
 
 const queryClient = new QueryClient()
 
-i18n.use(initReactI18next)
-    .init({
-        resources: {
-            fr: fr,
-            en: en
-        },
-        lng: 'fr',
-        fallbackLng: 'en',
-        interpolation: {
-            escapeValue: false
-        }
-    });
+i18nConfig
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
