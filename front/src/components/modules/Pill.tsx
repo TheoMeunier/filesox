@@ -11,11 +11,11 @@ export function Pill({children, type} : {children: ReactNode, type: string}) {
 }
 
 function getClass(type: string) {
-    if (type === 'info' || type === "uploaded") {
+    if (type === 'info' || type === "UPDATE") {
         return 'bg-indigo-100 text-indigo-800 border-indigo-300'
-    } else if (type === 'danger'  || type === "deleted") {
+    } else if (type === 'danger'  || type === "DELETE") {
         return 'bg-red-100 text-red-500 border-red-300'
-    } else if (type === 'success' || type === "created") {
+    } else if (type === 'success' || type === "CREATE") {
         return 'bg-green-100 text-green-500 border-green-300'
     } else if (type === 'warning' || type === "updated") {
         return 'bg-yellow-100 text-yellow-500 border-yellow-300'

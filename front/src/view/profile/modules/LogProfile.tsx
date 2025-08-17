@@ -36,7 +36,7 @@ export function ProfileLog() {
                         <TableRow key={log.id}>
                             <TableCell>{log.details}</TableCell>
                             <TableCell>
-                                <Pill type={log.action}>{log.action}</Pill>
+                                 <Pill type={log.action}>{log.action}</Pill>
                             </TableCell>
                             <TableCell>{formatDate(log.created_at)}</TableCell>
                         </TableRow>
