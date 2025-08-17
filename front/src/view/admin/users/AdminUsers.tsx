@@ -17,9 +17,7 @@ export function AdminUsers() {
 
     const {data, isLoading} = useUserApi()
 
-    if (isLoading) {
-        return <div><Loader/></div>;
-    }
+    if (isLoading) return <Loader/>;
 
     return <div className="px-7 py-4">
         <div className="flex justify-between items-center  mb-4">
@@ -53,7 +51,7 @@ export function AdminUsers() {
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.permissions[0] === 'Administration' ? <Pill type={"danger"}>{user.permissions}</Pill> : ''}</TableCell>
-                        <TableCell>./</TableCell>
+                        <TableCell>{user.file_path}</TableCell>
                         <TableCell>{formatDate(user.created_at)}</TableCell>
                         <TableCell height="py-2.5">
                             <div className="flex gap-2">

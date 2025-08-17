@@ -1,22 +1,12 @@
 package tmeunier.fr.databases.entities
 
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
-import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "users")
@@ -34,8 +24,9 @@ class UserEntity : PanacheEntityBase {
     @Column(nullable = false)
     lateinit var password: String
 
-    @Column(name = "file_path", nullable = false)
-    lateinit var filePath: UUID
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_path", nullable = false)
+    lateinit var filePath: FolderEntity
 
     @Column(nullable = false)
     var layout: Boolean = false

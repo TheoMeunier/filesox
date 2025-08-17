@@ -45,7 +45,7 @@ class DeleteStorageAction(
     private fun verifyFolderIsNotRootFolderUser(folderId: UUID) {
         val user = UserEntity.findById(UUID.fromString(identity.principal.name)) ?: throw NotFoundException()
 
-        if (user.filePath === folderId) {
+        if (user.filePath.id === folderId) {
             throw UnauthorizedException()
         }
     }

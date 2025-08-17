@@ -8,7 +8,6 @@ import tmeunier.fr.dtos.requests.UpdateUserRequest
 import tmeunier.fr.dtos.responses.UserResponse
 import tmeunier.fr.exceptions.common.NotFoundException
 import tmeunier.fr.exceptions.storage.StorageNotFoundException
-import tmeunier.fr.services.logger
 import java.util.*
 
 @ApplicationScoped
@@ -22,7 +21,7 @@ class UpdateUserAction {
 
         user.name = payload.name
         user.email = payload.email
-        user.filePath = rootFolderUser.id
+        user.filePath = rootFolderUser
 
         updateUerPermissions(user, payload.permissions)
 
@@ -36,19 +35,15 @@ class UpdateUserAction {
         )
     }
 
-    private fun getRootFolderUser(rootFolderUser: String, userFilePath: UUID): FolderEntity {
-        val userRootFolder = FolderEntity.findById(userFilePath) ?: throw NotFoundException()
-        logger.info("User root folder: $userRootFolder")
-
+    private fun getRootFolderUser(rootFolderUser: String, userFilePath: FolderEntity): FolderEntity {
         val rootFolderPath = if (rootFolderUser == "./") "/" else "/$rootFolderUser"
 
-
-        if (userRootFolder.path !== rootFolderPath) {
+        if (userFilePath.path !== rootFolderPath) {
             return FolderEntity.findByPath(rootFolderPath)
                 ?: throw StorageNotFoundException("Root folder not found.")
         }
 
-        return userRootFolder
+        return userFilePath
     }
 
     private fun updateUerPermissions(user: UserEntity, request: List<UUID>) {

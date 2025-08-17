@@ -26,6 +26,7 @@ class GetAllUserResource {
                 name = user.name,
                 email = user.email,
                 permissions = user.permissions.map { it.name },
+                filePath = user.filePath.path,
                 createdAt = user.createdAt.toString()
             )
         }

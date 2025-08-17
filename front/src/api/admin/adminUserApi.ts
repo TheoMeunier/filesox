@@ -76,7 +76,7 @@ export function useAdminEditUserApi({user, permissions}: { user: UserType, permi
         defaultValues: {
             name: user.name,
             email: user.email,
-            file_path: user.file_path,
+            file_path: user.file_path == "/" ? "./" : user.file_path,
             permissions: permissions ? getPermissionsValue(permissions, user.permissions) : undefined,
         }
     })

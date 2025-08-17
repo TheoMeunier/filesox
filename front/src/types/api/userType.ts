@@ -45,7 +45,7 @@ export const usersSchemaType = z.array(z.object({
     id: z.uuid(),
     name: z.string(),
     email: z.string(),
-    //file_path: z.string().nullable(),
+    file_path: z.string().nullable(),
     created_at: z.string(),
     permissions: z.array(z.string()),
 }))

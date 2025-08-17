@@ -13,9 +13,7 @@ import CustomMultiSelect from "@components/modules/Inputs/Select.tsx";
 
 export function AdminEditUserModal({user}: { user: UserType }) {
     const {t} = useTranslation()
-
     const {isLoading, permissions} = useAdminPermissionsApi()
-    console.log(user)
 
     if (isLoading) return <div><Loader/></div>;
 

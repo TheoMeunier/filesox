@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.Response
 import tmeunier.fr.actions.auth.RegisterAction
 import tmeunier.fr.dtos.requests.RegisterRequest
 import tmeunier.fr.dtos.responses.RegisterResponse
-import java.util.UUID
 
 @Path("/api/auth/register")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,10 +25,12 @@ class RegisterResource(
     ): Response {
         val result = registerAction.execute(request)
 
-        return Response.ok(RegisterResponse(
-            name = result.name,
-            email = result.email,
-            filePath = result.filePath,
-        )).build()
+        return Response.ok(
+            RegisterResponse(
+                name = result.name,
+                email = result.email,
+                filePath = result.filePath.id,
+            )
+        ).build()
     }
 }

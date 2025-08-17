@@ -9,15 +9,13 @@ import tmeunier.fr.dtos.responses.UserResponse
 import tmeunier.fr.exceptions.auth.UserAlreadyExistFountException
 import tmeunier.fr.exceptions.storage.StorageNotFoundException
 import tmeunier.fr.services.PasswordService
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
 class CreateUserAction(
     private val passwordService: PasswordService
-)
-{
-    fun execute(payload: CreateUserRequest): UserResponse
-    {
+) {
+    fun execute(payload: CreateUserRequest): UserResponse {
         val existingUser = UserEntity.findByEmail(payload.email)
 
         if (existingUser != null) throw UserAlreadyExistFountException(payload.email)
@@ -28,7 +26,7 @@ class CreateUserAction(
             id = UUID.randomUUID()
             name = payload.name
             email = payload.email
-            filePath = rootFolderUser.id
+            filePath = rootFolderUser
             password = passwordService.hashPassword(payload.password)
             payload.permissions.forEach { permission ->
                 this.permissions.add(
@@ -48,8 +46,7 @@ class CreateUserAction(
         )
     }
 
-    private fun getRootFolderUser(rootFolderUser: String): FolderEntity
-    {
+    private fun getRootFolderUser(rootFolderUser: String): FolderEntity {
         val folder = FolderEntity.findByPath("/$rootFolderUser")
 
         if (folder === null) {

@@ -4,14 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.BadRequestException
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.databases.entities.UserEntity
-import tmeunier.fr.dtos.requests.LoginRequest
 import tmeunier.fr.dtos.requests.RegisterRequest
-import tmeunier.fr.dtos.responses.LoginResponse
-import tmeunier.fr.exceptions.auth.UserAlreadyExistFountException
 import tmeunier.fr.exceptions.auth.UserNotFountException
-import tmeunier.fr.services.AuthService
 import tmeunier.fr.services.PasswordService
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
 class RegisterAction(
@@ -19,6 +15,7 @@ class RegisterAction(
 ) {
     fun execute(request: RegisterRequest): UserEntity {
         val existingUser = UserEntity.findByEmail(request.email)
+        val rootFolder = FolderEntity.findByPath("/") ?: throw BadRequestException("Root folder not found")
 
         if (existingUser != null) throw UserNotFountException(request.email)
 
@@ -26,7 +23,7 @@ class RegisterAction(
             id = UUID.randomUUID()
             name = request.name
             email = request.email
-            filePath = UUID.randomUUID()
+            filePath = rootFolder
             password = passwordService.hashPassword(request.password)
         }
 

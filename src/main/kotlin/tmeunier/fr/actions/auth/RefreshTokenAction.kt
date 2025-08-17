@@ -1,7 +1,6 @@
 package tmeunier.fr.actions.auth
 
 import jakarta.enterprise.context.ApplicationScoped
-import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.databases.entities.RefreshTokenEntity
 import tmeunier.fr.dtos.requests.AuthRefreshTokenRequest
 import tmeunier.fr.dtos.responses.LoginResponse
@@ -9,7 +8,7 @@ import tmeunier.fr.exceptions.auth.InvalidCredentialsException
 import tmeunier.fr.exceptions.auth.RefreshTokenExpiredException
 import tmeunier.fr.services.AuthService
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
 class RefreshTokenAction(
@@ -24,10 +23,8 @@ class RefreshTokenAction(
             throw RefreshTokenExpiredException()
         }
 
-        val rootFolderUser = FolderEntity.findById(rt.user.filePath) ?: throw InvalidCredentialsException()
-
         return LoginResponse(
-            token = authService.generateToken(rt.user, rootFolderUser.path),
+            token = authService.generateToken(rt.user),
             refreshToken = authService.generateRefreshToken(rt.user)
         )
     }
