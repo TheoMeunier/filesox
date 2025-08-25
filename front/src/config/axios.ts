@@ -6,15 +6,13 @@ export enum AuthEnum {
   REFRESH_TOKEN = 'refresh_token',
 }
 
-export const BASE_URL = import.meta.env.VITE_API_URL;
-
 export const useAxios = () => {
   const { setAllTokens, logout } = useAuth();
 
   const token = localStorage.getItem(AuthEnum.TOKEN);
 
   const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: '/api',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -41,7 +39,7 @@ export const useAxios = () => {
         baseReq._retry = true;
 
         try {
-          const response = await axios.post(BASE_URL + '/auth/refresh', {
+          const response = await axios.post('/api/auth/refresh', {
             refresh_token: localStorage.getItem(AuthEnum.REFRESH_TOKEN),
           });
 
