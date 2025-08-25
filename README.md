@@ -1,4 +1,4 @@
-div align="center">
+<div align="center">
 <a href="https://github.com/TheoMeunier/Filesox">
 <img src="doc/images/logo.svg" alt="Logo" width="100" height="100">
 </a>
@@ -23,7 +23,6 @@ management for businesses and developers.
 
 * [![React][React.js]][React-url]
 * [![Kotlin][Kotlin.js]][Kotlin-url]
-* [![MariaDB][Postgres.js]][MariaDB-url]
 
 ## Getting Started
 
