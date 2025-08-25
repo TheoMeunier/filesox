@@ -1,13 +1,28 @@
+FROM node:24-slim as build
+
+WORKDIR /app
+
+COPY ./front/package*.json ./
+
+RUN npm install
+
+COPY ./front/ .
+
+RUN npm run build
+
+
 FROM docker.io/nginx:1.28-alpine
 
 COPY ./docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 WORKDIR /app
+
 RUN chown -R nginx:nginx /app && chmod -R 755 /app && \
         chown -R nginx:nginx /var/cache/nginx && \
         chown -R nginx:nginx /var/log/nginx && \
-        chown -R nginx:nginx /etc/nginx/conf.d
+        chown -R nginx:nginx /etc/nginx/conf.d \
+
 RUN touch /var/run/nginx.pid && \
         chown -R nginx:nginx /var/run/nginx.pid
 
