@@ -44,13 +44,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Clean previous builds
+        run: ./gradlew clean
+
       - name: Build native application
-        run: ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true -x test
+        run: ./gradlew buildNative -Dquarkus.native.container-build=true
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,7 +61,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
