@@ -1,66 +1,129 @@
-# filesox
+div align="center">
+<a href="https://github.com/TheoMeunier/Filesox">
+<img src="doc/images/logo.svg" alt="Logo" width="100" height="100">
+</a>
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+<h2 align="center">Filesox</h3>
+  <p align="center">
+    <a href="https://github.com/TheoMeunier/Filesox">View Demo</a>
+    ·
+    <a href="https://github.com/TheoMeunier/Filesox/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/TheoMeunier/Filesox/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## About The Project
 
-## Running the application in dev mode
+FileManager S3 is a versatile file manager that offers a flexible storage solution, enabling the use of Amazon S3.
+Featuring an intuitive user interface and robust administration panel, it aims to simplify file
+management for businesses and developers.
 
-You can run your application in dev mode that enables live coding using:
+### Built With
 
-```shell script
-./gradlew quarkusDev
+* [![React][React.js]][React-url]
+* [![Kotlin][Kotlin.js]][Kotlin-url]
+* [![MariaDB][Postgres.js]][MariaDB-url]
+
+## Getting Started
+
+### Prerequisites
+
+* nodejs lts
+* java 21
+* postgres 16
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/TheoMeunier/filesox.git
+   ```
+2. Configuring the `.env` end `front/.env` file
+
+3. Build front-end
+   ```sh 
+    cd front
+    npm install
+    npm run build
+   ```
+4. Build back-end
+   ```sh
+    ./gradlew build
+   ```
+
+#### Docker
+
+1. Create a docker-compose file
+
+```yml
+services:
+  front:
+    image: theomeunier/filesox-front:latest
+    container_name: filemanager_front
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    environment:
+      APP_API_URL: http://localhost:8080
+    networks:
+      - app_network
+
+  back:
+    image: theomeunier/filesox-back:latest
+    container_name: filemanager_back
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./cache:/app/storages/cache
+      - ./storage:/app/storages/uploads
+      - ./.env:/app/.env
+    depends_on:
+      - mariadb
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+#### Connect to the application
 
-## Packaging and running the application
+Your default admin credentials are:
 
-The application can be packaged using:
+- Email: `admin@filesox.fr`
+- Password: `adminadmin`
 
-```shell script
-./gradlew build
-```
+It is strongly recommended that you change this password immediately after your first login for security reasons.
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+## Contributing
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
-If you want to build an _über-jar_, execute the following command:
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also
+simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-```shell script
-./gradlew build -Dquarkus.package.jar.type=uber-jar
-```
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+## License
 
-## Creating a native executable
+Distributed under the MIT License. See `LICENSE` for more information.
 
-You can create a native executable using:
+<!-- MARKDOWN LINKS & IMAGES -->
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true
-```
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+[React-url]: https://reactjs.org/
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
-```
+[Kotlin.js]: https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=FF5722
 
-You can then execute your native executable with: `./build/filesox-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
-
-## Related Guides
-
-- Hibernate ORM with Panache and Kotlin ([guide](https://quarkus.io/guides/hibernate-orm-panache-kotlin)): Define your persistent model in Hibernate ORM with Panache
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- JDBC Driver - MariaDB ([guide](https://quarkus.io/guides/datasource)): Connect to the MariaDB database via JDBC
-- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
-
-## Regenerate key for JWT
-openssl genrsa -out rsaPrivateKey.pem 2048
-openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
-openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+[Kotlin-url]: https://kotlinlang.org/
