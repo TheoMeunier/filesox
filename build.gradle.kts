@@ -29,11 +29,11 @@ dependencies {
     implementation("de.mkammerer:argon2-jvm:2.11")
 
     //Database
-    implementation("io.quarkus:quarkus-jdbc-mariadb")
+    implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-hibernate-orm-panache-kotlin")
     implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("io.quarkus:quarkus-flyway")
-    implementation("org.flywaydb:flyway-mysql")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     //s3
     implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3:3.9.1")

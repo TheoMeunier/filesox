@@ -1,14 +1,14 @@
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Administration');
+VALUES (uuid_generate_v4(), 'Administration');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Create file or folder');
+VALUES (uuid_generate_v4(), 'Create file or folder');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Delete file or folder');
+VALUES (uuid_generate_v4(), 'Delete file or folder');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Download');
+VALUES (uuid_generate_v4(), 'Download');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Edit file');
+VALUES (uuid_generate_v4(), 'Edit file');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Share files');
+VALUES (uuid_generate_v4(), 'Share files');
 INSERT INTO permissions (id, name)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'Rename file or folder');
+VALUES (uuid_generate_v4(), 'Rename file or folder');

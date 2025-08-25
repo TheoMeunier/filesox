@@ -1,2 +1,2 @@
 INSERT INTO folders (id, path, parent_id)
-VALUES (UNHEX(REPLACE(UUID(), '-', '')), '/', NULL);
+VALUES (uuid_generate_v4(), '/', NULL);

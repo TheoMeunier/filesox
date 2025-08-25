@@ -1,6 +1,6 @@
 CREATE TABLE audit_logs
 (
-    id          BINARY(16) PRIMARY KEY,
+    id          UUID PRIMARY KEY,
     action      VARCHAR(50)  NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id   VARCHAR(100),
@@ -8,9 +8,9 @@ CREATE TABLE audit_logs
     details     TEXT,
     old_values  TEXT,
     new_values  TEXT,
-    user_id     BINARY(16),
+    user_id     UUID,
     ip_address  VARCHAR(45),
-    timestamp   DATETIME NOT NULL,
+    timestamp   TIMESTAMP    NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 )

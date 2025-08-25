@@ -1,2 +1,2 @@
-ALTER TABLE IF EXISTS `files`
-       ADD COLUMN `deleted_at` datetime NULL;
+ALTER TABLE IF EXISTS files
+    ADD COLUMN deleted_at TIMESTAMP NULL;

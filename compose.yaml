@@ -11,20 +11,19 @@ services:
     networks:
       - app_network
 
-  # Mariadb Service
-  mariadb:
-    image: mariadb:latest
-    container_name: filesox_mariadb
+  postgres:
+    image: postgres:16-alpine
+    container_name: filesox_database
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:5432:5432"
     environment:
-      MYSQL_DATABASE: filesox
-      MYSQL_USER: filesox
-      MYSQL_PASSWORD: filesox
-      MYSQL_ROOT_PASSWORD: filesox
+      POSTGRES_DB: filesox
+      POSTGRES_USER: filesox
+      POSTGRES_PASSWORD: filesox
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./storage-db:/var/lib/mysql/
+      - ./storage-db:/var/lib/postgresql/data
     networks:
       - app_network
 

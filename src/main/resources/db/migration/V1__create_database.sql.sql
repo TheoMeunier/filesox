@@ -1,22 +1,25 @@
+CREATE
+EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE users
 (
-    id         BINARY(16) PRIMARY KEY,
+    id         UUID PRIMARY KEY,
     name       VARCHAR(255) NOT NULL,
     email      VARCHAR(255) NOT NULL,
     password   VARCHAR(255) NOT NULL,
-    file_path  BINARY(16),
-    layout     TINYINT(1)            default 0 not null,
-    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    file_path  UUID,
+    layout     BOOLEAN               DEFAULT false NOT NULL,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- table refresh tokens
 CREATE TABLE refresh_token
 (
-    id            BINARY(16) PRIMARY KEY,
-    user_id       BINARY(16)          NOT NULL,
-    refresh_token BINARY(16)  NOT NULL,
-    expired_at    DATETIME     NOT NULL,
+    id            UUID PRIMARY KEY,
+    user_id       UUID      NOT NULL,
+    refresh_token UUID      NOT NULL,
+    expired_at    TIMESTAMP NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -24,15 +27,15 @@ CREATE TABLE refresh_token
 -- table permissions
 CREATE TABLE permissions
 (
-    id   BINARY(16) PRIMARY KEY,
+    id   UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
 -- table users_permissions
 CREATE TABLE users_permissions
 (
-    user_id       BINARY(16) NOT NULL,
-    permission_id BINARY(16) NOT NULL,
+    user_id       UUID NOT NULL,
+    permission_id UUID NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE CASCADE
@@ -41,13 +44,13 @@ CREATE TABLE users_permissions
 -- table shares
 CREATE TABLE shares
 (
-    id         BINARY(16) PRIMARY KEY,
-    user_id    BINARY(16)         NOT NULL,
-    storage_id BINARY(16) NOT NULL,
+    id         UUID PRIMARY KEY,
+    user_id    UUID        NOT NULL,
+    storage_id UUID        NOT NULL,
     type       VARCHAR(10) NOT NULL,
     password   VARCHAR(255),
-    created_at DATETIME    NOT NULL,
-    expired_at DATETIME    NOT NULL,
+    created_at TIMESTAMP   NOT NULL,
+    expired_at TIMESTAMP   NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -55,24 +58,24 @@ CREATE TABLE shares
 -- tables storages
 CREATE TABLE folders
 (
-    id         BINARY(16) PRIMARY KEY,
-    path       VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL,
-    parent_id  BINARY(16),
-    updated_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id         UUID PRIMARY KEY,
+    path       VARCHAR(255) NOT NULL,
+    parent_id  UUID,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE
 );
 
 CREATE TABLE files
 (
-    id         BINARY(16) PRIMARY KEY,
-    parent_id  BINARY(16),
-    name       VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL,
-    size       LONG                               NOT NULL,
-    icon       VARCHAR(255)                       NOT NULL,
-    type       VARCHAR(255)                       NOT NULL,
-    updated_at DATETIME                           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id         UUID PRIMARY KEY,
+    parent_id  UUID,
+    name       VARCHAR(255) NOT NULL,
+    size       BIGINT       NOT NULL,
+    icon       VARCHAR(255) NOT NULL,
+    type       VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE
 )
