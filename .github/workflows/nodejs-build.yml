@@ -8,12 +8,13 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/front
 
+defaults:
+  run:
+    working-directory: ./front
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: front
     steps:
       - uses: actions/checkout@v4
 
