@@ -62,13 +62,24 @@ services:
       - app_network
 
   back:
-    image: ghcr.io/theomeunier/filesox/api:latest
+    image: ghcr.io/theomeunier/filesox/api-native:latest
     container_name: filesox_api
     restart: unless-stopped
     ports:
       - "8080:8080"
+    environment:
+      QUARKUS_DATASOURCE_USERNAME: filesox
+      QUARKUS_DATASOURCE_PASSWORD: filesox
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://filesox_database/filesox
+      QUARKUS_S3_ENDPOINT_OVERRIDE:
+      QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID:
+      QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY:
+      QUARKUS_S3_BUCKET: filesox
+      QUARKUS_REDIS_HOSTS:
+      MP_JWT_VERIFY_PUBLICKEY_LOCATION: /certs/publicKey.pem
+      SMALLRYE_JWT_SIGN_KEY_LOCATION: /certs/privateKey.pem
     volumes:
-      - ./certs:/work/certs
+      - ./certs:/certs
     networks:
       - app_network
 
@@ -97,6 +108,11 @@ networks:
 
 - `QUARKUS_REDIS_HOSTS=redis://[username:password@][host][:port][/database]` : The URL of your Redis database
 
+#### 2.4 JWT Configuration:
+
+- `MP_JWT_VERIFY_PUBLICKEY_LOCATION` : The location of the public key used to verify the JWT token
+- `SMALLRYE_JWT_SIGN_KEY_LOCATION` : The location of the private key used to sign the JWT token
+
 ### 3. Create keys for JWT token with `openssl`:
 
 ```bash
@@ -105,6 +121,8 @@ mkdir certs/ && cd certs
 openssl genrsa -out rsaPrivateKey.pem 2048
 openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
 openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+
+chmod 644 privateKey.pem publicKey.pem
 ```
 
 #### Connect to the application
