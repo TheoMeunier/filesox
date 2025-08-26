@@ -5,8 +5,6 @@
 
 <h2 align="center">Filesox</h3>
   <p align="center">
-    <a href="https://github.com/TheoMeunier/Filesox">View Demo</a>
-    ·
     <a href="https://github.com/TheoMeunier/Filesox/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
     <a href="https://github.com/TheoMeunier/Filesox/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
@@ -19,10 +17,7 @@ FileManager S3 is a versatile file manager that offers a flexible storage soluti
 Featuring an intuitive user interface and robust administration panel, it aims to simplify file
 management for businesses and developers.
 
-### Built With
-
-* [![React][React.js]][React-url]
-* [![Kotlin][Kotlin.js]][Kotlin-url]
+<img src="doc/images/demo-filesox.png" alt="demo-filesox" width="100%" height="auto">
 
 ## Getting Started
 
@@ -38,7 +33,7 @@ management for businesses and developers.
    ```sh
    git clone https://github.com/TheoMeunier/filesox.git
    ```
-2. Configuring the `.env` end `front/.env` file
+2. Configuring the `.env` file
 
 3. Build front-end
    ```sh 
@@ -48,7 +43,7 @@ management for businesses and developers.
    ```
 4. Build back-end
    ```sh
-    ./gradlew build
+    ./gradlew :quarkusAppPartsBuild -Dquarkus.package.type=native -Dquarkus.native.container-build=false
    ```
 
 #### Docker
@@ -73,7 +68,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./.env:/app/.env
+      - ./certs:/work/certs
     networks:
       - app_network
 
@@ -83,24 +78,34 @@ networks:
 
 ```
 
-2. Congifure the `.env` file
+### 2. Configure the `.env` file
 
-2.1 configuration postgres
+#### 2.1 PostgreSQL Configuration:
 
-- `QUARKUS_DATASOURCE_USERNAME` : The username of your postgres database
-- `QUARKUS_DATASOURCE_PASSWORD` : The password of your postgres database
-- `QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://[host][:port][/database]` : The url of your postgres database
+- `QUARKUS_DATASOURCE_USERNAME` : The username of your PostgreSQL database
+- `QUARKUS_DATASOURCE_PASSWORD` : The password of your PostgreSQL database
+- `QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://[host][:port][/database]` : The URL of your PostgreSQL database
 
-2.2 Configuration S3
+#### 2.2 S3 Configuration:
 
 - `QUARKUS_S3_ENDPOINT_OVERRIDE` : Endpoint of your S3 provider
 - `QUARKUS_S3_AWS_REGION` : The region of your S3 provider
 - `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID` : Access key of your S3 provider
 - `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY` : Secret key of your S3 provider
 
-2.3 Configuration redis
+#### 2.3 Redis Configuration;
 
-- `QUARKUS_REDIS_HOSTS=redis://[username:password@][host][:port][/database]` : The url of your redis database
+- `QUARKUS_REDIS_HOSTS=redis://[username:password@][host][:port][/database]` : The URL of your Redis database
+
+### 3. Create keys for JWT token with `openssl`:
+
+```bash
+mkdir certs/ && cd certs
+
+openssl genrsa -out rsaPrivateKey.pem 2048
+openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
+openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+```
 
 #### Connect to the application
 
@@ -129,13 +134,3 @@ Don't forget to give the project a star! Thanks again!
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-<!-- MARKDOWN LINKS & IMAGES -->
-
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-
-[React-url]: https://reactjs.org/
-
-[Kotlin.js]: https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=FF5722
-
-[Kotlin-url]: https://kotlinlang.org/
