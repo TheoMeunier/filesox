@@ -47,7 +47,11 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build native application
-        run: ./gradlew :quarkusAppPartsBuild -Dquarkus.package.type=native -Dquarkus.native.container-build=false
+        run: |
+          ./gradlew :quarkusAppPartsBuild \
+          -Dquarkus.package.type=native \ 
+          -Dquarkus.native.container-build=false \
+          -Dmp.jwt.verify.issuer=https://filesox.io/issuer
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
