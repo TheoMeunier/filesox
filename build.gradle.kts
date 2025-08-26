@@ -26,7 +26,7 @@ dependencies {
     //auth
     implementation("io.quarkus:quarkus-smallrye-jwt")
     implementation("io.quarkus:quarkus-smallrye-jwt-build")
-    implementation("de.mkammerer:argon2-jvm:2.11")
+    implementation("at.favre.lib:bcrypt:0.10.2")
 
     //Database
     implementation("io.quarkus:quarkus-jdbc-postgresql")
