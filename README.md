@@ -17,9 +17,7 @@ FileManager S3 is a versatile file manager that offers a flexible storage soluti
 Featuring an intuitive user interface and robust administration panel, it aims to simplify file
 management for businesses and developers.
 
-<hr/>
 <img src="doc/images/demo-filesox.png" alt="demo-filesox" width="100%" height="auto">
-<hr/>
 
 ## Getting Started
 
