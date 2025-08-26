@@ -3,7 +3,6 @@ import { User, useUserStore } from '@/stores/useUserStore.ts';
 import { jwtDecode } from 'jwt-decode';
 import { FilePaths } from '@hooks/useLocalStorage.ts';
 import axios from 'axios';
-import { BASE_URL } from '@config/axios.ts';
 
 interface AuthContext {
   token: string | null;
@@ -36,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    const response = await axios.post(BASE_URL + '/auth/logout', {
+    const response = await axios.post('/api/auth/logout', {
       refresh_token: refreshToken,
     });
 

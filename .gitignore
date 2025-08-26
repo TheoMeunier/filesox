@@ -1,6 +1,7 @@
 # Gradle
 .gradle/
 build/
+.kotlin
 
 # Eclipse
 .project
@@ -45,3 +46,5 @@ publicKey.pem
 rsaPrivateKey.pem
 
 storage-db
+
+application.properties
