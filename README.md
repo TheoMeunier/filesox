@@ -58,28 +58,22 @@ management for businesses and developers.
 ```yml
 services:
   front:
-    image: theomeunier/filesox-front:latest
-    container_name: filemanager_front
+    image: ghcr.io/theomeunier/filesox/front:latest
+    container_name: filesox_front
     restart: unless-stopped
     ports:
-      - "8888:80"
-    environment:
-      APP_API_URL: http://localhost:8080
+      - "80:80"
     networks:
       - app_network
 
   back:
-    image: theomeunier/filesox-back:latest
-    container_name: filemanager_back
+    image: ghcr.io/theomeunier/filesox/api:latest
+    container_name: filesox_api
     restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
-      - ./cache:/app/storages/cache
-      - ./storage:/app/storages/uploads
       - ./.env:/app/.env
-    depends_on:
-      - mariadb
     networks:
       - app_network
 
@@ -88,6 +82,25 @@ networks:
     driver: bridge
 
 ```
+
+2. Congifure the `.env` file
+
+2.1 configuration postgres
+
+- `QUARKUS_DATASOURCE_USERNAME` : The username of your postgres database
+- `QUARKUS_DATASOURCE_PASSWORD` : The password of your postgres database
+- `QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://[host][:port][/database]` : The url of your postgres database
+
+2.2 Configuration S3
+
+- `QUARKUS_S3_ENDPOINT_OVERRIDE` : Endpoint of your S3 provider
+- `QUARKUS_S3_AWS_REGION` : The region of your S3 provider
+- `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID` : Access key of your S3 provider
+- `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY` : Secret key of your S3 provider
+
+2.3 Configuration redis
+
+- `QUARKUS_REDIS_HOSTS=redis://[username:password@][host][:port][/database]` : The url of your redis database
 
 #### Connect to the application
 
