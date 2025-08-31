@@ -1,5 +1,15 @@
-import { ModalBody, ModalFooter, ModalHeader, } from '@components/modules/Modal.tsx';
-import { FormDescription, FormError, FormField, FormFields, FormLabel, } from '@components/modules/Form.tsx';
+import {
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from '@components/modules/Modal.tsx';
+import {
+  FormDescription,
+  FormError,
+  FormField,
+  FormFields,
+  FormLabel,
+} from '@components/modules/Form.tsx';
 import { Button } from '@components/modules/Button.tsx';
 import { Row } from '@components/modules/Grid.tsx';
 import { useTranslation } from 'react-i18next';
