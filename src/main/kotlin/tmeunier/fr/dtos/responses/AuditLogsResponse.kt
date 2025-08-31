@@ -1,7 +1,9 @@
 package tmeunier.fr.dtos.responses
 
-import java.util.UUID
+import io.quarkus.runtime.annotations.RegisterForReflection
+import java.util.*
 
+@RegisterForReflection
 data class AuditLogResponse(
     val id: UUID,
     val action: String,
