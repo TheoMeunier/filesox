@@ -1,15 +1,5 @@
-import {
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from '@components/modules/Modal.tsx';
-import {
-  FormDescription,
-  FormError,
-  FormField,
-  FormFields,
-  FormLabel,
-} from '@components/modules/Form.tsx';
+import { ModalBody, ModalFooter, ModalHeader, } from '@components/modules/Modal.tsx';
+import { FormDescription, FormError, FormField, FormFields, FormLabel, } from '@components/modules/Form.tsx';
 import { Button } from '@components/modules/Button.tsx';
 import { Row } from '@components/modules/Grid.tsx';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +32,7 @@ export function AdminCreateUserModal() {
       <FormFields onSubmit={form.handleSubmit(onSubmit)}>
         <ModalBody>
           <FormDescription>
-            {t('input.description.create_user')} <TypoCode>./</TypoCode>.
+            {t('input.description.create_user')} <TypoCode>/</TypoCode>.
           </FormDescription>
           <Row cols={2}>
             <FormField>
