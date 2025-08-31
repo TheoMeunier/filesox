@@ -7,7 +7,6 @@ import tmeunier.fr.dtos.requests.UpdatePasswordRequest
 import tmeunier.fr.exceptions.auth.UserAlreadyExistFountException
 import tmeunier.fr.exceptions.common.UnauthorizedException
 import tmeunier.fr.services.PasswordService
-import tmeunier.fr.services.logger
 import java.util.*
 
 @ApplicationScoped
@@ -23,8 +22,6 @@ class ProfileUpdatePasswordAction(
 
         user.password = passwordService.hashPassword(request.password)
         user.persist()
-
-        logger.info { "Password successfully updated for user ${request.password}" }
 
         return true
     }
