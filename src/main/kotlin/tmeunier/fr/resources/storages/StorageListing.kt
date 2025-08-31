@@ -15,6 +15,7 @@ import tmeunier.fr.dtos.requests.GetStorageByPathRequest
 import tmeunier.fr.dtos.responses.S3File
 import tmeunier.fr.dtos.responses.S3Folder
 import tmeunier.fr.dtos.responses.S3Response
+import tmeunier.fr.services.files_system.toHumanReadableValue
 
 @Path("/api/storages")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,11 +26,12 @@ class StorageListing {
     @Transactional
     @POST
     fun storageCreateFolder(@Valid request: GetStorageByPathRequest): Response {
-        val folder = FolderEntity.findByPath(request.path) ?: throw IllegalArgumentException("Folder not found for path: ${request.path}")
+        val folder = FolderEntity.findByPath(request.path)
+            ?: throw IllegalArgumentException("Folder not found for path: ${request.path}")
 
         val folders = FolderEntity.findAllByParentId(folder.id).map { S3Folder(it.id, it.path, it.parent?.id) }
         val files = FileEntity.findAllByParentId(folder.id)
-            .map { S3File(it.id, it.name, it.type, it.size.toString(), it.parent?.id, it.icon) }
+            .map { S3File(it.id, it.name, it.type, it.size.toHumanReadableValue(), it.parent?.id, it.icon) }
 
         return Response.ok(
             S3Response(

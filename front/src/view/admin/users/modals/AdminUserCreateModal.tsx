@@ -42,7 +42,7 @@ export function AdminCreateUserModal() {
       <FormFields onSubmit={form.handleSubmit(onSubmit)}>
         <ModalBody>
           <FormDescription>
-            {t('input.description.create_user')} <TypoCode>./</TypoCode>.
+            {t('input.description.create_user')} <TypoCode>/</TypoCode>.
           </FormDescription>
           <Row cols={2}>
             <FormField>
