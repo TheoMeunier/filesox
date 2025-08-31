@@ -12,6 +12,7 @@ import {
 } from '@/types/form/profileFormType.ts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAlerts } from '@context/hooks/useAlert.tsx';
+import { useAuth } from '@context/hooks/useAuth.tsx';
 
 export function useLogsProfileApi() {
   const API = useAxios();
@@ -79,6 +80,7 @@ export function useEditProfileApi() {
 
 export function useProfileEditPasswordApi() {
   const API = useAxios();
+  const { logout } = useAuth();
   const { setAlerts } = useAlerts();
 
   const form = useForm<ProfileEditPasswordFormFields>({
@@ -93,7 +95,7 @@ export function useProfileEditPasswordApi() {
       password: string;
       confirm_password: string;
     }) => {
-      await API.post('/profile/update/password', {
+      await API.post('/profile/update-password', {
         password: password,
         confirm_password: confirm_password,
       });
@@ -101,6 +103,7 @@ export function useProfileEditPasswordApi() {
     onSuccess: () => {
       form.reset({ password: '', confirm_password: '' });
       setAlerts('success', 'Password updated successfully');
+      logout();
     },
   });
 
