@@ -1,7 +1,9 @@
 package tmeunier.fr.dtos.responses
 
+import io.quarkus.runtime.annotations.RegisterForReflection
 import java.time.Instant
 
+@RegisterForReflection
 data class ApiErrorResponse(
     val error: String,
     val message: String,

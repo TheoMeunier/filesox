@@ -1,11 +1,12 @@
 package tmeunier.fr.dtos.requests
 
+import io.quarkus.runtime.annotations.RegisterForReflection
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import java.util.UUID
+import java.util.*
 
 
-// folder
+@RegisterForReflection
 data class FolderCreateRequest(
     @field:NotBlank(message = "The name of the folder is required")
     val path: String,
@@ -14,11 +15,13 @@ data class FolderCreateRequest(
 )
 
 // Storage actions
+@RegisterForReflection
 data class GetStorageByPathRequest(
     @field:NotBlank(message = "The name of the folder is required")
     val path: String,
 )
 
+@RegisterForReflection
 data class UpdateStorageRequest(
     @field:NotNull(message = "Storage ID is required")
     val id: UUID,
@@ -29,6 +32,7 @@ data class UpdateStorageRequest(
     val parentId: UUID?
 )
 
+@RegisterForReflection
 data class MoveStorageRequest(
     @field:NotNull(message = "Storage ID is required")
     val id: UUID,
@@ -43,6 +47,7 @@ data class MoveStorageRequest(
     val parentId: UUID,
 )
 
+@RegisterForReflection
 data class DeleteStorageRequest(
     @field:NotNull(message = "Storage ID is required")
     val id: UUID,

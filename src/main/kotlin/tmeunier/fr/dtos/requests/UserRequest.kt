@@ -1,11 +1,13 @@
 package tmeunier.fr.dtos.requests
 
+import io.quarkus.runtime.annotations.RegisterForReflection
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import java.util.UUID
+import java.util.*
 
+@RegisterForReflection
 data class CreateUserRequest(
     @field:NotBlank(message = "Email is required")
     @field:Email(message = "Email format is invalid")
@@ -25,6 +27,7 @@ data class CreateUserRequest(
     val permissions: List<UUID> = emptyList()
 )
 
+@RegisterForReflection
 data class UpdateUserRequest(
     @field:NotBlank(message = "Email is required")
     @field:Email(message = "Email format is invalid")

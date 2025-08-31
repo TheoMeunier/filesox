@@ -1,7 +1,11 @@
 package tmeunier.fr.dtos.requests
 
-import jakarta.validation.constraints.*
+import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
+@RegisterForReflection
 data class LoginRequest(
     @field:NotBlank(message = "L'email ne peut pas être vide")
     @field:Email(message = "Format d'email invalide")
@@ -12,6 +16,7 @@ data class LoginRequest(
     val password: String,
 )
 
+@RegisterForReflection
 data class RegisterRequest(
     @field:NotBlank(message = "L'email ne peut pas être vide")
     @field:Email(message = "Format d'email invalide")
@@ -27,6 +32,7 @@ data class RegisterRequest(
     val filePath: String? = null,
 )
 
+@RegisterForReflection
 data class AuthRefreshTokenRequest(
     @field:NotBlank(message = "Le token d'authentification ne peut pas être vide")
     val refreshToken: String

@@ -1,11 +1,12 @@
 package tmeunier.fr.dtos.requests
 
+import io.quarkus.runtime.annotations.RegisterForReflection
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Size
-import java.util.UUID
+import java.util.*
 
+@RegisterForReflection
 data class CreateShareRequest(
     @field:NotNull(message = "Storage is required")
     val storageId: UUID,
