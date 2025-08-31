@@ -9,9 +9,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import tmeunier.fr.actions.auth.LoginAction
 import tmeunier.fr.actions.profile.ProfileUpdatePasswordAction
-import tmeunier.fr.dtos.requests.LoginRequest
 import tmeunier.fr.dtos.requests.UpdatePasswordRequest
 
 @Path("/api/profile/update-password")
@@ -22,10 +20,12 @@ class ProfileUpdatePasswordResource(
 ) {
 
     @Authenticated
+    @Transactional
     @POST
-    fun profileUpdatePassword(@Valid request: UpdatePasswordRequest): Response {
-        val result = profileUpdatePasswordAction.execute(request)
-
-        return Response.ok(result).build()
+    fun profileUpdatePassword(
+        @Valid request: UpdatePasswordRequest
+    ): Response {
+        profileUpdatePasswordAction.execute(request)
+        return Response.ok().build()
     }
 }
