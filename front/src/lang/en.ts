@@ -88,6 +88,7 @@ export const en = {
         file_path: 'folder/',
         share_duration: 'Duration',
         search: 'Search a file',
+        permissions: 'Select permission for this user',
       },
       options: {
         shares: {

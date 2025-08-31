@@ -88,6 +88,7 @@ export const fr = {
         file_path: 'dossier/',
         share_duration: 'Durée du partage',
         search: 'Rechercher un fichier',
+        permissions: 'Selectionner les permissions pour cet utilisateur',
       },
       options: {
         shares: {
