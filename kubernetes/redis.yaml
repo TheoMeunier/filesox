@@ -1,0 +1,32 @@
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: filesox-redis
+  namespace: filesox
+spec:
+  replicas: 2
+  image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.31.0
+  resources:
+    requests:
+      cpu: 500m
+      memory: 500Mi
+    limits:
+      cpu: 800m
+      memory: 2Gi
+  priorityClassName: high-priority
+  authentication:
+    passwordFromSecret:
+      name: filesox-redis-credentials
+      key: REDIS_PASSWORD
+  affinity:
+    podAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - webservice
+            topologyKey: kubernetes.io/hostname
