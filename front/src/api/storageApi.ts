@@ -47,7 +47,7 @@ export function useSearchStorageApi(search: string) {
   const API = useAxios();
 
   const { data, isSuccess, isLoading } = useQuery({
-    queryKey: ['storage', search],
+    queryKey: ['storage-search', search],
     queryFn: async () => {
       const response = await API.get(`/storages?search=${search}`);
       return response.data;
@@ -55,10 +55,12 @@ export function useSearchStorageApi(search: string) {
     enabled: search.length >= 3,
   });
 
-  if (isSuccess) {
-    setFolders(undefined);
-    setFiles(data.files);
-  }
+  useEffect(() => {
+    if (isSuccess && data) {
+      setFolders(data.folders);
+      setFiles(data.files);
+    }
+  }, [isSuccess, data, search, setFolders, setFiles]);
 
   return { isLoading };
 }
