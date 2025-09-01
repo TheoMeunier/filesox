@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-database-filesox
+  namespace: filesox
+  labels:
+    app: backup-database-filesox
+    component: database
+spec:
+  schedule: "30 2 * * *"
+  timeZone: "Europe/Paris"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 300
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: backup-database-filesox
+            component: database
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup-container-postgres
+              image: ghcr.io/theomeunier/worker-backup-db/postgres:latest
+              envFrom:
+                - secretRef:
+                    name: backup-database-secrets
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "500m"

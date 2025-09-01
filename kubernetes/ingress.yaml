@@ -1,0 +1,23 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: filesox
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`filesox.fr`) && PathPrefix(`/api`)
+      services:
+        - name: filesox-api
+          namespace: filesox
+          port: 80
+    - kind: Rule
+      match: Host(`filesox.fr`)
+      services:
+        - name: filesox-front
+          namespace: filesox
+          port: 80
+  tls:
+    certResolver: le
