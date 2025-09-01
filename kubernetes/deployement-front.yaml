@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filesox-front
+  namespace: filesox
+  labels:
+    app: filesox-front
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: filesox-front
+  template:
+    metadata:
+      labels:
+        app: filesox-front
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: filesox-front
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: filesox-front
+          image: ghcr.io/theomeunier/filesox/front:latest
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 80

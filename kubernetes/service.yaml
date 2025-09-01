@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: filesox-api
+  namespace: filesox
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: filesox-api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filesox-front
+  namespace: filesox
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: filesox-front

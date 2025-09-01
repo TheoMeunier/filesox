@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-filesox-job
+  namespace: filesox
+  labels:
+    app: filesox
+    component: flyway-migration
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: filesox
+        component: flyway-migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: flyway-migration
+          image: ghcr.io/theomeunier/filesox/api-native:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cdn-init-job
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "ps aux | grep java || exit 1"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filesox-api
+  namespace: filesox
+  labels:
+    app: filesox-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: filesox-api
+  template:
+    metadata:
+      labels:
+        app: filesox-api
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: filesox-api
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: cdn-api
+          image: ghcr.io/theomeunier/filesox/api-native:latest
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+          envFrom:
+            - secretRef:
+                name: filesox-common
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+          volumeMounts:
+            - name: jwt
+              readOnly: true
+              mountPath: "/certs"
+      volumes:
+        - name: jwt
+          secret:
+            secretName: jwt-keys
