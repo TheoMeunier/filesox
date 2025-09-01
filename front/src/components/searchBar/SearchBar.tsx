@@ -2,24 +2,23 @@ import { LoaderCircle, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ChangeEvent, useState } from 'react';
 import { useSearchStorageApi } from '@/api/storageApi.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function SearchBar() {
-  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
+  const queryClient = useQueryClient();
 
   const [debouncedSearch] = useDebounce(search, 300);
-
   const { isLoading } = useSearchStorageApi(debouncedSearch);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
 
-    if (value.length <= 2) {
-      queryClient.invalidateQueries({ queryKey: ['storage'] });
+    if (debouncedSearch.length >= 2 && value.length < 2) {
+      queryClient.clear();
     }
   };
 

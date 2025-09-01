@@ -1,25 +1,13 @@
 package tmeunier.fr.databases.entities
 
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
-import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EntityListeners
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
-import org.hibernate.annotations.CreationTimestamp
+import jakarta.persistence.*
 import org.hibernate.annotations.UpdateTimestamp
 import tmeunier.fr.databases.interfaces.AuditableInterface
 import tmeunier.fr.databases.listeners.AuditListener
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "files")
@@ -73,6 +61,11 @@ class FileEntity : PanacheEntityBase, AuditableInterface {
 
         fun findAllByParentId(parentId: UUID): List<FileEntity> {
             return list("parent.id = ?1 AND deletedAt IS NULL", parentId)
+        }
+
+        fun search(query: String): List<FileEntity> {
+            val likeQuery = "%${query.replace("%", "\\%").replace("_", "\\_")}%"
+            return list("name LIKE ?1 AND deletedAt IS NULL", likeQuery)
         }
     }
 }
