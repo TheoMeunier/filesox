@@ -15,16 +15,14 @@ import { AdminEditUserModal } from './modals/AdminUserEditModal.tsx';
 import { Pill } from '@components/modules/Pill.tsx';
 import { useTranslation } from 'react-i18next';
 import { useUserApi } from '@/api/admin/adminUserApi.ts';
-import { Loader } from '@components/modules/Loader/Loader.tsx';
 import { formatDate } from '@/utils/date.ts';
+import TableSkeleton from '@components/skeletons/TableSkeleton.tsx';
 
 export function AdminUsers() {
   const { openModal } = useModal();
   const { t } = useTranslation();
 
   const { data, isLoading } = useUserApi();
-
-  if (isLoading) return <Loader />;
 
   return (
     <div className="px-7 py-4">
@@ -46,57 +44,61 @@ export function AdminUsers() {
         </Button>
       </div>
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeader>{t('table.name')}</TableHeader>
-            <TableHeader>{t('table.email')}</TableHeader>
-            <TableHeader>{t('table.permissions')}</TableHeader>
-            <TableHeader>{t('table.file_path')}</TableHeader>
-            <TableHeader>{t('table.created_at')}</TableHeader>
-            <TableHeader>{t('table.actions')}</TableHeader>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data &&
-            data.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  {user.permissions[0] === 'Administration' ? (
-                    <Pill type={'danger'}>{user.permissions}</Pill>
-                  ) : (
-                    ''
-                  )}
-                </TableCell>
-                <TableCell>{user.file_path}</TableCell>
-                <TableCell>{formatDate(user.created_at)}</TableCell>
-                <TableCell height="py-2.5">
-                  <div className="flex gap-2">
-                    <ButtonIcon
-                      title="edit"
-                      onClick={() =>
-                        openModal(() => <AdminEditUserModal user={user} />)
-                      }
-                      svg={SquarePen}
-                    />
-                    <ButtonIcon
-                      title="delete"
-                      onClick={() =>
-                        openModal(
-                          () => <AdminDeleteUserModal userId={user.id} />,
-                          'md'
-                        )
-                      }
-                      svg={Trash2}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
+      {isLoading ? (
+        <TableSkeleton col={6} />
+      ) : (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeader>{t('table.name')}</TableHeader>
+              <TableHeader>{t('table.email')}</TableHeader>
+              <TableHeader>{t('table.permissions')}</TableHeader>
+              <TableHeader>{t('table.file_path')}</TableHeader>
+              <TableHeader>{t('table.created_at')}</TableHeader>
+              <TableHeader>{t('table.actions')}</TableHeader>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data &&
+              data.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.permissions[0] === 'Administration' ? (
+                      <Pill type={'danger'}>{user.permissions}</Pill>
+                    ) : (
+                      ''
+                    )}
+                  </TableCell>
+                  <TableCell>{user.file_path}</TableCell>
+                  <TableCell>{formatDate(user.created_at)}</TableCell>
+                  <TableCell height="py-2.5">
+                    <div className="flex gap-2">
+                      <ButtonIcon
+                        title="edit"
+                        onClick={() =>
+                          openModal(() => <AdminEditUserModal user={user} />)
+                        }
+                        svg={SquarePen}
+                      />
+                      <ButtonIcon
+                        title="delete"
+                        onClick={() =>
+                          openModal(
+                            () => <AdminDeleteUserModal userId={user.id} />,
+                            'md'
+                          )
+                        }
+                        svg={Trash2}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }
