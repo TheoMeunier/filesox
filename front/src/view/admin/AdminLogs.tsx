@@ -10,18 +10,14 @@ import {
 import { Pill } from '@components/modules/Pill.tsx';
 import { useTranslation } from 'react-i18next';
 import { Archive } from 'lucide-react';
-import { Loader } from '@components/modules/Loader/Loader.tsx';
 import { useAdminLogsApi } from '@/api/admin/adminApi.ts';
 import { formatDate } from '@/utils/date.ts';
+import TableSkeleton from '@components/skeletons/TableSkeleton.tsx';
 
 export function AdminLogs() {
   const { t } = useTranslation();
 
   const { data, isLoading } = useAdminLogsApi();
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <div className="px-7 py-4">
@@ -32,32 +28,36 @@ export function AdminLogs() {
         </h1>
       </div>
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeader>{t('table.user')}</TableHeader>
-            <TableHeader>{t('table.subject')}</TableHeader>
-            <TableHeader>{t('table.actions')}</TableHeader>
-            <TableHeader>{t('table.created_at')}</TableHeader>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data && data.length > 0 ? (
-            data.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell>{log.username}</TableCell>
-                <TableCell>{log.details}</TableCell>
-                <TableCell>
-                  <Pill type={log.action}>{log.action}</Pill>
-                </TableCell>
-                <TableCell>{formatDate(log.created_at)}</TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableNoData text={t('table.no_data')} colspan={8} />
-          )}
-        </TableBody>
-      </Table>
+      {isLoading ? (
+        <TableSkeleton col={4} />
+      ) : (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeader>{t('table.user')}</TableHeader>
+              <TableHeader>{t('table.subject')}</TableHeader>
+              <TableHeader>{t('table.actions')}</TableHeader>
+              <TableHeader>{t('table.created_at')}</TableHeader>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data && data.length > 0 ? (
+              data.map((log) => (
+                <TableRow key={log.id}>
+                  <TableCell>{log.username}</TableCell>
+                  <TableCell>{log.details}</TableCell>
+                  <TableCell>
+                    <Pill type={log.action}>{log.action}</Pill>
+                  </TableCell>
+                  <TableCell>{formatDate(log.created_at)}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableNoData text={t('table.no_data')} colspan={8} />
+            )}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

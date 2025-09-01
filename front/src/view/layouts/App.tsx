@@ -21,7 +21,13 @@ import {
   Users,
 } from 'lucide-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Navbar, NavItem, NavItems, NavItemsLeft, NavItemsRight, } from '@components/layouts/nav.tsx';
+import {
+  Navbar,
+  NavItem,
+  NavItems,
+  NavItemsLeft,
+  NavItemsRight,
+} from '@components/layouts/nav.tsx';
 import { ButtonIcon } from '@components/modules/Button.tsx';
 import { ModalCreateFolder } from '../modals/folders/ModalCreateFolder.tsx';
 import { ModalMoveMedia } from '../modals/ModalMoveMedia.tsx';

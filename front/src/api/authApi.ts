@@ -4,7 +4,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { loginSchemaType } from '@/types/api/authType.ts';
-import { loginSchema, LoginSchemaFormFields, } from '@/types/form/authFormType.ts';
+import {
+  loginSchema,
+  LoginSchemaFormFields,
+} from '@/types/form/authFormType.ts';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '@context/hooks/useAuth.tsx';
 import { useAlerts } from '@context/hooks/useAlert.tsx';
