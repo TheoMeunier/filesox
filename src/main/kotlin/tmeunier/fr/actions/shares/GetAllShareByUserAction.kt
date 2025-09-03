@@ -5,13 +5,11 @@ import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.databases.entities.ShareEntity
 import tmeunier.fr.dtos.responses.ShareProfileResponse
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
-class GetAllShareByUserAction
-{
-    fun execute(userId: UUID): List<ShareProfileResponse>
-    {
+class GetAllShareByUserAction {
+    fun execute(userId: UUID): List<ShareProfileResponse> {
         val shares = ShareEntity.find("user.id = ?1", userId).list()
 
         val fileIds = shares.filter { it.type == "file" }.map { it.storageId }
@@ -31,6 +29,7 @@ class GetAllShareByUserAction
             ShareProfileResponse(
                 id = share.id,
                 path = getStorageName(share, fileNames, folderPaths),
+                password = share.password,
                 expiredAt = share.expiredAt.toString(),
                 createdAt = share.createdAt.toString()
             )

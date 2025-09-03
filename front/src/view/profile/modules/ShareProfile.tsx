@@ -57,7 +57,9 @@ export function ProfileShare() {
                     <div className="flex items-center gap-2">
                       <ButtonIcon
                         title="copy"
-                        onClick={() => handleCopy(share.path)}
+                        onClick={() =>
+                          handleCopy(share.path + '?password=' + share.password)
+                        }
                         svg={ClipboardCopy}
                       />
                       <ButtonIcon

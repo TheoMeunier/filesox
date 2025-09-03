@@ -7,6 +7,7 @@ import java.util.*
 data class ShareProfileResponse(
     val id: UUID,
     val path: String,
+    val password: String?,
     val expiredAt: String,
     val createdAt: String
 )
@@ -16,6 +17,7 @@ data class ShareAdminResponse(
     val id: UUID,
     val path: String,
     val username: String,
+    val password: String?,
     val expiredAt: String,
     val createdAt: String
 )
