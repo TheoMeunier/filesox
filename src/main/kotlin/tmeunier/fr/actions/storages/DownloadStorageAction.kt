@@ -8,9 +8,10 @@ import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.exceptions.storage.ErrorCreatingZipException
 import tmeunier.fr.exceptions.storage.ErrorS3Exception
 import tmeunier.fr.exceptions.storage.StorageNotFoundException
-import tmeunier.fr.services.files_system.download.DownloadFileService
 import tmeunier.fr.services.files_system.StorageService
+import tmeunier.fr.services.files_system.download.DownloadFileService
 import tmeunier.fr.services.files_system.download.DownloadFolderService
+import tmeunier.fr.services.logger
 import java.io.OutputStream
 import java.time.Instant
 import java.time.LocalDateTime
@@ -66,11 +67,13 @@ class DownloadStorageAction(
         val startTime = Instant.now()
         val objectKey = "/$objectKey/"
 
+        logger.info { "Downloading folder $objectKey" }
+
         return try {
             val folderStructure = downloadFolderService.getFolderStructure(objectKey)
 
             if (folderStructure.isEmpty()) {
-               throw StorageNotFoundException("No folder found: $objectKey")
+                throw StorageNotFoundException("No folder found: $objectKey")
             }
 
             val zipFilename = downloadFolderService.sanitizeFolderName(objectKey) + "_" +
@@ -89,7 +92,7 @@ class DownloadStorageAction(
                 .build()
 
         } catch (e: Exception) {
-           throw ErrorCreatingZipException("Error creating zip file: ${e.message}")
+            throw ErrorCreatingZipException("Error creating zip file: ${e.message}")
         }
     }
 }

@@ -15,6 +15,7 @@ export const adminSharesSchemaType = z.array(
     id: z.uuid(),
     path: z.string().max(255),
     username: z.string().max(255),
+    password: z.string().nullable(),
     expired_at: z.string(),
     created_at: z.string(),
   })

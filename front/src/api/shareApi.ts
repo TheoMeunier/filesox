@@ -35,6 +35,7 @@ export function useCreateShare() {
   const { isFolder } = useStorage();
   const { activeStorage } = useFileStore();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const form = useForm<ShareStorageFormFields>({
     resolver: zodResolver(shareStorageSchema),
@@ -44,15 +45,20 @@ export function useCreateShare() {
     mutationFn: async (data: ShareStorageFormFields) => {
       await API.post('/shares/create', {
         storage_id: activeStorage!.id,
-        type: !isFolder ? 'folder' : 'file',
+        type: !isFolder() ? 'file' : 'folder',
         password: data.password === '' ? null : data.password,
         duration: data.duration,
         type_duration: data.type_duration,
       });
     },
-    onSuccess: () => {
-      setAlerts('success', t('alerts.success.shares.create'));
-      closeModal();
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['profile-shares'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin-shares'] }),
+      ]).then(() => {
+        setAlerts('success', t('alerts.success.shares.create'));
+        closeModal();
+      });
     },
   });
 
@@ -78,8 +84,11 @@ export function useDeleteShare({ url }: { url: string }) {
     mutationFn: async () => {
       await API.delete(url);
     },
-    onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['shares'] }).then(() => {
+    onSuccess: async () => {
+      await Promise.all([
+        client.invalidateQueries({ queryKey: ['profile-shares'] }),
+        client.invalidateQueries({ queryKey: ['admin-shares'] }),
+      ]).then(() => {
         setAlerts('success', t('alerts.success.shares.delete'));
         closeModal();
       });
