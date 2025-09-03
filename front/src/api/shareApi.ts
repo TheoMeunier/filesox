@@ -6,10 +6,7 @@ import { ListModalShareSchemaType } from '@/types/api/storageType.ts';
 import { useFileStore } from '@stores/useFileStore.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useStorage } from '@hooks/useStorage.ts';
-import {
-  ShareStorageFormFields,
-  shareStorageSchema,
-} from '@/types/form/shareFormTypes.ts';
+import { ShareStorageFormFields, shareStorageSchema, } from '@/types/form/shareFormTypes.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAlerts } from '@context/hooks/useAlert.tsx';
 
@@ -35,6 +32,7 @@ export function useCreateShare() {
   const { isFolder } = useStorage();
   const { activeStorage } = useFileStore();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const form = useForm<ShareStorageFormFields>({
     resolver: zodResolver(shareStorageSchema),
@@ -50,9 +48,14 @@ export function useCreateShare() {
         type_duration: data.type_duration,
       });
     },
-    onSuccess: () => {
-      setAlerts('success', t('alerts.success.shares.create'));
-      closeModal();
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['profile-shares'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin-shares'] }),
+      ]).then(() => {
+        setAlerts('success', t('alerts.success.shares.create'));
+        closeModal();
+      });
     },
   });
 
@@ -78,8 +81,11 @@ export function useDeleteShare({ url }: { url: string }) {
     mutationFn: async () => {
       await API.delete(url);
     },
-    onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['shares'] }).then(() => {
+    onSuccess: async () => {
+      await Promise.all([
+        client.invalidateQueries({ queryKey: ['profile-shares'] }),
+        client.invalidateQueries({ queryKey: ['admin-shares'] }),
+      ]).then(() => {
         setAlerts('success', t('alerts.success.shares.delete'));
         closeModal();
       });
