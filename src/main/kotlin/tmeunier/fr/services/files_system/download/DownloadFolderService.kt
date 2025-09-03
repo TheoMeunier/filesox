@@ -1,14 +1,17 @@
 package tmeunier.fr.services.files_system.download
 
-import tmeunier.fr.services.logger
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.WebApplicationException
 import jakarta.ws.rs.core.Response
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.*
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse
+import software.amazon.awssdk.services.s3.model.S3Exception
 import tmeunier.fr.databases.entities.FileEntity
 import tmeunier.fr.databases.entities.FolderEntity
 import tmeunier.fr.services.files_system.StorageService
+import tmeunier.fr.services.logger
 import java.io.BufferedOutputStream
 import java.io.OutputStream
 import java.time.Instant
@@ -20,8 +23,7 @@ import kotlin.math.min
 class DownloadFolderService(
     private val s3Client: S3Client,
     private val storageService: StorageService,
-)
-{
+) {
     private val bucketName = "cdn"
     private val chunkSize: Int = 5 * 1024 * 1024
     private val zipBufferSize: Int = 65536
@@ -139,42 +141,25 @@ class DownloadFolderService(
         var totalBytesRead = 0L
 
         try {
-            // Vérification que c'est bien un fichier
             if (item.fileEntity == null) {
-                logger.warn { "Tentative d'ajout d'un non-fichier au ZIP: ${item.zipPath}" }
+                logger.warn { "Attempt to add a non-file to the ZIP file: ${item.zipPath}" }
                 return 0L
             }
 
-            logger.info { "Traitement fichier: ${item.fileEntity.name}, S3 key: ${item.s3Key}, isExist: ${item.fileEntity.isExist}" }
-
-            // Test d'existence sur S3 (ignorer le flag isExist pour l'instant)
-            logger.info { "Vérification existence S3 pour: ${item.s3Key} (isExist en BDD: ${item.fileEntity.isExist})" }
             val metadata = try {
                 getFileMetadata(item.s3Key)
             } catch (e: S3Exception) {
                 if (e.statusCode() == 404) {
-                    logger.warn { "Fichier S3 non trouvé: ${item.s3Key} pour fichier BDD: ${item.fileEntity.name}" }
-                    // Marquer le fichier comme non-existant
-                    item.fileEntity.isExist = false
-                    item.fileEntity.persist()
                     return 0L
                 } else {
-                    logger.error { "Erreur S3 lors de la vérification: ${e.message}" }
+                    logger.error { "S3 error during verification: ${e.message}" }
                     throw e
                 }
             }
 
-            // Si on arrive ici, le fichier existe sur S3, on peut mettre à jour le flag
-            if (!item.fileEntity.isExist) {
-                logger.info { "Fichier trouvé sur S3, mise à jour isExist=true pour: ${item.fileEntity.name}" }
-                item.fileEntity.isExist = true
-                item.fileEntity.persist()
-            }
-
             val fileSize = metadata.contentLength()
-            logger.info { "Métadonnées S3 récupérées pour ${item.s3Key}: ${fileSize} bytes" }
+            logger.info { "S3 metadata retrieved for  ${item.s3Key}: ${fileSize} bytes" }
 
-            // Création de l'entrée ZIP avec métadonnées enrichies
             val zipEntry = ZipEntry(item.zipPath).apply {
                 time = metadata.lastModified()?.toEpochMilli() ?: System.currentTimeMillis()
                 size = fileSize
@@ -182,24 +167,22 @@ class DownloadFolderService(
             }
             zipOut.putNextEntry(zipEntry)
 
-            // Streaming du fichier par chunks depuis S3
             var bytesProcessed = 0L
             while (bytesProcessed < fileSize) {
                 val start = bytesProcessed
                 val end = min(bytesProcessed + chunkSize - 1, fileSize - 1)
 
-                logger.debug { "Téléchargement chunk: bytes $start-$end pour ${item.s3Key}" }
+                logger.debug { "Download chunk: bytes $start-$end pour ${item.s3Key}" }
                 val bytesRead = downloadChunkToZip(item.s3Key, start, end, zipOut)
                 bytesProcessed += bytesRead
                 totalBytesRead += bytesRead
             }
 
             zipOut.closeEntry()
-            logger.info { "Fichier ajouté au ZIP avec succès: ${item.zipPath} (${totalBytesRead} bytes)" }
+            logger.info { "File successfully added to ZIP file: ${item.zipPath} (${totalBytesRead} bytes)" }
 
         } catch (e: Exception) {
-            logger.error { "Erreur lors de l'ajout du fichier ${item.zipPath}: ${e.message}" }
-            // Ne pas throw pour continuer avec les autres fichiers
+            logger.error { "Error adding file ${item.zipPath}: ${e.message}" }
         }
 
         return totalBytesRead

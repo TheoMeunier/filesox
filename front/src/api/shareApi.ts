@@ -6,7 +6,10 @@ import { ListModalShareSchemaType } from '@/types/api/storageType.ts';
 import { useFileStore } from '@stores/useFileStore.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useStorage } from '@hooks/useStorage.ts';
-import { ShareStorageFormFields, shareStorageSchema, } from '@/types/form/shareFormTypes.ts';
+import {
+  ShareStorageFormFields,
+  shareStorageSchema,
+} from '@/types/form/shareFormTypes.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAlerts } from '@context/hooks/useAlert.tsx';
 
@@ -42,7 +45,7 @@ export function useCreateShare() {
     mutationFn: async (data: ShareStorageFormFields) => {
       await API.post('/shares/create', {
         storage_id: activeStorage!.id,
-        type: !isFolder ? 'folder' : 'file',
+        type: !isFolder() ? 'file' : 'folder',
         password: data.password === '' ? null : data.password,
         duration: data.duration,
         type_duration: data.type_duration,

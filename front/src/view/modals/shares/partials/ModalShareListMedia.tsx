@@ -16,7 +16,7 @@ export function ModalShareListMedia() {
 
   const handleCopy = (id: string) => {
     navigator.clipboard.writeText(
-      import.meta.env.VITE_API_URL + '/storages/share/dl/' + id
+      import.meta.env.VITE_API_URL + 'api/storages/share/dl/' + id
     );
     setAlerts('success', t('alerts.success.shares.copy'));
   };

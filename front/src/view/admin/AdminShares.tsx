@@ -24,9 +24,10 @@ export function AdminShares() {
 
   const { data, isLoading } = useAdminSharesApi();
 
-  const handleCopy = (id: string) => {
+  const handleCopy = (path: string) => {
+    const storage = path.startsWith('/') ? path : `/${path}`;
     navigator.clipboard.writeText(
-      import.meta.env.VITE_API_URL + '/storages/share/dl/' + id
+      `${window.location.origin}/api/shares/dl${storage}`
     );
     setAlerts('success', t('alerts.success.shares.copy'));
   };
@@ -65,7 +66,7 @@ export function AdminShares() {
                     <div className="flex items-center gap-2">
                       <ButtonIcon
                         title="copy"
-                        onClick={() => handleCopy(share.id)}
+                        onClick={() => handleCopy(share.path)}
                         svg={ClipboardCopy}
                       />
                       <ButtonIcon
@@ -74,7 +75,7 @@ export function AdminShares() {
                           openModal(
                             () => (
                               <ModalDeleteShares
-                                url={`/admin/shares/delete}`}
+                                url={`/shares/delete/${share.id}`}
                               />
                             ),
                             'md'

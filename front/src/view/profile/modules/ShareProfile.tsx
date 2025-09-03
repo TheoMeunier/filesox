@@ -24,8 +24,11 @@ export function ProfileShare() {
 
   const { data, isLoading } = useSharesProfileApi();
 
-  const handleCopy = (id: string) => {
-    navigator.clipboard.writeText(import.meta.env + '/storages/share/dl/' + id);
+  const handleCopy = (path: string) => {
+    const storage = path.startsWith('/') ? path : `/${path}`;
+    navigator.clipboard.writeText(
+      `${window.location.origin}/api/shares/dl${storage}`
+    );
     setAlerts('success', t('alerts.success.shares.copy'));
   };
 
@@ -54,7 +57,7 @@ export function ProfileShare() {
                     <div className="flex items-center gap-2">
                       <ButtonIcon
                         title="copy"
-                        onClick={() => handleCopy(share.id)}
+                        onClick={() => handleCopy(share.path)}
                         svg={ClipboardCopy}
                       />
                       <ButtonIcon
