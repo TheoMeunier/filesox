@@ -27,31 +27,48 @@ management for businesses and developers.
 * java 21
 * postgres 16
 
-### Installation
+### Installation for development
 
 1. Clone the repo
    ```sh
    git clone https://github.com/TheoMeunier/filesox.git
    ```
-2. Configuring the `.env` file
+2. Configuring the `variable environnement` file
 
 3. Build front-end
    ```sh 
     cd front
     npm install
-    npm run build
+    npm run dev
    ```
 4. Build back-end
    ```sh
-    ./gradlew :quarkusAppPartsBuild -Dquarkus.package.type=native -Dquarkus.native.container-build=false
+    ./gradlew quarkusDev
+   ```
+5. Run docker compose
+   ```sh
+    docker compose up -d
    ```
 
 #### Docker
 
-1. Create a docker-compose file
+### 1. Create keys for JWT token with `openssl`:
+
+```bash
+mkdir certs/ && cd certs
+
+openssl genrsa -out rsaPrivateKey.pem 2048
+openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
+openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+
+chmod 644 privateKey.pem publicKey.pem
+```
+
+2. Create a `compose.yaml` file
 
 ```yml
 services:
+  # Web Service
   front:
     image: ghcr.io/theomeunier/filesox/front:latest
     container_name: filesox_front
@@ -61,6 +78,7 @@ services:
     networks:
       - app_network
 
+  # Api Service
   back:
     image: ghcr.io/theomeunier/filesox/api-native:latest
     container_name: filesox_api
@@ -75,11 +93,53 @@ services:
       QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID:
       QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY:
       QUARKUS_S3_BUCKET: filesox
-      QUARKUS_REDIS_HOSTS:
+      QUARKUS_REDIS_HOSTS: redis://filesox-redis@filesox_redis:6379
       MP_JWT_VERIFY_PUBLICKEY_LOCATION: /certs/publicKey.pem
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /certs/privateKey.pem
     volumes:
       - ./certs:/certs
+    networks:
+      - app_network
+
+  # Reverse Proxy Service
+  nginx:
+    image: nginx:alpine
+    container_name: filesox_nginx
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app_network
+
+  # Database Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: filesox_database
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: filesox
+      POSTGRES_USER: filesox
+      POSTGRES_PASSWORD: filesox
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./storage-db:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  # Redis Service
+  redis:
+    image: redis:latest
+    container_name: filesox_redis
+    restart: unless-stopped
+    command: redis-server --requirepass filesox-redis
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: filesox-redis
     networks:
       - app_network
 
@@ -89,40 +149,41 @@ networks:
 
 ```
 
-### 2. Configure the `.env` file
+### 3. Configure the `variable environnement` file
 
-#### 2.1 PostgreSQL Configuration:
+#### 3.1 PostgreSQL Configuration:
 
 - `QUARKUS_DATASOURCE_USERNAME` : The username of your PostgreSQL database
 - `QUARKUS_DATASOURCE_PASSWORD` : The password of your PostgreSQL database
 - `QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://[host][:port][/database]` : The URL of your PostgreSQL database
 
-#### 2.2 S3 Configuration:
+#### 3.2 S3 Configuration:
 
 - `QUARKUS_S3_ENDPOINT_OVERRIDE` : Endpoint of your S3 provider
+- `QUARKUS_S3_BUCKET` : The bucket name of your S3 provider
 - `QUARKUS_S3_AWS_REGION` : The region of your S3 provider
 - `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID` : Access key of your S3 provider
 - `QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY` : Secret key of your S3 provider
 
-#### 2.3 Redis Configuration;
+#### 3.3 Redis Configuration;
 
 - `QUARKUS_REDIS_HOSTS=redis://[username:password@][host][:port][/database]` : The URL of your Redis database
 
-#### 2.4 JWT Configuration:
+#### 3.4 JWT Configuration:
 
 - `MP_JWT_VERIFY_PUBLICKEY_LOCATION` : The location of the public key used to verify the JWT token
 - `SMALLRYE_JWT_SIGN_KEY_LOCATION` : The location of the private key used to sign the JWT token
 
-### 3. Create keys for JWT token with `openssl`:
+### 4. Start the application with docker-compose
 
 ```bash
-mkdir certs/ && cd certs
+docker compose up -d
+```
 
-openssl genrsa -out rsaPrivateKey.pem 2048
-openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem
-openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+### 5. Access the application
 
-chmod 644 privateKey.pem publicKey.pem
+```bash
+http://localhost:8888
 ```
 
 #### Connect to the application
