@@ -93,7 +93,8 @@ services:
       QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID:
       QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY:
       QUARKUS_S3_BUCKET: filesox
-      QUARKUS_REDIS_HOSTS: redis://filesox-redis@filesox_redis:6379
+      QUARKUS_S3_AWS_REGION: eu-west-1
+      QUARKUS_REDIS_HOSTS: redis://:filesox-redis@redis:6379
       MP_JWT_VERIFY_PUBLICKEY_LOCATION: /certs/publicKey.pem
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /certs/privateKey.pem
     volumes:
