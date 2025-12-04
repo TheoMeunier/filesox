@@ -15,7 +15,7 @@ class StarterApplication {
 
     @Transactional
     fun onStart(@Observes event: StartupEvent) {
-        println("🚀 Démarrage de l'application...")
+        println("🚀 Application started!")
         execute()
     }
 
