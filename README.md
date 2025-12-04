@@ -25,7 +25,7 @@ management for businesses and developers.
 
 * nodejs lts
 * java 21
-* postgres 16
+* postgres 17.4
 
 ### Installation for development
 
@@ -116,7 +116,7 @@ services:
 
   # Database Service
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17.4-alpine
     container_name: filesox_database
     restart: unless-stopped
     ports:
